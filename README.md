@@ -163,6 +163,16 @@ cleanest benchmark and the one every method decision was made on.
 ./run_control_placebo_only.sh <vec> <layers> <gamma>
 ```
 
+**Every benchmark folder has these same five scripts**, one per cell of the
+matrix, so the matrix is complete everywhere rather than only on LiveMath.
+
+For the two **agent** benchmarks there is no `--condition embed` flag: steering
+comes from the *server*, and the adapter labels the cell from what `/health`
+reports. So an embed script is the baseline command pointed at the hooked
+server. Each one calls `require_steering` first, which refuses to run against a
+plain server — otherwise the cell would quietly come out as a second baseline,
+indistinguishable from a real one in the results.
+
 ### SpreadsheetBench — `02_spreadsheetbench_agent/` and `03_spreadsheetbench_single_turn/`
 400 real spreadsheet-editing tasks. The agent arm gives the model a shell, a file
 editor and a workspace holding `input.xlsx`; it must leave `output.xlsx` behind.

@@ -6,8 +6,11 @@ compares the task's answer range against the golden workbook.
 
 Data and grader are validated: 394/394 golden-vs-golden, 0.3% init-vs-golden.
 
-  run_baseline.sh     mechanics prompt only
-  run_text_skill.sh   the same prompt with the skill appended
+  run_baseline.sh              mechanics prompt only
+  run_text_skill.sh            the same prompt with the skill appended
+  run_embed_from_placebo.sh    B1, controlled   <vec> <layers> <gamma>
+  run_embed_from_nothing.sh    B2, uncontrolled <vec> <layers> <gamma>
+  run_control_placebo_only.sh  the null         <vec> <layers> <gamma>
 
 NEEDS A SERVED MODEL
 --------------------------------------------------------------------------------
@@ -19,12 +22,23 @@ Start an endpoint first, in another terminal or another job:
 and read the tool-call-parser warning in that file before trusting a number.
 The wrong parser gives tool_calls: [] and a score of exactly 0% with no error.
 
-WHY THERE IS NO EMBED CELL HERE
+THE EMBED CELLS ARE EXPENSIVE HERE
 --------------------------------------------------------------------------------
-The embedding arm needs the residual stream, which vLLM does not expose, so it
-would have to run through the serial hooked server: ~25 h against ~1 h for the
-single-turn arm next door. Use ../03_spreadsheetbench_single_turn/run_embed.sh
-instead. It is a different row in the matrix, not a substitute cell.
+The three embed arms need the residual stream, which vLLM does not expose, so
+they run through the HOOKED server (../00_setup/05_serve_model.sh steered) --
+plain HF transformers, serial, no batching. Measured: ~25 h for a 400-task
+agent cell, against ~1 h for the same vector in
+../03_spreadsheetbench_single_turn/.
+
+If you want a SpreadsheetBench embedding number rather than specifically an
+AGENTIC one, run the single-turn arm. It is a different row in the matrix, not
+a worse version of this cell.
+
+There is no --condition embed flag. The adapter asks the SERVER whether it is
+steering and labels the cell from the answer, so an embed script is the
+baseline command pointed at a steered server. The scripts call
+require_steering, which refuses to run against a plain server -- otherwise the
+cell would quietly come out as a second baseline.
 
 WHY NO LOCATION HINT
 --------------------------------------------------------------------------------

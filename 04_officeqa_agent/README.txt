@@ -3,8 +3,17 @@ OfficeQA -- the agent arm
 239 scored questions over 285 US Treasury Bulletins (~146 MB of plain text).
 The agent greps the files on disk and writes its answer to answer.txt.
 
-  run_baseline.sh     mechanics prompt only
-  run_text_skill.sh   the same prompt with the skill appended
+  run_baseline.sh              mechanics prompt only
+  run_text_skill.sh            the same prompt with the skill appended
+  run_embed_from_placebo.sh    B1, controlled   <vec> <layers> <gamma>
+  run_embed_from_nothing.sh    B2, uncontrolled <vec> <layers> <gamma>
+  run_control_placebo_only.sh  the null         <vec> <layers> <gamma>
+
+The three embed arms need the HOOKED server, not vLLM
+(../00_setup/05_serve_model.sh steered) -- it is serial and unbatched, so
+budget many hours for 239 questions and start with LIMIT_OQA=20. There is no
+--condition embed: the adapter reads steering off the server, and the scripts
+refuse to run against a plain one.
 
 NEEDS A SERVED MODEL:   ../00_setup/05_serve_model.sh plain
 

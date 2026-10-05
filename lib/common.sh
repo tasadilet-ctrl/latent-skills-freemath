@@ -41,6 +41,39 @@ require_served_model() {
     LLM_BASE_URL at an endpoint you already have."
 }
 
+# The agent benchmarks get steering from the SERVER, not from a flag: the
+# adapters probe /health and label the cell "embed" if it reports a vector.
+# So an embed script pointed at a PLAIN server does not fail -- it quietly runs
+# and writes a second baseline. Refuse that.
+#
+#   require_steering [expected-vector-basename]
+#
+require_steering() {
+  local want="${1:-}" health desc
+  health="$(curl -fsS --max-time 10 "${LLM_BASE_URL%/v1}/health" 2>/dev/null)" \
+    || fail "no /health at ${LLM_BASE_URL%/v1}
+    An embed cell needs the HOOKED server (src/serve_hooked.py), not vLLM --
+    vLLM exposes no residual stream and cannot steer. Start one:
+      00_setup/05_serve_model.sh steered <vectors.pt> <layers> <gamma>"
+  desc="$(printf '%s' "$health" | sed -n 's/.*"steering"[ ]*:[ ]*"\([^"]*\)".*/\1/p')"
+  case "$desc" in
+    ""|none)
+      fail "the server at $LLM_BASE_URL is NOT steering.
+
+    It answered /health with steering=\"${desc:-none}\". Running this cell
+    against it would produce a second BASELINE, not an embed cell -- the
+    adapters label the condition from what the server reports.
+
+    Start the hooked server instead:
+      00_setup/05_serve_model.sh steered <vectors.pt> <layers> <gamma>" ;;
+  esac
+  note "server is steering: $desc"
+  if [ -n "$want" ] && [ "${desc#"$want"}" = "$desc" ]; then
+    warn "server is steering with '$desc' but this cell names '$want'."
+    warn "The result will record what the SERVER used, not what you passed."
+  fi
+}
+
 # ---------------------------------------------------------------------------
 # submit <job-name> <python-interpreter> <script.py> [args...]
 #

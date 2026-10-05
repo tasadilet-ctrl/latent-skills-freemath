@@ -3,9 +3,11 @@ SpreadsheetBench -- the single-turn arm
 The same 400 tasks, but the model sees a rendering of the workbook and emits
 the edit in ONE turn. No tools, no iteration, runs in-process with batching.
 
-  run_baseline.sh     no skill
-  run_text_skill.sh   skill as system prompt
-  run_embed.sh        steering vector
+  run_baseline.sh              no skill
+  run_text_skill.sh            skill as system prompt
+  run_embed_from_placebo.sh    B1, controlled   <vec> <layers> <gamma>
+  run_embed_from_nothing.sh    B2, uncontrolled <vec> <layers> <gamma>
+  run_control_placebo_only.sh  the null         <vec> <layers> <gamma>
 
 NO SERVED MODEL NEEDED -- this arm loads weights itself.
 
