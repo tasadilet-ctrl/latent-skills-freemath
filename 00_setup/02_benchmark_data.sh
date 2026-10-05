@@ -51,29 +51,26 @@ if [ "$WHICH" = all ] || [ "$WHICH" = spreadsheet ]; then
   if [ -d "$DATA/spreadsheetbench_verified_400" ]; then
     note "already here: $(ls "$DATA/spreadsheetbench_verified_400" | wc -l) entries"
   else
-    note "fetching ~22 MB of workbooks from Hugging Face"
-    require_env "$PY_EVAL" eval
-    "$PY_EVAL" - <<'PY' || fail "SpreadsheetBench fetch failed"
-import os
-from huggingface_hub import snapshot_download
-d = os.environ["DATA"]
-snapshot_download("RUCKBReasoning/SpreadsheetBench", repo_type="dataset",
-                  local_dir=os.path.join(d, "spreadsheetbench_raw"))
-print("    raw benchmark downloaded")
-PY
-    # BE HONEST ABOUT THE GAP. The raw benchmark is public and downloads
-    # fine, but this project does not evaluate on the raw benchmark -- it
-    # evaluates on a VERIFIED 400-TASK SUBSET, and the subset selection
-    # (including which tasks are excluded) lives in a manifest,
-    # spreadsheetbench_verified_400/dataset.json. No script in this
-    # repository regenerates that manifest: it was produced once by checking
-    # every task golden-vs-golden (394/394 passed, init-vs-golden
-    # disagreement 0.3%) and the result was kept, not the procedure.
-    warn "the raw benchmark is NOT what the reported cells used."
-    warn "You also need spreadsheetbench_verified_400/dataset.json -- the"
-    warn "subset manifest. It is not in this repository and is not"
-    warn "regenerable from it. Ask the project owner for that directory."
-    warn "See DATA.md."
+    # The verified subset ships as ONE tarball. There is no download step:
+    # this project does not evaluate on the upstream benchmark, it evaluates
+    # on a VERIFIED 400-TASK SUBSET built once by checking every task
+    # golden-vs-golden (394/394 passed, init-vs-golden disagreement 0.3%).
+    # The result was kept; the procedure was not. So the subset travels as
+    # data/sb400.tar.gz -- 15 MB, workbooks and manifest together.
+    if [ -f "$DATA/sb400.tar.gz" ]; then
+      note "unpacking sb400.tar.gz (the verified 400-task subset)"
+      tar xzf "$DATA/sb400.tar.gz" -C "$DATA" || fail "could not unpack sb400.tar.gz"
+      note "ok: $(ls "$DATA/spreadsheetbench_verified_400/spreadsheet" | wc -l) task directories"
+    else
+      fail "SpreadsheetBench subset is missing.
+
+    This project evaluates on a verified 400-task subset, not on the upstream
+    benchmark. It travels as a single file, data/sb400.tar.gz (15 MB), which
+    is not in git (third-party workbooks + answer positions).
+
+    Ask the project owner for data/sb400.tar.gz and drop it in data/.
+    See DATA.md."
+    fi
   fi
 fi
 

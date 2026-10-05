@@ -44,16 +44,20 @@ baseline near 20% (chance), not near 100%.
 
 ## SpreadsheetBench
 
-400 spreadsheet-editing tasks with golden workbooks, from
-`RUCKBReasoning/SpreadsheetBench` (public).
+400 spreadsheet-editing tasks with golden workbooks.
+
+**Not gated, and not downloaded.** This project does not evaluate on the upstream
+benchmark — it evaluates on a **verified 400-task subset**, built once by checking
+every task golden-vs-golden (394/394 pass; init-vs-golden disagreement 0.3%). The
+result was kept, the procedure was not, so the subset cannot be regenerated from
+this repository.
+
+It travels as a single file: **`data/sb400.tar.gz`, 15 MB**, workbooks and manifest
+together. Ask the project owner for it, drop it in `data/`, then:
 
 ```bash
 ./00_setup/02_benchmark_data.sh spreadsheet
 ```
-
-This project uses a **verified 400-task subset**: every task was checked
-golden-vs-golden before inclusion (394/394 pass; init-vs-golden disagreement
-0.3%). Tasks whose grader could not validate are excluded via an `exclude` key.
 
 ## OfficeQA
 
