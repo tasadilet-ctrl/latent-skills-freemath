@@ -1,0 +1,147 @@
+================================================================================
+RUNBOOK -- Qwen3-8B on LiveMath: baseline and text-skill cells
+================================================================================
+Two runs. Each takes ~50 min of wall clock once it gets GPUs.
+
+
+--------------------------------------------------------------------------------
+1. WHAT YOU ARE RUNNING, AND WHY THERE ARE TWO OF THEM
+--------------------------------------------------------------------------------
+LiveMath is 608 research-level maths questions, each a 5-way multiple choice.
+Random guessing scores 20%.
+
+  baseline   the model gets the question, nothing else
+  text       the model gets a SKILL as its system prompt, then the question
+
+The skill is skills/compare_claims.md -- a written procedure for choosing
+between candidate mathematical statements. It is not a file the model opens;
+its entire contents are pasted in as the system message. The model always has
+it, cannot ignore it, and cannot fail to load it.
+
+The two runs differ in EXACTLY that one thing, so any score difference is
+attributable to the skill. That is the whole point.
+
+
+--------------------------------------------------------------------------------
+2. THE COMMANDS
+--------------------------------------------------------------------------------
+    source ~/latent-skills/env.sh
+
+    # baseline
+    MODEL_ID=Qwen/Qwen3-8B LIMIT=608 BS=8 \
+      sbatch ~/latent-skills/slurm/eval.sh livemath baseline
+
+    # text skill
+    MODEL_ID=Qwen/Qwen3-8B LIMIT=608 BS=8 SKILL=compare_claims.md \
+      sbatch ~/latent-skills/slurm/eval.sh livemath text
+
+Submit both at once; they queue independently.
+
+EVERY ENV VAR MATTERS:
+  MODEL_ID   env.sh defaults to the 27B. Omit this and you run the wrong model.
+  LIMIT      defaults to 200. Omit this and you evaluate a third of the set.
+  SKILL      defaults to compare_claims.md, which is correct -- there is now
+             exactly ONE compare_claims file. Until 2026-10-05 there were
+             three (v1/v2/v3) and this default pointed at v1, a discarded
+             draft scoring ~24%; that was the easiest mistake to make and it
+             failed silently. The drafts now live in skills/archive/.
+  BS         batch size 8 fits the 8B comfortably on one 80GB H100.
+
+
+--------------------------------------------------------------------------------
+3. WHAT HAPPENS WHEN IT RUNS
+--------------------------------------------------------------------------------
+One SLURM job grabs a node with 4 GPUs and runs FOUR independent shards, one
+per GPU, each taking every 4th question. They are merged at report time. This
+is ~4x faster than one model spread across four GPUs.
+
+  squeue -u $USER                     # PD = pending, R = running
+
+PENDING IS NORMAL. The cluster is shared and often full. Do not "fix" it by
+lowering --gpus-per-node or changing the partition. Let it wait.
+
+  tail -f ~/latent-skills/logs/<jobid>_shard0.log    # progress of one shard
+
+
+--------------------------------------------------------------------------------
+4. READING THE RESULT
+--------------------------------------------------------------------------------
+    $LS_PY ~/latent-skills/src/report.py
+
+Look for the `livemath  qwen3-8b` block:
+
+    condition                   acc %          95% CI     n  parse  d vs base  McNemar p
+    baseline                    26.15    [22.8, 29.8]   608  1.000
+    text[compare_claims_v3]     25.99    [22.7, 29.6]   608  1.000     -0.16      1.000
+
+Those are the numbers to reproduce.
+
+  acc %      exact-match on the 5-way choice; chance is 20%
+  n          MUST be 608 (see check 1 below)
+  parse      fraction of replies that committed to an answer; should be 1.000
+  McNemar p  paired test against this model's baseline, on the same 608 items.
+             Paired because both conditions answer the identical questions --
+             a two-proportion test would throw that away and need a much
+             bigger effect to detect anything.
+
+
+--------------------------------------------------------------------------------
+5. THREE CHECKS BEFORE YOU BELIEVE A NUMBER
+--------------------------------------------------------------------------------
+CHECK 1 -- IS n EXACTLY 608?
+  Four shards x 152 questions. If you see 456, one shard died. This happens:
+  the shared filesystem occasionally fails a read while four processes load
+  the weights at once ("does not appear to have a file named
+  model-00001-of-00015.safetensors"). The job script now catches this and
+  fails loudly, printing the command to re-run just the dead shard, but check
+  n anyway. It cost us a silently-wrong cell once.
+
+CHECK 2 -- IS parse_rate 1.000?
+  If replies run out of tokens before saying "Answer: X", they score zero and
+  the cell measures verbosity rather than correctness. On the 27B this once
+  produced 16.94% -- BELOW the 20% chance floor. The 8B at 2048 tokens is
+  fine, but check.
+
+CHECK 3 -- IS THE SCORE ABOVE 20%?
+  Below chance means something is broken, not that the model is bad.
+
+
+--------------------------------------------------------------------------------
+6. THINGS THAT WILL BITE YOU
+--------------------------------------------------------------------------------
+* RE-RUNNING OVERWRITES. Result filenames are deterministic, so a second run
+  of the same cell replaces the first. Move results/ aside first if you want
+  to keep the existing numbers:
+      mv ~/latent-skills/results ~/latent-skills/results_previous && mkdir ~/latent-skills/results
+
+* THE RESULT IS EXPECTED TO BE A NULL. baseline 26.15 vs text 25.99 is
+  -0.16 points, p=1.000. The skill does nothing here. That is the finding,
+  not a failed run. Do not tune anything to make it positive.
+
+* GREEDY DECODING, so the run is deterministic: same command, same numbers.
+  If your numbers differ from the ones above, something differs in the setup
+  -- check MODEL_ID, LIMIT and SKILL first.
+
+* DO NOT EDIT A .sh FILE WHILE A JOB IS EXECUTING IT. bash reads scripts
+  incrementally; editing one mid-run makes it execute garbage. Python files
+  are safe (read once at import).
+
+
+--------------------------------------------------------------------------------
+7. IF YOU WANT TO UNDERSTAND WHAT THE MODEL ACTUALLY SEES
+--------------------------------------------------------------------------------
+    source ~/latent-skills/env.sh
+    MODEL_ID=Qwen/Qwen3-8B $LS_PY - <<'EOF'
+    import sys, json; sys.path.insert(0,'/shared/home/adil.taibassarov/latent-skills')
+    from transformers import AutoTokenizer
+    from src import qwen, evaluate
+    tok = AutoTokenizer.from_pretrained("Qwen/Qwen3-8B")
+    row = json.loads(open("/shared/home/adil.taibassarov/latent-skills/data/livemath.jsonl").readline())
+    q = evaluate.render_question("livemath", row)
+    skill = open("/shared/home/adil.taibassarov/latent-skills/skills/compare_claims.md").read()
+    print(qwen.build_prompt(tok, q, system_msg=skill)[:800])
+    EOF
+
+You will see the skill sitting inside <|im_start|>system ... <|im_end|>, and
+the question inside <|im_start|>user. Nothing else is going on.
+================================================================================

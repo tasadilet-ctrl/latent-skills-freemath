@@ -1,0 +1,256 @@
+================================================================================
+METHODOLOGY ANSWERS -- Cross-Domain Transfer of Latent Procedural Skills
+Prepared 2026-09-27. Facts below are read off the run summaries, not recalled.
+Items marked [OPEN] are decisions not yet made; do not write them as settled.
+================================================================================
+
+
+--------------------------------------------------------------------------------
+1. FINAL TEXT SKILL FOR LIVEMATH, AND THE TEST-SET DECLARATION
+--------------------------------------------------------------------------------
+Final TS = compare_claims_v3.md.
+
+YES, IT MUST BE DECLARED AS TEST-SET-INFORMED. v3 was written after inspecting
+the AGGREGATE distractor-role histogram of v1 and v2 on the same 608 items.
+Only the marginal distribution over trap types was used -- never per-item
+labels, never which specific questions were missed. Held-out subsets are
+reported alongside every number.
+
+The iteration, for the record:
+    v1  24.18%   fixed the weaker-but-true trap (18.3% -> 11.8%), leaked the
+                 gain into over-claims and scope errors (12.8% -> 18.8%)
+    v2  24.34%   fixed the off-topic wildcard trap (21.4% -> 17.4%), gave the
+                 weaker-true gain back (11.8% -> 20.7%)
+    v3  25.99%   replaced two competing preferences with ONE criterion
+                 (derivability from the hypotheses, strength ordering strictly
+                 downstream); recovered the deficit, did not exceed baseline
+    baseline 26.15%
+
+Worth stating in the paper: all three versions demonstrably changed behaviour
+(v1 drove restatement 10%->100%, v2 drove relevance-screening 0%->87%) while
+accuracy stayed flat. Procedure redistributes errors across trap types without
+reducing the total.
+
+
+--------------------------------------------------------------------------------
+2. EXTRACTION POOL
+--------------------------------------------------------------------------------
+IN-DOMAIN CELLS (what has been run):
+  - ES extracted on 50 prompts from the benchmark's OWN pool.
+  - Prompts rendered IDENTICALLY to the evaluator's rendering:
+      LiveMath        question + all five options + the answer cue
+      SpreadsheetBench instruction + workbook text dump + the answer cue
+    (Extracting on a bare question would build the vector from a context the
+     skill never sees at evaluation time.)
+  - The 50 items are NOT removed from the scored set. They remain in the
+    608 / 200. The disjoint remainder is reported as a second table.
+  - On LiveMath 27B the effect is +6.6 on the held-out 558 versus +6.25 on all
+    608 -- STRONGER off the pool, so there is no contamination advantage.
+
+CROSS CELLS (not yet run):
+  - Yes: ES_j extracted on benchmark j's own 50 prompts, injected UNCHANGED
+    into BM_i.
+  - Note this makes the overlap question vanish by construction: the pool comes
+    from a different benchmark than the scored set, so the intersection is
+    empty. State this explicitly; it is a point in the design's favour.
+
+POOL CHOICE (measured, not argued): an in-domain pool beat a domain-neutral
+pool in 3 of 4 model x arm combinations, decisively on the 27B
+(fidelity +0.229 vs +0.064).
+
+
+--------------------------------------------------------------------------------
+3. WHICH ES ARM GOES IN THE MATRIX
+--------------------------------------------------------------------------------
+ALL THREE. The third one is the finding.
+
+  arm                 vector                                    LiveMath 27B
+  ------------------------------------------------------------------------
+  embed / vs-dummy    E[h|skill] - E[h|placebo]                 +2.14  p=0.302
+  embed / vs-nothing  E[h|skill] - E[h|no system message]       +6.25  p=0.003
+  CONTROL             E[h|placebo] - E[h|no system message]     +3.62  p=0.073
+                      (contains NO skill whatsoever)
+
+How to present them:
+  vs-dummy    = the estimate of what the PROCEDURE contributes
+  vs-nothing  = upper bound, includes generic prompt-presence
+  CONTROL     = what accounts for the gap between the two
+
+Reporting only vs-nothing yields a clean, significant +6.25 that is not about
+skills. The control is what prevents that.
+
+A second control was run with the skill delivered in the USER turn instead of
+the system message, so that no arm has a system prompt at all:
+  text @ user                       +2.30  p=0.288
+  embed skill @ user                +2.47  p=0.232
+  CONTROL (placebo only) @ user     +4.11  p=0.041   <- still no skill in it
+
+The content-free control BEATS the skill vector at user position. Moving
+channels does not remove the confound.
+
+
+--------------------------------------------------------------------------------
+4. OPERATING POINT (layer, gamma)
+--------------------------------------------------------------------------------
+Chosen PER (model, vector) by a fidelity sweep. NOT fixed once on the source
+benchmark and reused.
+
+Injection is norm-relative:      h_l  <-  h_l + gamma * ||h_l|| * (v / ||v||)
+so gamma is comparable across layers, and vector MAGNITUDE does not affect
+steering strength -- only direction does. (This matters for interpretation:
+two vectors compared at the same gamma are pushed equally hard.)
+
+Final values actually used:
+
+  model          benchmark          layer          gamma   mode
+  ----------------------------------------------------------------
+  Qwen3-8B       LiveMath           34  (of 36)    0.3     relative
+  Qwen3.6-27B    LiveMath           62  (of 64)    0.3     relative
+  Qwen3-14B      SpreadsheetBench   37-38 (of 40)  0.3-0.5 relative   [OPEN]
+
+Within a model, BOTH embed arms share the SAME layer and gamma, so the only
+difference between the two embed cells is the vector itself.
+
+Selection metric:
+    fidelity = 1 - KL(text || steered) / KL(text || plain)
+measured on a probe from the benchmark's own distribution, drawn from items the
+extraction pool did not consume.
+
+DEGENERATION GUARD. Fidelity is measured on teacher-forced tokens and therefore
+CANNOT see generation collapsing into repetition. Every operating point was
+additionally checked with an UNFORCED run measuring distinct-token ratio
+against the unsteered baseline. Configurations rejected by that guard:
+
+  8B  L34    gamma 0.5   distinct 0.114 vs 0.358   -68%   rejected
+  27B L62    gamma 0.5   distinct 0.273 vs 0.413   -34%   rejected
+  27B L60-63 gamma 0.2   distinct 0.008 vs 0.407   -98%   rejected
+
+So gamma 0.3 is usable on both models and gamma 0.5 is not. The value carried
+in the original design (gamma = 1.0) is roughly 3x past the usable ceiling.
+Multi-layer spans are far more sensitive than single layers.
+
+Also worth reporting: the sweep grid must be checked for a BOUNDARY optimum.
+The first 27B sweep pinned every vector to L60 because L60 was the deepest
+layer searched; extending to L63 moved the optimum to L56, interior.
+
+[OPEN] CROSS CELLS: recommendation is to reuse the SOURCE benchmark's operating
+point unchanged. Re-sweeping on the target leaks target information and stops
+it being a transfer test. Report target-probe fidelity as a diagnostic instead.
+
+
+--------------------------------------------------------------------------------
+5. DECODING
+--------------------------------------------------------------------------------
+GREEDY throughout: do_sample=False, temperature=None, top_p=None, top_k=None.
+enable_thinking=False on the direct benchmarks (verified: zero <think> markers
+across 608 replies).
+
+Token budgets, per model by necessity:
+
+  LiveMath  Qwen3-8B                2048 new tokens
+  LiveMath  Qwen3-14B               3072
+  LiveMath  Qwen3.6-27B             4096
+  SpreadsheetBench single-turn      1536
+  SpreadsheetBench agent            20 turns, no per-turn cap
+
+ONE RUN, NO SEEDS. Greedy decoding is deterministic, so seeds would be
+redundant -- but state plainly that this means there is NO run-to-run variance
+estimate; all reported uncertainty is sampling error over items.
+
+ANSWER FORCING (direct benchmarks only). A reply that never commits to an
+answer has its assistant turn continued with an "Answer:" cue and a few tokens.
+Applied identically in every condition, and inside the steering context for
+embed cells so the continuation is steered exactly as the reply it continues.
+Rates are reported per cell (forced_rate): 2.6% on the 8B, 21.7% on the 27B.
+
+This is load-bearing, not cosmetic. Without it the 27B scored 16.94% --
+BELOW the 20% chance floor -- because 51.6% of its replies hit the token cap
+mid-deliberation and never reached an answer line. Because truncation rate
+tracks verbosity, and skills change verbosity, scoring those as wrong is a
+BIAS and not merely noise. With forcing the 27B baseline is 33.06% and parse
+rate is 1.000 in every cell.
+
+
+--------------------------------------------------------------------------------
+6. SCOPE OF THE TESTS, AND MULTIPLE-COMPARISON CORRECTION
+--------------------------------------------------------------------------------
+NOT every cell runs on both models, and the paper should present this as a
+design principle rather than an apology:
+
+  MODEL CHOICE IS PER BENCHMARK, SELECTED BY HEADROOM.
+
+  LiveMath           8B (26.2%) and 27B (33.1%) both usable
+  SpreadsheetBench   27B is at CEILING (83.0%, n=200) -- a ~2-point effect is
+                     undetectable at SE 2.7%. The 14B (~21-25%) is the usable
+                     model. An earlier 8B score of 0% was a tool-call parser
+                     bug, not capability.
+  OfficeQA           documents are 215k tokens at the median (p90 534k, max
+                     1.2M). Zero of 246 questions fit an 8B/14B context; 58%
+                     fit the 27B. It therefore MUST be run agentically, with
+                     the model grepping files rather than ingesting them.
+
+CORRECTION:
+  Use HOLM, not Bonferroni. Uniformly more powerful, identical assumptions,
+  no reason to prefer Bonferroni.
+
+  Apply it WITHIN each (benchmark, model) family -- those comparisons share a
+  baseline and answer one question.
+
+  BUT ALSO report whether the headline survives correction across the whole
+  study, because that is the first thing a skeptical reviewer computes. It
+  currently does: p = 0.003 against a Bonferroni threshold of 0.05/8 = 0.00625,
+  and Holm is more lenient still.
+
+  Supporting robustness for that cell: 97 items fixed vs 59 broken; positive in
+  6 of 8 monthly slices with all four largest slices positive; +6.6 on the
+  held-out 558; parse rate 1.000 so it is not a truncation artifact.
+
+
+--------------------------------------------------------------------------------
+7. ONE THING NOT ON THE LIST, WORTH REPORTING
+--------------------------------------------------------------------------------
+Report floor KL(text || plain) PER BENCHMARK. It measures how much the skill
+text moves the model's own token distribution BEFORE any steering:
+
+    LiveMath            0.82
+    SpreadsheetBench    0.19 - 0.22
+
+The same skill text perturbs the model roughly 4x less in the long agentic
+context. The likely cause is dilution -- SpreadsheetBench prompts carry a
+~3,500-character workbook dump, so a 279-word skill is a much smaller fraction
+of the context.
+
+This single number explains why the vector arm has so little to reproduce on
+the agentic benchmark, and it is a cleaner framing than reporting another null:
+it is a measurable statement about WHEN prompt-delivered skills have any
+purchase at all, and it applies to the text arm as much as the vector arm.
+
+
+--------------------------------------------------------------------------------
+8. HARNESS FAULTS THAT CHANGED CONCLUSIONS (methods-section material)
+--------------------------------------------------------------------------------
+Four, all caught and fixed; each would have inverted a conclusion.
+
+1. TRUNCATION. 27B scored below the chance floor; see section 5.
+
+2. TOOL-CALL PARSER. vLLM was serving with --tool-call-parser qwen3_xml, which
+   matches Qwen3.6's XML tool-call format. Qwen3-8B and Qwen3-14B are the prior
+   generation and emit Hermes JSON inside <tool_call> tags. On a mismatch vLLM
+   returns tool_calls=[] and leaves the call in `content`; the agent executes
+   nothing and the benchmark scores EXACTLY 0%, with no error logged anywhere.
+   This is indistinguishable from incapability and produced two wrong capability
+   conclusions before a direct curl of the live server exposed it.
+   The parser is a property of the MODEL GENERATION and must be set per model.
+
+3. SILENT SHARD FAILURE. The evaluator runs four GPU shards and joined them
+   with a bare `wait`, which returns only the last job's exit status. A shard
+   died on a transient shared-filesystem read error and the job still exited 0
+   with a quarter of the results missing. Detected only because the report
+   prints n (456 instead of 608). Now each shard's status is checked
+   individually and a failure fails the job.
+
+4. FILENAME COLLISION. Artefact names carried no model tag, so an 8B run and a
+   27B run wrote identical paths and the second silently destroyed the first --
+   across exactly the two models being compared.
+
+================================================================================

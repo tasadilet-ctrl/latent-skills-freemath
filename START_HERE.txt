@@ -1,0 +1,192 @@
+================================================================================
+ LATENT SKILLS -- cross-domain transfer of procedural skills
+ Does a procedural skill transfer better as a latent activation vector
+ than as text in the prompt?
+================================================================================
+
+
+WHAT THIS IS
+--------------------------------------------------------------------------------
+Two tools and a measurement protocol.
+
+  1. TURN A TEXT SKILL INTO AN EMBEDDING SKILL.
+     Take any .md skill file, read the model's activations with and without
+     it, and keep the difference as a direction. At inference, add that
+     direction back into the residual stream instead of putting the text in
+     the prompt.
+
+  2. MEASURE WHETHER THAT WORKED.
+     Not "did the score go up" -- that cannot distinguish a working vector
+     from noise. Fidelity measures whether the vector reproduces what the text
+     actually did to the model's output distribution.
+
+The research question is the first line of this file. The answer this kit
+produced on LiveMath is in RESULTS, below, and it is a negative one.
+
+
+FIRST RUN
+--------------------------------------------------------------------------------
+    ./setup.sh
+
+That builds three python environments, fetches the benchmark data and the
+model weights, and finishes with a smoke test. 30-60 min, mostly downloading.
+
+Then:
+
+    01_livemath_direct/run_baseline.sh
+    01_livemath_direct/run_text_skill.sh
+    06_reports/results_table.sh
+
+Everything auto-detects SLURM. On a workstation, set RUNNER=local and GPU=0 or
+GPU=0,1.
+
+
+THE LAYOUT
+--------------------------------------------------------------------------------
+  setup.sh                        run this first
+  env.sh                          every path and knob; sourced by everything
+  lib/common.sh                   the submit helper -- sbatch or local
+
+  00_setup/                       the four setup steps, individually runnable
+      01_python_envs.sh           three venvs (they conflict; see the file)
+      02_benchmark_data.sh        LiveMath / SpreadsheetBench / OfficeQA
+      03_model_weights.sh         8B ~16 GB, 14B ~28 GB, 27B ~60 GB
+      04_smoke_test.sh            the whole path in miniature, ~5 min
+      05_serve_model.sh           an HTTP endpoint, for the agent benchmarks
+
+  01_livemath_direct/             608 maths questions, no tools. 5 cells.
+  02_spreadsheetbench_agent/      400 .xlsx tasks through a Strands agent
+  03_spreadsheetbench_single_turn/  the same tasks in one turn, batched
+  04_officeqa_agent/              239 questions over 146 MB of bulletins
+
+  05_make_embedding_skills/       THE METHOD. Extract, fidelity, calibrate.
+  06_reports/                     tables, matrix, PNG
+
+  src/                            the python. Nothing here needs editing to run.
+  skills/                         the .md skills and their placebos
+  tests/                          harness unit tests, no GPU needed
+
+Each benchmark folder has a README.txt explaining its cells and what the
+comparison is for. 05_make_embedding_skills/README.txt is the one to read if
+you only read one.
+
+
+THE MATRIX
+--------------------------------------------------------------------------------
+Per benchmark, per model:
+
+  baseline            no skill. The reference.
+  text                the skill as system prompt. The thing to beat.
+  embed from placebo  B1, CONTROLLED: [placebo+skill] - [placebo]
+  embed from nothing  B2, UNCONTROLLED: [skill] - [no system message]
+  CONTROL             a vector built FROM the placebo. Contains no procedure.
+
+B1 against B2 is the whole experiment. B2's contrast carries the procedure AND
+the bare fact that instructional text sits in the system slot; B1 cancels the
+second with length-matched filler on both sides. The CONTROL closes it: if a
+vector made from text with no procedure in it still moves the score, the
+method is not transporting procedures.
+
+
+================================================================================
+ THE THREE TRAPS
+ Each of these produced a wrong number, with no error in any log.
+ Each cost real GPU-hours and, twice, a wrong conclusion.
+================================================================================
+
+1. THE TRUNCATION TRAP -- a score BELOW the chance floor
+   The 27B scored 16.94% on a 5-way choice where chance is 20%. Not a bad
+   model: 51.6% of its replies hit the 2048-token cap mid-deliberation and
+   never emitted an answer, so they scored zero. Raising the cap to 4096 and
+   forcing an answer cue moved it to 33.06%. A 16-point correction that looked
+   like a finding.
+
+   CHECK: parse_rate must be 1.000. A score under chance means broken, not bad.
+   The 27B needs MAXNEW=4096. env.sh defaults to 2048, which suits 8B/14B.
+
+2. THE TOOL-PARSER TRAP -- a score of EXACTLY 0%
+   vLLM needs --tool-call-parser matched to the model generation. Qwen3-8B and
+   14B emit Hermes JSON; Qwen3.6-27B emits qwen3_xml. Serve an 8B with the
+   XML parser and vLLM returns tool_calls: [], the agent executes nothing, and
+   every task fails. No error anywhere. It cost three runs and two wrong
+   conclusions about what the small models could do.
+
+   CHECK: 00_setup/05_serve_model.sh picks it from MODEL_ID. Before trusting
+   an agent number, open the first episode log and confirm a tool call exists.
+
+3. THE DEAD-SHARD TRAP -- a cell that is quietly incomplete
+   Four shards run per cell. A bare `wait` returns only the last one's status,
+   so a shard that died left n=456 where 608 was expected and the cell still
+   reported a number. lib/common.sh now checks each pid and prints
+   "INCOMPLETE -- do not trust this cell".
+
+   CHECK: n must equal the full benchmark size. 608 / 400 / 239.
+
+A fourth, smaller one: result filenames are deterministic, so re-running a
+cell OVERWRITES it. Move results/ aside first if you want to keep what is
+there.
+
+
+================================================================================
+ RESULTS -- what this kit found
+================================================================================
+Headline, from two complete 4-condition matrices on LiveMath:
+
+   What activation steering contributes tracks the PRESENCE OF INSTRUCTIONAL
+   TEXT in the extraction contrast, not the procedural content of the skill.
+
+The uncontrolled arm (B2) carried most of the text skill's apparent effect.
+Subtracting a length-matched placebo (B1) removed it. The CONTROL -- a vector
+built from placebo text containing no procedure -- behaved like the real
+skill's vector.
+
+Secondary: fidelity does not predict effect. The 14B's best vector scored
++0.638 fidelity and -0.16 accuracy; its text skill gave +2.30. A vector can
+faithfully reproduce a skill's output distribution and still be useless.
+
+Six text cells, six nulls, five positive. Full tables in RESULTS_TABLE.txt
+and via 06_reports/full_matrix.sh.
+
+This is a negative result and it is the finding. The pipeline is not broken;
+do not tune it until the embedding arm looks better.
+
+
+================================================================================
+ THINGS THAT WILL BITE YOU
+================================================================================
+* GREEDY DECODING, so runs are deterministic. Same command, same numbers. If
+  yours differ, something differs in the setup -- check MODEL_ID, LIMIT and
+  which SKILL file, in that order.
+
+* ONE CANONICAL SKILL FILE PER BENCHMARK, by design. compare_claims.md,
+  spreadsheet_edit.md, officeqa_lookup.md. The two superseded compare_claims
+  drafts were deleted on 2026-10-05 -- three near-identical filenames is how a
+  run gets pointed at the wrong one, and that fails silently and looks like a
+  result. History in skills/notes/README.md.
+
+  One trap it leaves behind: the name compare_claims.md USED to mean the first
+  draft, which hurt (~24% against a 26.15% baseline). Old result files naming
+  it are not comparable with new ones. The kit ships an empty results/, so
+  this only bites if you copy old files in.
+
+* PENDING IS NORMAL on a shared cluster. Do not "fix" it by lowering
+  --gpus-per-node or switching partition. In this project 11 of 12 hours on
+  one run were queue time. Submit everything you can up front; queue position
+  is worth more than tidy sequencing.
+
+* NEVER EDIT A .sh WHILE A JOB IS EXECUTING IT. bash reads scripts
+  incrementally and will execute garbage. Python files are safe (read once at
+  import).
+
+* THE AGENT BENCHMARKS NEED A SERVED MODEL; the direct ones do not. If an
+  agent cell dies instantly, nothing was listening on LLM_BASE_URL.
+
+* HARNESS IS PART OF THE CONDITION. The agent benchmarks moved from OpenHands
+  to the Strands SDK on 2026-10-05. The two do not expose identical tools, so
+  their cells are not comparable and the reports keep them in separate rows.
+  See HARNESS_SWAP.txt. To compare across the swap, re-run both arms.
+
+* g002 and g006 are excluded by default. g002's munge auth died 2026-08-14 and
+  SLURM still reports it IDLE; g006 runs jobs that hold GPU memory without
+  requesting it through gres.
+================================================================================

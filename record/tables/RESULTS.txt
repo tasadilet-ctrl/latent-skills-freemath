@@ -1,0 +1,191 @@
+LIVEMATH RESULTS  --  8 cells, n=608, chance 20%, paired exact McNemar
+skill = compare_claims_v3.md          * = significant
+
++---------------------+---------+---------+--------+-------+----------+
+| condition           | 8B      | 27B     | d(8B)  | d(27B)| p (27B)  |
++---------------------+---------+---------+--------+-------+----------+
+| baseline            | 26.15   | 33.06   |   --   |   --  |    --    |
+| text skill          | 25.99   | 34.70   | -0.16  | +1.64 |  0.450   |
+| embed  vs DUMMY     | 25.82   | 35.20   | -0.33  | +2.14 |  0.302   |
+| embed  vs EMPTY     | 27.14   | 39.31 * | +0.99  | +6.25 |  0.003 * |
++---------------------+---------+---------+--------+-------+----------+
+| CONTROL: dummy-only |   --    | 36.68   |   --   | +3.62 |  0.073   |
+|   vector, NO skill  |         |         |        |       |          |
++---------------------+---------+---------+--------+-------+----------+
+
+Only ONE of the eight cells is statistically significant -- and the control
+row shows most of it is not the skill.
+
+
+=== 1. DUMMY  vs  EMPTY  (what you subtract when extracting) ===============
+
+                8B          27B
+  vs DUMMY    25.82       35.20      = skill only
+  vs EMPTY    27.14       39.31      = skill + "a system prompt exists"
+              -----       -----
+  EMPTY wins  +1.32       +4.11
+
+  EMPTY wins on accuracy, on both models.
+  BUT empty is the dirty one: it never removes the generic
+  "there is a system prompt telling me to be careful" signal.
+
+  FULL CONTROL SET (27B, L62 gamma 0.3, all vs baseline 33.06):
+
+      skill @ system                       +6.25   p=0.003
+      placebo-only @ system   NO SKILL     +3.62   p=0.073
+      skill @ user                         +2.47   p=0.232
+      placebo-only @ user     NO SKILL     +4.11   p=0.041
+      skill @ system, placebo subtracted   +2.14   p=0.302
+
+  READ THIS CAREFULLY. At user position the CONTENT-FREE placebo vector
+  (+4.11) BEATS the actual skill vector (+2.47). Every vector built as
+  (some instructional text) - (nothing) gives roughly +2 to +6, and which
+  text you use does NOT track whether it is a relevant skill.
+
+  The only arm that isolates skill content -- skill minus a matched placebo
+  at the same position -- gives +2.14, not significant.
+
+  => There is NO EVIDENCE on this benchmark that the skill CONTENT contributes
+     anything beyond generic text-derived steering.
+  => p=0.041 does not survive correction over the ~10 comparisons run
+     (Bonferroni threshold ~0.005).
+
+  An earlier reading of this data claimed a clean additive split
+  (3.62 + 2.14 ~= 6.25, "58% confound / 34% procedure"). That decomposition
+  does NOT hold at user position and should not be reported.
+
+  => Do NOT write this up as "latent skills beat text skills".
+  => The defensible claim is about the CONTROL, not the effect: steering with
+     a text-derived direction helps, and a content-free control direction
+     helps as much. Report that.
+
+  Opposite verdict from fidelity (how well the vector copies the text skill):
+      8B  vs DUMMY  +0.430   <- much better copy
+      8B  vs EMPTY  +0.236
+  So the dummy gives the PURER vector and the WORSE score.
+  Fidelity and accuracy disagree; report them separately.
+
+  DECISION: USE THE DUMMY, and ALWAYS publish the placebo-only control row
+  next to it. Empty's advantage is a measured artifact (+3.62 at system,
+  +4.11 at user, both from vectors containing no skill). Moving the skill to
+  the user turn does NOT avoid this -- it was tried and the control got
+  bigger, not smaller.
+
+
+=== 2. SMALL  vs  LARGE ====================================================
+
+                        8B (36L)          27B (64L)
+  baseline              26.15             33.06
+  headroom over chance   6.2 pts          13.1 pts
+  all 4 cells           ALL NULL          ALL POSITIVE
+  best cell             +0.99 (p=0.64)    +6.25 (p=0.003)
+
+  Every 8B cell is null. Every 27B cell leans positive.
+  Most likely cause: the 8B has only 6 points above guessing, so there
+  is almost no room for any intervention to show up.
+
+  With two models this is a suggestion, not a trend -- but it is exactly
+  what a headroom explanation predicts.
+
+
+=== 3. EMBEDDING  vs  TEXT =================================================
+
+                        8B          27B
+  text skill          25.99       34.70
+  best embedding      27.14       39.31
+                      -----       -----
+  embedding wins      +1.15       +4.61   (significant on 27B only)
+
+  Embedding >= text on both models. Significant only on the 27B.
+
+  SANITY CHECK PASSES: text vs dummy-subtracted embedding land within
+  half a point on both models (8B 25.99/25.82, 27B 34.70/35.20).
+  The vector really does reproduce what the prompt does.
+
+  Behaviour differs sharply even when accuracy does not. On the 8B,
+  replies that never commit to an answer on their own:
+      text  1.0%      embedding 26.2%
+  Same skill, opposite effect on decisiveness, identical score.
+
+
+=== WHAT THE TEXT SKILL DID (3 versions, all null on 8B) ===================
+
+  % of answers landing on each option role, 8B:
+
+                          base    v1     v2
+  correct                 26.0   24.2   24.0    <- never moves
+  wildcard (off-topic)    21.4   21.5   17.4    <- v2 fixed this
+  weaker-but-true         18.3   11.8   20.7    <- v1 fixed, v2 undid
+  stronger-trap           14.3   15.6   14.5
+  scope errors            12.8   18.8   16.6    <- where v1 leaked
+
+  Each version fixes one trap and reopens another. The skills ARE being
+  followed (v1 drove restatement 10%->100%, v2 drove relevance-screening
+  0%->87%). Procedure redistributes errors without reducing them.
+
+
+=== TWO HARNESS BUGS THAT WOULD HAVE INVERTED THE CONCLUSIONS ==============
+
+  1. 27B truncation. At 2048 tokens, 51.6% of 27B replies hit the cap
+     mid-sentence and never reached "Answer:". The cell scored 16.94% --
+     BELOW the 20% chance floor -- making the big model look worse than
+     the small one. Fixed with 4096 tokens + answer-forcing: 33.06%.
+     A 16-point correction.
+
+  2. Filename collision. Artefacts carried no model tag, so an 8B run and
+     a 27B run wrote the same path and the second destroyed the first --
+     across exactly the two models being compared. Fixed.
+
+
+=== OPERATING POINTS (chosen by fidelity sweep, checked by guard) ==========
+
+  8B   both embed arms   L34  gamma 0.3
+  27B  both embed arms   L62  gamma 0.3
+  (same layer+gamma within each model, so the ONLY difference between
+   the two embed cells is dummy-vs-empty)
+
+  gamma 0.3 = usable on both models
+  gamma 0.5 = degenerate on both      (old default gamma=1.0 was ~3x too high)
+  3 configs rejected by the guard before spending GPU-hours on them.
+
+
+=== STILL BLOCKED ==========================================================
+
+  OfficeQA         needs ONE CLICK from you: accept the terms at
+                   huggingface.co/datasets/databricks/officeqa as adil-t
+                   (still 403 as of 2026-09-26; cannot be worked around,
+                   the manifest pins exact sha256 hashes)
+
+  SpreadsheetBench RUN, AND IT CANNOT HOST THE EXPERIMENT. Real OpenHands
+                   agent (terminal + file_editor, multi-turn) against qwen
+                   served by vLLM on the same node. Official protocol: the
+                   answer location is NOT given.
+
+                     Qwen3.6-27B   83.0%  (n=200)  CEILING, too easy
+                     Qwen3-14B     28.0%  (n=25)   USABLE -- run the cells here
+                     Qwen3-8B       0.0%           INVALID, see below
+
+                   The 27B is at ceiling, but the 14B sits in the measurable
+                   range, so the benchmark CAN host the comparison with the
+                   full OpenHands agent.
+
+                   THE 0% WAS A HARNESS BUG, NOT MODEL CAPABILITY. vLLM was
+                   started with --tool-call-parser qwen3_xml, which matches
+                   Qwen3.6's XML tool-call format. Qwen3-8B and Qwen3-14B are
+                   the previous generation and emit Hermes JSON inside
+                   <tool_call> tags. On a mismatch vLLM silently returns
+                   tool_calls=[] and puts the call in `content`; the agent
+                   executes nothing and scores exactly 0 with no error logged.
+                   Fixed with EXTRA_ARGS="--tool-call-parser hermes".
+
+                   Why 83% vs ~50% published: the verified-400 subset scores
+                   ONE test case per task, while full SpreadsheetBench requires
+                   ALL test cases of an instruction to pass. Not a protocol
+                   artifact -- withholding the answer location changed 85.9% to
+                   85.5%, i.e. nothing.
+
+                   Incidental, fixable: 5 of 34 failures are the agent building
+                   a FRESH workbook (sheet named 'Sheet') instead of editing
+                   input.xlsx ('Sheet1'). ~2.5% recoverable with one prompt line.
+
+  Full writeup: https://claude.ai/code/artifact/2c74e8dd-e7f7-4403-8a6a-d210921dd191

@@ -1,0 +1,37 @@
+
+==========================================================================================================================================================================================================
+ACCURACY %  (n)   --  '.' = not run
+==========================================================================================================================================================================================================
+benchmark / harness / model                        baseline         text text:matchedtext:notationtext:register      text:v2  embed/dummy   embed/none      CONTROL     text@usrembed/none@usr  CONTROL@usr
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+LiveMath [direct] qwen3-8b                       26.2(608)    26.0(608)    26.2(608)    25.3(608)    24.3(608)    24.3(608)    25.8(608)    27.1(608)             .            .            .            .
+LiveMath [direct] qwen3-14b                      25.3(608)    27.6(608)             .            .            .            .   25.2(608)    26.2(608)             .            .            .            .
+LiveMath [direct] qwen3.6-27b                    33.1(608)    34.7(608)             .            .            .            .   35.2(608)    39.3(608)    36.7(608)    35.4(608)    35.5(608)    37.2(608) 
+SpreadsheetBench [openhands] qwen3-14b           20.0(200)    24.0(200)             .            .            .            .            .            .            .            .            .            .
+SpreadsheetBench [openhands] qwen3.6-27b         83.0(200)             .            .            .            .            .            .            .            .            .            .            .
+SpreadsheetBench [single-turn] qwen3-8b          15.1(398)    14.1( 99)!            .            .            .            .            .            .            .            .            .            .
+SpreadsheetBench [single-turn] qwen3-14b         20.1(398)    22.6(398)             .            .            .            .   20.4(398)    22.4(398)             .            .            .            .
+OfficeQA [openhands] qwen3-14b                    0.0(239)             .            .            .            .            .            .            .            .            .            .            .
+OfficeQA [openhands] qwen3.6-27b                 68.6(239)    70.3(239)             .            .            .            .            .            .            .            .            .            .
+
+==========================================================================================================================================================================================================
+DELTA vs that row's baseline   (McNemar p in brackets)
+==========================================================================================================================================================================================================
+benchmark / harness / model                            text text:matchedtext:notationtext:register      text:v2  embed/dummy   embed/none      CONTROL     text@usrembed/none@usr  CONTROL@usr
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+LiveMath [direct] qwen3-8b                       -0.2(1.00)    +0.0(1.00)    -0.8(0.70)    -1.8(0.37)    -1.8(0.40)    -0.3(0.93)    +1.0(0.64)             .            .            .            .
+LiveMath [direct] qwen3-14b                      +2.3(0.17)             .            .            .            .   -0.2(1.00)    +0.8(0.68)             .            .            .            .
+LiveMath [direct] qwen3.6-27b                    +1.6(0.45)             .            .            .            .   +2.1(0.30)    +6.2(0.00)*   +3.6(0.07)    +2.3(0.29)    +2.5(0.23)    +4.1(0.04)*
+SpreadsheetBench [openhands] qwen3-14b           +4.0(0.29)             .            .            .            .            .            .            .            .            .            .
+SpreadsheetBench [openhands] qwen3.6-27b                  .            .            .            .            .            .            .            .            .            .            .
+SpreadsheetBench [single-turn] qwen3-8b          -0.9(0.08)             .            .            .            .            .            .            .            .            .            .
+SpreadsheetBench [single-turn] qwen3-14b         +2.5(0.27)             .            .            .            .   +0.3(1.00)    +2.3(0.23)             .            .            .            .
+OfficeQA [openhands] qwen3-14b                            .            .            .            .            .            .            .            .            .            .            .
+OfficeQA [openhands] qwen3.6-27b                 +1.7(0.60)             .            .            .            .            .            .            .            .            .            .
+
+!  = fewer items than the rest of that row (partial or cancelled run)
+* p<0.05 uncorrected. With ~15 comparisons the Bonferroni threshold is ~0.003.
+CONTROL = steering vector built from the DUMMY skill only, containing no
+procedure. Where CONTROL matches or beats embed/none, the gain is not
+skill transfer.
+

@@ -1,0 +1,114 @@
+================================================================================
+ OPENHANDS -> STRANDS SDK : what changed, 2026-10-05
+ Affects the two AGENT benchmarks only: SpreadsheetBench and OfficeQA.
+ LiveMath is a direct (no-harness) benchmark and is untouched.
+================================================================================
+
+
+WHERE THE SDK CAME FROM
+-----------------------
+  repo    RakhatMM/asr-autoadapt   (private)
+  branch  strands_harness
+  commit  2026-09-25, "Strands-SDK harness for protocol v2 -- release harness-v2.2"
+  local   ~/asr-autoadapt-strands   (542 KB, branch tarball)
+
+The Agent / OpenAIModel / hook / SequentialToolExecutor construction in
+src/strands_harness.py follows that repo's harness/loop.py and
+harness/strands_glue.py.
+
+  SDK      strands-agents[openai,anthropic]==1.54.0   (version it pins)
+  venv     latent-skills/.strandsvenv   (python 3.12.13)
+  env var  $LS_STRANDS_PY               (added to env.sh)
+
+A separate venv is required: OpenHands was installed under system python 3.9,
+strands-agents needs >=3.10, and it pulls its own openai/anthropic tree that
+must not be mixed into the eval venv holding torch and vLLM.
+
+
+WHAT CHANGED IN THE CODE
+------------------------
+  NEW  src/strands_harness.py          the glue: model, tools, workspace, caps
+  NEW  tests/test_strands_harness.py   11 checks, all passing, no endpoint needed
+  MOD  src/run_sb_agent.py             SpreadsheetBench adapter
+  MOD  src/run_oqa_agent.py            OfficeQA adapter
+  MOD  src/matrix.py                   keeps the two harnesses in separate rows
+  MOD  env.sh                          $LS_STRANDS_PY
+  KEEP legacy_openhands/               both original adapters, verbatim
+
+The CLI, sharding, /health steering probe, result-file naming and result JSON
+schema are all unchanged, so report.py / matrix.py / the existing SLURM
+scripts keep working. New keys added to each summary: harness, sdk,
+sdk_version, stop_reasons.
+
+Mapping used:
+  LLM(model, base_url, ...)                 -> OpenAIModel(client_args={...})
+  AgentContext(system_message_suffix=skill) -> system_prompt + "\n\n" + skill
+  Conversation(workspace=d)                 -> WorkspaceEnvironment(d)
+  Tool("terminal"), Tool("file_editor")     -> strands.vended_tools shell/file_editor
+  max_iteration_per_run=N                   -> IterationCap hook
+  stuck_detection=on                        -> NoProgressStop hook
+  conv.send_message(m); conv.run()          -> run_episode(...)
+
+
+THREE THINGS WORTH KNOWING
+--------------------------
+1. ** NUMBERS ARE NOT COMPARABLE ACROSS HARNESSES. **
+   OpenHands shipped `terminal` and `file_editor` as first-class tools with
+   its own prompting; Strands ships neither by that name. The SDK's vended
+   equivalents differ in tool name, description, argument shape and error
+   text -- all of which the model sees. The agent's capability surface is
+   therefore not identical.
+
+   Every Strands summary carries "harness": "strands", and matrix.py now
+   splits the rows (old runs, which have no such key, are labelled
+   "openhands"). Existing results re-label cleanly:
+       LiveMath          direct       80 files
+       OfficeQA          openhands    32 files
+       SpreadsheetBench  openhands    31 files
+       SpreadsheetBench  single-turn  21 files
+   Compare conditions WITHIN a harness. To claim anything across the swap,
+   the baseline and text cells have to be re-run on Strands.
+
+2. OPENHANDS SUPPLIED A SYSTEM PROMPT; STRANDS DOES NOT.
+   The baseline arm previously got OpenHands' own agent prompt. Strands
+   starts empty, so both adapters now carry a MECHANICS constant: tools and
+   stopping condition only, no advice on how to approach the task. Both arms
+   get it; the text arm appends the skill. That preserves the thing the study
+   depends on -- the two arms differ by the skill and nothing else.
+
+3. USES strands.vended_tools, NOT strands-agents-tools.
+   The separate strands-agents-tools package was tried first; its shell and
+   editor are deprecated ("becomes an error log in v0.9.0") and bypass the
+   sandbox abstraction. The SDK's own vended tools route through a sandbox,
+   which is what makes workspace pinning enforceable rather than advisory.
+   strands-agents-tools 0.8.9 is still installed in the venv but unused.
+
+
+A BUG CAUGHT BEFORE IT RAN
+--------------------------
+The first WorkspaceEnvironment used Path.resolve() for its containment check.
+OfficeQA symlinks each question's bulletins into the task workspace, and
+resolve() follows symlinks -- so every bulletin would have resolved out to the
+shared docs directory and been refused as an escape. All 239 OfficeQA
+questions would have scored zero with no error. The check now normalises
+lexically with abspath, which still collapses ".." but does not follow links.
+tests/test_strands_harness.py covers this case directly.
+
+
+HOW TO RUN IT (not yet run)
+---------------------------
+    source ~/latent-skills/env.sh
+
+    # SpreadsheetBench
+    MODEL_TAG=qwen3-8b LLM_MODEL=Qwen3-8B \
+      $LS_STRANDS_PY $LS_ROOT/src/run_sb_agent.py --condition baseline --shard 0/4
+    MODEL_TAG=qwen3-8b LLM_MODEL=Qwen3-8B \
+      $LS_STRANDS_PY $LS_ROOT/src/run_sb_agent.py --condition text \
+      --skill $LS_ROOT/skills/spreadsheet_edit.md --shard 0/4
+
+    # OfficeQA -- same shape, run_oqa_agent.py, skills/officeqa_lookup.md
+
+Needs a served model at $LLM_BASE_URL (default http://127.0.0.1:9000), as
+before. Start with one shard and a small --limit to confirm the tool calls
+land before committing a full matrix.
+================================================================================

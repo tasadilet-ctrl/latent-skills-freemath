@@ -1,0 +1,10 @@
+# Eval environment: everything that loads model weights locally.
+# Install torch FIRST, matched to your CUDA (00_setup/01_python_envs.sh does this).
+transformers>=4.51
+accelerate>=0.30
+safetensors
+sentencepiece
+numpy
+openpyxl            # SpreadsheetBench grading + the single-turn arm
+fastapi             # src/serve_hooked.py -- steering behind an OpenAI API
+uvicorn

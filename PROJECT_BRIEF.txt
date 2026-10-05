@@ -1,0 +1,407 @@
+================================================================================
+PROJECT BRIEF -- Cross-Domain Transfer of Latent Procedural Skills in LLM Agents
+Prepared 2026-09-26 as source material for writing a literature review.
+================================================================================
+
+HOW TO USE THIS FILE
+  Sections 1-7 describe what was built and measured, so the review can state
+  accurately what this work does. Section 8 lists every paper, split by whether
+  the citation has been verified. Section 9 lists the gaps a review should
+  position the work against. Do not cite anything from 8B without checking it.
+
+
+--------------------------------------------------------------------------------
+1. RESEARCH QUESTION
+--------------------------------------------------------------------------------
+Does a procedural skill transfer across domains better as a LATENT ACTIVATION
+VECTOR than as TEXT IN THE PROMPT?
+
+Three tiers of skill representation are distinguished throughout:
+  1. Text skills (.md)      input-level instructions in the context window
+  2. LoRA skills (dW)       parameter/weight-level updates
+  3. Embedding skills (v)   state-level vectors injected into hidden layers
+                            at inference; zero weight edits, zero prompt tokens
+
+This project compares tier 1 against tier 3 only. Tier 2 appears in the
+literature (LatentSkill) and is used to position, not to test.
+
+Motivating hypothesis: text skills suffer CONTEXT POLLUTION -- a skill mined in
+domain A carries domain-A vocabulary that clutters the prompt in domain B --
+while an activation vector carries the procedure with no tokens and no
+vocabulary.
+
+
+--------------------------------------------------------------------------------
+2. METHOD (and its name in the literature)
+--------------------------------------------------------------------------------
+Extraction, at the final prompt token, averaged over a pool of N=50 prompts:
+
+    v_skill = E[ h_l | S_text ] - E[ h_l | baseline_prompt ]
+
+Injection at inference, every token position, norm-relative:
+
+    h_l  <-  h_l + gamma * ||h_l|| * (v / ||v||)
+
+The vector is normalised before injection, so gamma is comparable across layers
+and vector magnitude does NOT affect steering strength -- only direction does.
+This matters for interpreting results: two vectors compared at the same gamma
+are pushed equally hard.
+
+THIS METHOD ALREADY HAS A NAME: Contrastive Activation Addition (CAA), Rimsky /
+Panickssery et al. The statistical name is DIFFERENCE-IN-MEANS, called
+"mass-mean probing" by Marks & Tegmark. The project did not invent it and
+should cite CAA as the method rather than defend a new one.
+
+TWO EXTRACTION ARMS (the central methodological variable of this study):
+  - "vs dummy"   baseline_prompt = a length- and register-matched placebo
+                 system prompt with no procedural content
+  - "vs nothing" baseline_prompt = no system message at all
+
+The difference between these two arms is the quantity of interest: what the
+placebo removes is the generic "a system prompt is present" component.
+
+SECOND METRIC -- FIDELITY. End-task accuracy cannot tell "the vector works"
+from noise when a skill is worth two points. So a KL-based measure is used:
+
+    fidelity = 1 - KL(text || steered) / KL(text || plain)
+
+    1.0  steering reproduces the text skill's token distribution exactly
+    0.0  steering achieves nothing the plain model did not already do
+    <0   steering moves away from the skill
+
+Fidelity selects the operating point (layer, gamma) without a benchmark in the
+loop. IMPORTANT MEASURED CAVEAT: fidelity does not predict accuracy (see 6).
+
+
+--------------------------------------------------------------------------------
+3. MODELS AND INFRASTRUCTURE
+--------------------------------------------------------------------------------
+Qwen3-8B        36 decoder layers, hidden 4096
+Qwen3.6-27B     64 decoder layers, hidden 5120; only 16 of 64 layers are
+                full-attention (the rest linear attention)
+
+Both loaded in HuggingFace `transformers`, bf16, NOT vLLM -- vLLM exposes no
+access to the residual stream, so the embedding arm is impossible there.
+`enable_thinking=False` throughout (verified: zero <think> markers in 608
+replies). Forward hooks capture h_l and inject v. Runs on H100 nodes via SLURM,
+four independent single-GPU shards per cell.
+
+
+--------------------------------------------------------------------------------
+4. BENCHMARKS
+--------------------------------------------------------------------------------
+Chosen to match the WikiSkill paper's benchmark set.
+
+LIVEMATH (LiveMathematicianBench) -- COMPLETE
+  608 questions, research-level mathematics drawn from recent papers, 5-way
+  multiple choice, chance = 20%. Pure text in / text out. The source data
+  labels each distractor's ROLE (weaker-but-true, stronger-trap, off-topic
+  wildcard, boundary/quantifier/uniformity scope errors), which makes a much
+  finer diagnostic possible than accuracy alone. Options are deterministically
+  shuffled per question because the raw data labels the correct choice "A" in
+  all 608.
+
+SPREADSHEETBENCH -- RUN; CANNOT HOST THE EXPERIMENT
+  400 tasks (275 cell-level, 125 sheet-level); 398 usable. Model receives an
+  instruction plus a text rendering of the workbook and emits an openpyxl
+  script, which is executed and the result graded against a golden file over
+  the task's declared answer range. Grader validated at 398/398 golden-vs-golden
+  and 0.3% for a do-nothing agent (so the tasks genuinely require work).
+  Evaluated with a real OpenHands agent (terminal + file_editor, up to 20
+  turns) driving qwen served by vLLM on the same node, under the official
+  protocol (answer location withheld).
+
+      Qwen3.6-27B   83.0%   n=200, CI [77.2, 87.6]   at CEILING
+      Qwen3-14B     28.0%   n=25                     USABLE
+      Qwen3-8B       0.0%                            INVALID (harness bug)
+
+  The 27B is at ceiling and cannot show a ~2-point effect (SE 2.7%), but the
+  14B sits in the measurable range, so the skill cells run there.
+
+  The 0% was NOT capability. vLLM ran --tool-call-parser qwen3_xml, matching
+  Qwen3.6's XML tool-call format; Qwen3-8B/14B are the prior generation and
+  emit Hermes JSON inside <tool_call>. A mismatch makes vLLM return
+  tool_calls=[] with the call left in `content` -- no error anywhere, the agent
+  executes nothing, and the score is exactly zero, which is indistinguishable
+  from incapability. Two wrong capability conclusions were drawn before a
+  direct curl of the live server exposed it. The parser is a property of the
+  MODEL GENERATION and must be set per model.
+
+  The 83% is not a protocol artifact: supplying the answer location gave 85.9%
+  and withholding it gave 85.5%. The gap to the ~50% published SOTA comes from
+  the dataset -- the verified-400 subset scores ONE test case per task, whereas
+  full SpreadsheetBench requires every test case of an instruction to pass.
+
+  One deviation remains, applied identically in every condition: computed
+  literal values are requested rather than formulas, because this node has no
+  LibreOffice or recalculation library and an un-recalculated formula reads
+  back as empty.
+
+  Reportable methodological point: an agentic benchmark can be at ceiling for
+  the larger model in a family while remaining measurable for a mid-sized one,
+  so the model must be chosen per benchmark rather than fixed across the study.
+
+OFFICEQA -- BLOCKED, NOT RUN
+  The 246-question manifest is open, but the Treasury Bulletin corpus the
+  questions are grounded on is gated on HuggingFace (databricks/officeqa) and
+  returns 403. Cannot be substituted: the manifest pins exact sha256 hashes.
+
+ALFWorld and SealQA appear in the source literature but were not attempted;
+both need an agent harness.
+
+
+--------------------------------------------------------------------------------
+5. RESULTS -- LIVEMATH (complete, n=608, paired exact McNemar)
+--------------------------------------------------------------------------------
+
+                          Qwen3-8B      Qwen3.6-27B
+  baseline                 26.15          33.06
+  text skill               25.99          34.70      (p=1.000 / p=0.450)
+  embed, vs DUMMY          25.82          35.20      (p=0.927 / p=0.302)
+  embed, vs NOTHING        27.14          39.31 ***  (p=0.643 / p=0.003)
+
+  CONTROL: placebo-only vector, no skill in it at all
+                             --            36.68      (       / p=0.073)
+
+  *** the only statistically significant cell in the study.
+
+Robustness of that cell: 97 items fixed vs 59 broken; survives Bonferroni over
+all 8 comparisons run (0.003 < 0.05/8 = 0.00625); positive in 6 of 8 monthly
+slices with all four largest slices positive; +6.6 on the 558 items the
+extraction pool never touched (i.e. stronger, not weaker, off the pool);
+parse rate 1.000 so it is not a truncation artifact.
+
+DIRECT CONTROLS -- measured, not inferred. Vectors were extracted from the
+PLACEBO ALONE against nothing (no skill content whatever) and used to steer
+at the same operating point. The skill was also delivered in the USER turn
+instead of the system message, so that no arm has a system prompt at all and
+the "a system message exists" jump cannot enter the contrast.
+
+  27B, L62 gamma 0.3, all vs baseline 33.06:
+
+      skill @ system                       +6.25   p=0.003
+      placebo-only @ system   NO SKILL     +3.62   p=0.073
+      skill @ user                         +2.47   p=0.232
+      placebo-only @ user     NO SKILL     +4.11   p=0.041
+      skill @ system, placebo subtracted   +2.14   p=0.302
+
+  THE CENTRAL NEGATIVE RESULT. At user position the content-free placebo
+  vector (+4.11) OUTPERFORMS the actual skill vector (+2.47). Every vector of
+  the form (some instructional text) - (nothing) yields roughly +2 to +6, and
+  which text is used does not track whether it is a relevant skill. The only
+  arm isolating skill content gives +2.14 and is not significant. Nothing
+  here survives Bonferroni over the ~10 comparisons run except the
+  uncontrolled +6.25.
+
+  Moving the skill to the user turn was tried specifically to remove the
+  system-prompt confound at source. It did not work: the control got LARGER.
+  Geometry predicted this -- cos(placebo, skill) is ~+0.6 at 8B and ~+0.35 to
+  +0.40 at 27B REGARDLESS of placebo content (three placebos with unrelated
+  subject matter were screened), so the shared component is "instructional
+  text is present", not anything about the system channel.
+
+  The honest claim is NOT "latent skills beat text skills". It is that
+  activation steering with a text-derived direction produces a gain on this
+  benchmark that a content-free control direction reproduces or exceeds.
+
+
+--------------------------------------------------------------------------------
+6. FINDINGS A REVIEW SHOULD POSITION AGAINST
+--------------------------------------------------------------------------------
+
+(a) TEXT SKILLS WERE A MEASURED NULL, NOT A FAILED ATTEMPT.
+    Three skill versions were written and evaluated. Each demonstrably changed
+    behaviour -- v1 drove restatement from 10% to 100% of replies, v2 drove
+    relevance-screening from 0% to 87% -- and accuracy never moved. The
+    distractor-role histogram shows the mechanism: each version fixes one trap
+    and reopens another.
+        role                base    v1     v2
+        correct             26.0   24.2   24.0
+        wildcard            21.4   21.5   17.4
+        weaker-but-true     18.3   11.8   20.7
+        stronger-trap       14.3   15.6   14.5
+        scope errors        12.8   18.8   16.6
+    Procedure REDISTRIBUTES errors across trap types without shrinking them.
+
+(b) FIDELITY DOES NOT PREDICT ACCURACY.
+    The highest-fidelity vector in the study (8B, vs-dummy, +0.430) produced
+    the WORST accuracy cell. Fidelity measures how faithfully the vector
+    reproduces the text skill; if the text skill is itself accuracy-neutral,
+    faithful reproduction buys nothing. The two metrics must be reported
+    separately, and fidelity alone must not be used to claim a skill "works".
+
+(c) THE SANITY CHECK (A ~= B) PASSES.
+    Text arm and dummy-subtracted embedding arm land within half a point on
+    both models (8B 25.99 / 25.82; 27B 34.70 / 35.20). The vector does
+    reproduce what the prompt does. This is the premise the method rests on.
+
+(d) PLACEBO CONTENT DOES NOT DRIVE THE GEOMETRY.
+    Three placebos with unrelated content (brevity instructions; notation and
+    typography; tense, voice and naming) all produced the same alignment with
+    the skill direction (cos +0.62 on the 8B; +0.35 to +0.41 on the 27B). So
+    that shared component is generic prompt-presence, not content leakage. A
+    behavioural check agreed: the original placebo scores 26.15% as a text
+    skill, exactly the 26.15% baseline. The placebo is a valid control.
+
+(e) OPERATING POINTS MUST BE GUARDED, NOT JUST OPTIMISED.
+    Fidelity is measured on teacher-forced tokens and therefore cannot see
+    generation collapsing into repetition. A separate unforced check on
+    distinct-token ratio rejected three configurations that fidelity liked:
+    8B L34 gamma 0.5 (-68% diversity), 27B L62 gamma 0.5 (-34%), and 27B
+    L60-63 gamma 0.2 (-98%, essentially one repeated token). Measured ceiling:
+    gamma 0.3 usable on both models, gamma 0.5 not. Multi-layer spans are far
+    more sensitive than single layers.
+
+(f) SCALE: all four 8B cells are null; all four 27B cells lean positive. The
+    8B sits ~6 points above chance on LiveMath and the 27B ~13, so a headroom
+    explanation is available but unproven with two models.
+
+(g) A HARNESS FAULT INVERTED A CONCLUSION, WORTH NOTING AS A METHODS LESSON.
+    At a 2048-token budget, 51.6% of 27B replies hit the cap mid-deliberation
+    and never emitted an answer; the cell scored 16.94%, BELOW the 20% chance
+    floor, making the larger model look worse than the smaller. Because
+    truncation rate tracks verbosity and skills change verbosity, this is a
+    BIAS and not merely noise. Fixed by continuing non-committal replies with
+    an "Answer:" cue identically in every condition: 33.06%, a 16-point
+    correction.
+
+
+--------------------------------------------------------------------------------
+7. WHAT IS NOVEL HERE (for the contribution paragraph)
+--------------------------------------------------------------------------------
+The extraction method is borrowed and well established (CAA). The unclaimed
+ground is the COMPARISON: CAA-style activation skills versus text skills,
+measured on cross-domain transfer, on the agent benchmarks the skills
+literature uses.
+
+  - The activation-steering papers use MATH and GSM8K and do not test transfer.
+  - The agent-skills papers use ALFWorld, SearchQA and spreadsheets and do not
+    test activation space.
+  - LatentSkill is closest but operates in WEIGHT space (LoRA), not state space.
+
+A second contribution is negative and methodological: the placebo control that
+separates skill transfer from generic prompt-presence steering. Without it this
+study would have reported a clean significant +6.25 with no way to tell the two
+apart.
+
+One framing caveat worth keeping: CAA and its successors steer BEHAVIOURAL
+DISPOSITIONS (sycophancy, refusal, truthfulness). Whether the same machinery
+carries a MULTI-STEP PROCEDURE is genuinely open, and the evidence here is that
+it is harder.
+
+
+--------------------------------------------------------------------------------
+8. PAPERS
+--------------------------------------------------------------------------------
+
+8A. ACTIVATION STEERING LITERATURE -- recognised, standard, safe to cite.
+    These were checked against known authors and venues in an earlier session.
+
+ 1. Steering Llama 2 via Contrastive Activation Addition   -- PRIMARY CITATION
+    arXiv 2312.06681 -- Panickssery (Rimsky), Gabrieli, Schulz, Tong,
+    Hubinger, Turner -- ACL 2024
+    Mean difference of residual-stream activations over a dataset of matched
+    prompt pairs, added back at inference with a coefficient. This IS the
+    method used here. Note its contrast design is matched pairs, not
+    "prompt vs nothing" -- which is the precedent for the placebo arm.
+
+ 2. The Geometry of Truth
+    arXiv 2310.06824 -- Marks & Tegmark -- COLM 2024
+    Names the technique "mass-mean probing" (difference of class means) and
+    argues it outperforms trained linear probes for CAUSAL intervention:
+    probes latch onto correlated features, the mean difference isolates what
+    actually moves behaviour. Cite for why subtract-and-average rather than
+    train a classifier.
+
+ 3. Refusal in Language Models Is Mediated by a Single Direction
+    arXiv 2406.11717 -- Arditi, Obeso, Syed, Paleka, Panickssery, Gurnee, Nanda
+    Difference-in-means over harmful vs harmless prompts. Cleanest
+    demonstration that a single direction can carry a whole behaviour; useful
+    precedent for layer selection and coefficient sweeps.
+
+ 4. Steering Language Models With Activation Engineering (ActAdd)
+    arXiv 2308.10248 -- Turner, Thiergart, Leech, Udell, Vazquez, Mini,
+    MacDiarmid
+    The origin of the technique. Uses a SINGLE prompt pair rather than an
+    averaged dataset -- precisely the weakness the 50-prompt pool addresses.
+
+ 5. Function Vectors in Large Language Models
+    arXiv 2310.15213 -- Todd, Li, Sen Sharma, Mueller, Wallace, Bau -- ICLR 2024
+    Mean activations over in-context examples yield a vector that EXECUTES A
+    TASK. Closest precedent for "procedure as a vector" rather than
+    "disposition as a vector"; most relevant of this group to a skills framing.
+
+ 6. In-Context Learning Creates Task Vectors
+    arXiv 2310.15916 -- Hendel, Geva, Globerson -- Findings of EMNLP 2023
+    A whole in-context demonstration set compresses into one vector. The
+    precedent for "instructions in context == a vector", which is exactly the
+    text-skill / embedding-skill equivalence claim.
+
+8B. AGENT-SKILLS LITERATURE -- FROM THE USER'S OWN REVIEW. NOT VERIFIED.
+    These six came from a project summary supplied by the researcher, not from
+    an independent search. Several are dated 2026 and could not be checked
+    against the assistant's knowledge. VERIFY EVERY ONE -- title, authors,
+    venue and arXiv ID -- BEFORE CITING. Do not let a review inherit an
+    unchecked reference.
+
+ 7. EvoSkill -- arXiv 2603.02766
+    Critic, proposer and builder agents synthesise code/Markdown tools from
+    failed execution logs, filtering candidates through a Pareto-frontier
+    validation gate.
+
+ 8. Trace2Skill -- arXiv 2603.25158
+    Distils parallel task-trajectory logs into localised skill patches via
+    analyst agents, then consolidates them into conflict-free skill
+    directories for direct prompt injection.
+
+ 9. SkillOpt -- arXiv 2605.18432
+    Optimises natural-language skill documents by treating prompt text as a
+    trainable parameter, generating edit diffs under a textual learning-rate
+    budget behind a held-out validation gate.
+
+10. LatentSkill -- arXiv 2606.06087
+    Maps textual skill descriptions into PARAMETER WEIGHT space with a trained
+    hypernetwork producing modular LoRA adapters. The nearest neighbour to
+    this project, and the key contrast: weight space vs state space.
+
+11. WikiSkill -- arXiv 2608.27454
+    Maintains agent experience across a multi-tier workspace (raw transcripts,
+    git-tracked wiki pages, executable procedures) with maintainer agents and
+    git rollbacks. THE BENCHMARK SET USED HERE COMES FROM THIS PAPER:
+    LiveMath, SealQA, SpreadsheetBench, OfficeQA, ALFWorld.
+
+12. Toward Latent Language Model Skills Steering and Optimization
+    arXiv 2608.29459
+    Applies activation steering to PROCEDURAL SKILLS specifically, on MATH and
+    GSM8K. The closest prior work to this project's method-plus-domain
+    combination; the differentiator here is cross-domain transfer and the
+    agent-skills benchmark set.
+
+DATASETS TO CITE SEPARATELY
+  - SpreadsheetBench (400-task verified subset used here)
+  - LiveMathematicianBench
+  - OfficeQA (NEAR-AI manifest + databricks/officeqa gated corpus) -- not run
+  - GSM8K and HotpotQA -- used only in an early pilot, not in the final matrix
+
+
+--------------------------------------------------------------------------------
+9. OPEN QUESTIONS / LIMITATIONS TO STATE HONESTLY
+--------------------------------------------------------------------------------
+ 1. The only significant cell is the uncontrolled one. A content-free control
+    vector reproduces or exceeds the skill vector's effect, at two different
+    prompt positions. No arm isolating skill content reaches significance.
+ 2. n=608 gives about +/-1.8% standard error; a 2-point effect sits inside the
+    noise. The significant cell was found, not predicted -- it needs
+    replication as a single pre-specified test.
+ 3. Only two models, one family. The scale pattern is a suggestion, not a trend.
+ 4. Only one of three benchmarks completed at the time of writing; OfficeQA is
+    blocked upstream.
+ 5. LiveMath gives the 8B only ~6 points of headroom over chance, which is very
+    little room for any intervention to register. A null there is weaker
+    evidence than a null on a task the model can actually do.
+ 6. Skill v3 was written after inspecting the aggregate error profile of v1 and
+    v2 on the same 608 items it was then scored on. Only the aggregate role
+    histogram was used, never per-item labels, and held-out subsets are
+    reported -- but it is test-set-informed and must be declared.
+ 7. Single-turn code emission for SpreadsheetBench, not a multi-turn agent.
+================================================================================

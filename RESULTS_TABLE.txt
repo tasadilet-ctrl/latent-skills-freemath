@@ -1,0 +1,144 @@
+================================================================================
+ CROSS-DOMAIN TRANSFER OF LATENT PROCEDURAL SKILLS -- RESULTS
+================================================================================
+ generated 2026-09-29 09:01   all queued jobs complete
+
+--------------------------------------------------------------------------------
+THE HEADLINE
+--------------------------------------------------------------------------------
+Two complete 4-condition matrices, on different benchmarks, different models and
+different harnesses, show the SAME structure:
+
+                              LiveMath 27B      SpreadsheetBench 14B
+                                                (single-turn)
+  baseline                       33.06                20.10
+  text skill                     34.70  (+1.64)       22.61  (+2.51)
+  embed vs NOTHING               39.31  (+6.25)*      22.36  (+2.26)
+  embed vs DUMMY                 35.20  (+2.14)       20.35  (+0.25)
+                                                      * p=0.003
+
+  The UNCONTROLLED vector carries most or all of the text skill's effect.
+  Subtracting a matched placebo removes it.
+
+  => What activation steering contributes on these tasks tracks the PRESENCE of
+     instructional text in the extraction contrast, not the PROCEDURAL CONTENT
+     of the skill.
+
+--------------------------------------------------------------------------------
+THE TEXT ARM: SIX CELLS, SIX NULLS, FIVE POSITIVE
+--------------------------------------------------------------------------------
+  LiveMath          8B     26.15 -> 25.99   -0.16   p=1.000
+  LiveMath         14B     25.33 -> 27.63   +2.30   p=0.175
+  LiveMath         27B     33.06 -> 34.70   +1.64   p=0.450
+  SpreadsheetBench 14B ag  20.00 -> 24.00   +4.00   p=0.291
+  SpreadsheetBench 14B st  20.10 -> 22.61   +2.51   p=0.275
+  OfficeQA         27B     68.62 -> 70.29   +1.67   p=0.597
+
+  5 of 6 positive (+1.6 to +4.0); under the null you would expect ~3. No single
+  cell is significant. The cells are not independent (shared models/benchmarks),
+  so a pooled test is the honest way to ask whether the effect is real.
+
+--------------------------------------------------------------------------------
+FIDELITY DOES NOT PREDICT EFFECT
+--------------------------------------------------------------------------------
+  fidelity = 1 - KL(text||steered)/KL(text||plain)   -- the method's own
+  validation metric, i.e. how well the vector reproduces the text skill.
+
+  LiveMath vs-dummy:   8B +0.430   14B +0.638   27B +0.229
+
+  The 14B vector reproduces the text skill BEST in the whole study (+0.638)
+  and gives -0.16 accuracy, while the TEXT form gives +2.30.
+  The 14B's WORST vector (+0.192) gives +0.82.
+
+  => Distributional fidelity to a text skill does not imply behavioural
+     equivalence. This is a direct problem for the standard validation
+     approach in the activation-steering literature.
+
+  floor KL(text||plain), i.e. how much the skill moves the model at all:
+     LiveMath 0.82-0.89     SpreadsheetBench 0.19-0.22
+  The same skill text perturbs the model ~4x less in a long agentic context.
+
+--------------------------------------------------------------------------------
+MODEL CHOICE IS PER BENCHMARK, BY MEASURED HEADROOM
+--------------------------------------------------------------------------------
+  LiveMath          8B 26.2 | 14B 25.3 | 27B 33.1      all three usable
+  SpreadsheetBench  14B 20.0 usable    | 27B 83.0 CEILING
+  OfficeQA          14B  0.0 FLOOR     | 27B 68.6 usable (easy 82.7 / hard 56.6)
+
+  The two agentic benchmarks select OPPOSITE models. A model fixed across the
+  study would have produced a floor or a ceiling on at least one of them.
+  Capability is also NOT monotone in parameter count: on LiveMath the 14B
+  (25.3) sits BELOW the 8B (26.2), because 8B/14B are Qwen3 and the 27B is
+  Qwen3.6 -- a generation change, not just a size change.
+
+--------------------------------------------------------------------------------
+HARNESS EQUIVALENCE (validates a substitution)
+--------------------------------------------------------------------------------
+  SpreadsheetBench 14B, same model, same skill:
+     agent harness (20 turns, terminal)   baseline 20.00   text +4.00
+     single-turn code generation          baseline 20.10   text +2.51
+
+  Near-identical baselines and same-direction skill effects. Giving this model
+  a terminal and 20 turns buys nothing over one shot at writing the script.
+  This is what justifies measuring the embed arm single-turn: ~3 GPU-hours
+  instead of ~50 through the serial hooked server (910 s/task vs ~1.8 s/task).
+
+
+====================================================================================================================================================================================================================================
+ACCURACY %  (n)   --  '.' = not run
+====================================================================================================================================================================================================================================
+benchmark / harness / model                        baseline         text    text:edit  text:lookup text:matchedtext:notationtext:register      text:v2  embed/dummy   embed/none      CONTROL     text@usrembed/none@usr  CONTROL@usr
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+LiveMath [direct] qwen3-8b                       26.2(608)    26.0(608)             .            .   26.2(608)    25.3(608)    24.3(608)    24.3(608)    25.8(608)    27.1(608)             .            .            .            .
+LiveMath [direct] qwen3-14b                      25.3(608)    27.6(608)             .            .            .            .            .            .   25.2(608)    26.2(608)             .            .            .            .
+LiveMath [direct] qwen3.6-27b                    33.1(608)    34.7(608)             .            .            .            .            .            .   35.2(608)    39.3(608)    36.7(608)    35.4(608)    35.5(608)    37.2(608) 
+SpreadsheetBench [agent] qwen3-14b               20.0(200)             .   24.0(200)             .            .            .            .            .            .            .            .            .            .            .
+SpreadsheetBench [agent] qwen3.6-27b             83.0(200)             .            .            .            .            .            .            .            .            .            .            .            .            .
+SpreadsheetBench [single-turn] qwen3-8b          15.1(398)             .   14.1( 99)!            .            .            .            .            .            .            .            .            .            .            .
+SpreadsheetBench [single-turn] qwen3-14b         20.1(398)             .   22.6(398)             .            .            .            .            .   20.4(398)    22.4(398)             .            .            .            .
+OfficeQA [direct] qwen3-14b                       0.0(239)             .            .            .            .            .            .            .            .            .            .            .            .            .
+OfficeQA [direct] qwen3.6-27b                    68.6(239)             .            .   70.3(239)             .            .            .            .            .            .            .            .            .            .
+
+====================================================================================================================================================================================================================================
+DELTA vs that row's baseline   (McNemar p in brackets)
+====================================================================================================================================================================================================================================
+benchmark / harness / model                            text    text:edit  text:lookup text:matchedtext:notationtext:register      text:v2  embed/dummy   embed/none      CONTROL     text@usrembed/none@usr  CONTROL@usr
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+LiveMath [direct] qwen3-8b                       -0.2(1.00)             .            .   +0.0(1.00)    -0.8(0.70)    -1.8(0.37)    -1.8(0.40)    -0.3(0.93)    +1.0(0.64)             .            .            .            .
+LiveMath [direct] qwen3-14b                      +2.3(0.17)             .            .            .            .            .            .   -0.2(1.00)    +0.8(0.68)             .            .            .            .
+LiveMath [direct] qwen3.6-27b                    +1.6(0.45)             .            .            .            .            .            .   +2.1(0.30)    +6.2(0.00)*   +3.6(0.07)    +2.3(0.29)    +2.5(0.23)    +4.1(0.04)*
+SpreadsheetBench [agent] qwen3-14b                        .   +4.0(0.29)             .            .            .            .            .            .            .            .            .            .            .
+SpreadsheetBench [agent] qwen3.6-27b                      .            .            .            .            .            .            .            .            .            .            .            .            .
+SpreadsheetBench [single-turn] qwen3-8b                   .   -0.9(0.08)             .            .            .            .            .            .            .            .            .            .            .
+SpreadsheetBench [single-turn] qwen3-14b                  .   +2.5(0.27)             .            .            .            .            .   +0.3(1.00)    +2.3(0.23)             .            .            .            .
+OfficeQA [direct] qwen3-14b                               .            .            .            .            .            .            .            .            .            .            .            .            .
+OfficeQA [direct] qwen3.6-27b                             .            .   +1.7(0.60)             .            .            .            .            .            .            .            .            .            .
+
+!  = fewer items than the rest of that row (partial or cancelled run)
+* p<0.05 uncorrected. With ~15 comparisons the Bonferroni threshold is ~0.003.
+CONTROL = steering vector built from the DUMMY skill only, containing no
+procedure. Where CONTROL matches or beats embed/none, the gain is not
+skill transfer.
+
+
+--------------------------------------------------------------------------------
+CAVEATS TO CARRY INTO THE WRITE-UP
+--------------------------------------------------------------------------------
+ 1. The LiveMath skill (compare_claims_v3) was revised after inspecting the
+    AGGREGATE distractor-role histogram of v1/v2 on the same 608 items. Only the
+    marginal distribution was used, never per-item labels. Declare it.
+ 2. The placebo-only CONTROL cells are +3.62 (p=0.073) and +4.11 (p=0.041);
+    neither survives correction. They AGREE across two prompt positions, which
+    is worth something, but neither is individually significant.
+ 3. One run per cell, greedy decoding. Deterministic, so no run-to-run variance
+    estimate; all uncertainty is sampling error over items.
+ 4. SpreadsheetBench uses the verified-400 subset, which scores ONE test case
+    per task where the full benchmark requires all of them. Not comparable to
+    the ~50% published SOTA.
+ 5. OfficeQA excludes 7 of 246 questions whose source bulletins failed their
+    manifest sha256 (upstream changed them).
+ 6. The embed arm for the AGENT harnesses was not run: steering needs the
+    residual stream, vLLM cannot provide it, and the hooked HF server is ~500x
+    slower per token. OfficeQA has no single-turn fallback because its
+    documents do not fit in context.
+================================================================================

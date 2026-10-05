@@ -1,0 +1,915 @@
+{
+  "summary": {
+    "domain": "spreadsheet",
+    "condition": "text",
+    "n": 99,
+    "model": "Qwen/Qwen3-8B",
+    "model_tag": "qwen3-8b",
+    "skill": "spreadsheet_edit.md",
+    "em": 0.1414141414141414,
+    "f1": 0.1414141414141414,
+    "seconds": 2335.3,
+    "code_rate": 1.0,
+    "ran_rate": 0.5858585858585859,
+    "parse_rate": 1.0,
+    "forced": 0,
+    "forced_rate": 0.0,
+    "mean_pred_chars": 1493.5656565656566,
+    "max_new_tokens": 1536,
+    "vector": {},
+    "shard": "3/4"
+  },
+  "records": [
+    {
+      "id": "23-24",
+      "gold": "golden",
+      "pred": "3722/5510 cells differ",
+      "em": 0.0,
+      "f1": 0.0,
+      "instruction_type": "Sheet-Level Manipulation",
+      "raw": "```python\nfrom openpyxl import load_workbook\n\n# Load the workbook and select the worksheet\nwb = load_workbook('input.xlsx')\nws = wb['Sheet1']\n\n# Identify the header row and first data row\nheader_row = None\ndata_start_row = 1\n\n# Find the header row by checking for non-empty cells\nfor row in ws.iter_rows(min_row=1, max_row=10):\n    if any(cell.value for cell in row):\n        header_row = row[0].row\n        break\n\n# Find the first data row by checking for non-empty cells\nfor row in ws.iter_rows(min_row=header_row + 1, max_row=100):\n    if any(cell.value for cell in row):\n        data_start_row = row[0].row\n        break\n\n# Read all values from column A and column I\ncolumn_a_values = [cell.value for cell in ws['A'][data_start_row - 1:]]\ncolumn_i_values = [cell.value for cell in ws['I'][data_start_row - 1:]]\n\n# Create a set of words from column I\nwords_to_remove = set(column_i_values)\n\n# Read all data rows\ndata_rows = []\nfor row in ws.iter_rows(min_row=data_start_row, max_row=ws.max_row):\n    data_rows.append([cell.value for cell in row])\n\n# Filter out rows where column A matches any word in column I\nfiltered_data = [row for row in data_rows if row[0] not in words_to_remove]\n\n# Write the filtered data back to the worksheet\nfor i, row in enumerate(filtered_data, start=data_start_row):\n    for j, value in enumerate(row):\n        ws.cell(row=i, column=j + 1, value=value)\n\n# Save the workbook\nwb.save('output.xlsx')\n```"
+    },
+    {
+      "id": "51-12",
+      "gold": "golden",
+      "pred": "1/1 cells differ",
+      "em": 0.0,
+      "f1": 0.0,
+      "instruction_type": "Sheet-Level Manipulation",
+      "raw": "```python\nfrom openpyxl import load_workbook\n\n# Load the workbook and select the worksheet\nwb = load_workbook('input.xlsx')\nws = wb['Sheet1']\n\n# Define the data range (row 2, columns A to M)\ndata_start_row = 2\ndata_end_row = 2\ndata_start_col = 1\ndata_end_col = 13\n\n# Read the data into a list of lists\ndata = []\nfor row in ws.iter_rows(min_row=data_start_row, max_row=data_end_row, min_col=data_start_col, max_col=data_end_col):\n    data.append([cell.value for cell in row])\n\n# Initialize the count and the current position\ncount = 0\ncurrent_col = data_start_col\n\n# Process each cell in the data range\nwhile current_col <= data_end_col:\n    # Get the current value\n    current_value = data[0][current_col - 1]\n    \n    # Check if the current value is not None (i.e., not empty)\n    if current_value is not None:\n        # Check if the next cell is within the data range\n        next_col = current_col + 1\n        if next_col <= data_end_col:\n            next_value = data[0][next_col - 1]\n            if next_value is not None:\n                # Check if the next value is at least 10% higher\n                if next_value >= current_value * 1.1:\n                    count += 1\n                    # Move to the cell immediately right of the next cell\n                    current_col = next_col + 1\n                else:\n                    # Move to the next cell\n                    current_col += 1\n            else:\n                # Move to the next cell\n                current_col += 1\n        else:\n            # Move to the next cell\n            current_col += 1\n    else:\n        # Move to the next cell\n        current_col += 1\n\n# Write the count to cell B6\nws['B6'] = count\n\n# Save the workbook\nwb.save('output.xlsx')\n```"
+    },
+    {
+      "id": "267-18",
+      "gold": "golden",
+      "pred": "2/2 cells differ",
+      "em": 0.0,
+      "f1": 0.0,
+      "instruction_type": "Sheet-Level Manipulation",
+      "raw": "```python\nfrom openpyxl import load_workbook\n\n# Load the workbook and select the worksheet\nwb = load_workbook('input.xlsx')\nws = wb['Folha1']\n\n# Define the answer range\nanswer_range = 'G1:G2'\n\n# Iterate through the rows in the answer range\nfor row in ws[answer_range]:\n    for cell in row:\n        # Check if the row is highlighted with yellow color\n        if cell.row >= 1 and cell.row <= 2:\n            # Get the current value in the cell\n            current_value = cell.value\n            if current_value:\n                # Add the prefix \"//\" to the value\n                new_value = f'//{current_value}'\n                # Write the computed value back to the cell\n                cell.value = new_value\n\n# Save the workbook as output.xlsx\nwb.save('output.xlsx')\n```"
+    },
+    {
+      "id": "279-23",
+      "gold": "golden",
+      "pred": "match",
+      "em": 1.0,
+      "f1": 1.0,
+      "instruction_type": "Sheet-Level Manipulation",
+      "raw": "```python\nfrom openpyxl import load_workbook\n\n# Load the workbook and select the worksheet\nwb = load_workbook('input.xlsx')\nws = wb['Sheet1']\n\n# Define the answer range\nanswer_range = ws['A3':'B26']\n\n# Process each cell in the answer range\nfor row in answer_range:\n    cell = row[1]  # Column B\n    cell_value = cell.value\n    \n    if cell_value is None:\n        # Leave blank cells blank\n        cell.value = None\n    else:\n        # Check if there are parentheses\n        if '(' in cell_value and ')' in cell_value:\n            # Extract the content inside the parentheses\n            start = cell_value.find('(') + 1\n            end = cell_value.rfind(')')\n            cell.value = cell_value[start:end]\n        else:\n            # No parentheses, leave the cell as is\n            cell.value = cell_value\n\n# Save the workbook\nwb.save('output.xlsx')\n```"
+    },
+    {
+      "id": "290-27",
+      "gold": "golden",
+      "pred": "no output.xlsx; ValueError: Row or column values must be at least 1",
+      "em": 0.0,
+      "f1": 0.0,
+      "instruction_type": "Sheet-Level Manipulation",
+      "raw": "```python\nfrom openpyxl import load_workbook\n\n# Load the workbook and select the worksheet\nwb = load_workbook('input.xlsx')\nws = wb['Sheet1']\n\n# Define the answer range\nstart_row, start_col = 13, 0  # A14 is row 14, column 0 (A)\nend_row, end_col = 137, 8     # I137 is row 137, column 8 (I)\n\n# Iterate through the specified range\nfor row in range(start_row, end_row + 1):\n    for col in range(start_col, end_col + 1):\n        cell = ws.cell(row=row, column=col)\n        if cell.value is None:\n            continue  # Skip empty cells\n        \n        # Check if the cell is in column B (column index 1)\n        if col == 1:\n            # Extract the value from the cell\n            value = str(cell.value)\n            \n            # Check if the value matches the pattern (code followed by number)\n            if len(value) >= 2 and value[0].isalpha() and value[1].isalpha():\n                # Check if the code is 2 letters and there's a space before the number\n                if len(value) >= 3 and value[2] == ' ':\n                    # Extract the number part\n                    number_part = value[3:]\n                else:\n                    # Extract the number part\n                    number_part = value[2:]\n                \n                # Find the first numeric character\n                number_start = None\n                for i, char in enumerate(number_part):\n                    if char.isdigit():\n                        number_start = i\n                        break\n                \n                if number_start is not None:\n                    # Extract the number\n                    number = number_part[number_start:]\n                    # Write the number back to the cell\n                    cell.value = number\n                else:\n                    # If no number found, leave the cell as is\n                    pass\n            else:\n                # If the value doesn't match the pattern, leave it as is\n                pass\n\n# Save the workbook\nwb.save('output.xlsx')\n```"
+    },
+    {
+      "id": "341-40",
+      "gold": "golden",
+      "pred": "match",
+      "em": 1.0,
+      "f1": 1.0,
+      "instruction_type": "Sheet-Level Manipulation",
+      "raw": "```python\nfrom openpyxl import load_workbook\n\n# Load the workbook and select the worksheet\nwb = load_workbook('input.xlsx')\nws = wb['Sheet1']\n\n# Define the range to process (A1:Q701)\n# This includes all rows from 1 to 701 and columns from A to Q\nfor row in ws.iter_rows(min_row=1, max_row=701, min_col=1, max_col=17):\n    # Extract values from columns A, B, C, and Q\n    segment = row[0].value\n    country = row[1].value\n    product = row[2].value\n    # Check if the conditions are met\n    if segment == 'Government' and country == 'Germany' and product == 'Carretera':\n        # Insert 'Volkswagen' into column Q (column 17)\n        ws.cell(row=row[0].row, column=17, value='Volkswagen')\n\n# Save the modified workbook\nwb.save('output.xlsx')\n```"
+    },
+    {
+      "id": "455-35",
+      "gold": "golden",
+      "pred": "14980/104110 cells differ",
+      "em": 0.0,
+      "f1": 0.0,
+      "instruction_type": "Sheet-Level Manipulation",
+      "raw": "```python\nfrom openpyxl import load_workbook\n\n# Load the workbook and select the worksheet\nwb = load_workbook('input.xlsx')\nws = wb['Worksheet1']\n\n# Identify the header row and the first data row\nheader_row = None\ndata_start_row = 1\n\n# Find the header row by checking for the header names\nfor row in ws.iter_rows(min_row=1, max_row=10):\n    if row[0].value == 'Action':\n        header_row = row\n        data_start_row = row[0].row + 1\n        break\n\n# Read the data into a list of dictionaries\ndata = []\nfor row in ws.iter_rows(min_row=data_start_row, max_row=ws.max_row, min_col=1, max_col=10):\n    data.append({\n        'Action': row[0].value,\n        'User': row[1].value,\n        'Date': row[2].value,\n        'Client': row[3].value,\n        'Packslip': row[4].value,\n        'PO Number': row[5].value,\n        'Quantity': row[6].value,\n        'Packsize': row[7].value,\n        'Extended Product Code': row[8].value,\n        'Bin Label': row[9].value\n    })\n\n# Filter the data to keep rows where the first character in column B is 'H' or 'A'\nfiltered_data = []\nfor row in data:\n    if row['Bin Label'] and (row['Bin Label'][0] == 'H' or row['Bin Label'][0] == 'A'):\n        filtered_data.append(row)\n\n# Clear the worksheet and write the filtered data back\nws.delete_rows(data_start_row, ws.max_row)\nfor i, row in enumerate(filtered_data, start=data_start_row):\n    for j, value in enumerate(row.values()):\n        ws.cell(row=i, column=j+1, value=value)\n\n# Save the workbook\nwb.save('output.xlsx')\n```"
+    },
+    {
+      "id": "493-18",
+      "gold": "golden",
+      "pred": "10/42 cells differ",
+      "em": 0.0,
+      "f1": 0.0,
+      "instruction_type": "Sheet-Level Manipulation",
+      "raw": "```python\nfrom openpyxl import load_workbook\nfrom openpyxl.utils import get_column_letter\n\n# Load the workbook and select the worksheet\nwb = load_workbook('input.xlsx')\nws = wb['Sheet1']\n\n# Identify the header row and first data row\nheader_row = None\ndata_row = None\n\nfor row in ws.iter_rows(min_row=1, max_row=7):\n    if row[0].value == 'Car':\n        header_row = row[0].row\n    elif row[0].value is not None:\n        data_row = row[0].row\n        break\n\n# Extract the filter list from column F\nfilter_list = [cell.value for cell in ws['F'][1:7] if cell.value]\n\n# Extract the car names from column A\ncar_names = [cell.value for cell in ws['A'][data_row:7]]\n\n# Find the indices of cars that are in the filter list\nvalid_indices = [i for i, car in enumerate(car_names) if car in filter_list]\n\n# Get the range of columns A, B, and C\ncols = ['A', 'B', 'C']\n\n# Create a list to hold the filtered data\nfiltered_data = []\n\n# Iterate through the rows and collect valid data\nfor i, row in enumerate(ws.iter_rows(min_row=data_row, max_row=7, min_col=1, max_col=3), start=1):\n    if i - 1 in valid_indices:\n        filtered_data.append([cell.value for cell in row])\n\n# Clear the data in columns A, B, and C\nfor col in cols:\n    for row in range(data_row, 8):\n        ws[f'{col}{row}'] = None\n\n# Write the filtered data back to columns A, B, and C\nfor i, row_data in enumerate(filtered_data, start=data_row):\n    for j, value in enumerate(row_data):\n        ws[f'{cols[j]}{i}'] = value\n\n# Remove any blank rows in columns A, B, and C\nblank_rows = []\nfor row in range(data_row, 8):\n    is_blank = True\n    for col in cols:\n        if ws[f'{col}{row}'].value is not None:\n            is_blank = False\n            break\n    if is_blank:\n        blank_rows.append(row)\n\n# Remove blank rows from the worksheet\nfor row in reversed(blank_rows):\n    ws.delete_rows(row)\n\n# Save the workbook\nwb.save('output.xlsx')\n```"
+    },
+    {
+      "id": "73-45",
+      "gold": "golden",
+      "pred": "1/1 cells differ",
+      "em": 0.0,
+      "f1": 0.0,
+      "instruction_type": "Sheet-Level Manipulation",
+      "raw": "```python\nfrom openpyxl import load_workbook\nfrom openpyxl.styles import Font\n\n# Load the workbook and select the worksheet\nwb = load_workbook('input.xlsx')\nws = wb['Sheet1']\n\n# Define the answer range\nanswer_range = ws['BD2':'BD308']\n\n# Define the patterns to search for (example patterns)\npatterns = [\n    'too', 'example', 'test', 'highlight', 'search', 'number', 'text', 'pattern',\n    'whole', 'word', 'ignore', 'empty', 'cells', 'macro', 'bold', 'red', 'highlighted'\n]\n\n# Process each cell in the answer range\nfor cell in answer_range:\n    row = cell[0].row\n    col = cell[0].column\n    cell_value = ws.cell(row=row, column=col).value\n\n    # Skip empty cells\n    if not cell_value:\n        continue\n\n    # Check if any pattern is found in the cell (whole word match)\n    found_patterns = []\n    for pattern in patterns:\n        # Use regex to find whole word matches\n        if f'\\\\b{pattern}\\\\b' in cell_value:\n            found_patterns.append(pattern)\n\n    # Write the found patterns to the cell\n    ws.cell(row=row, column=col).value = ', '.join(found_patterns)\n\n    # Apply bold and red formatting\n    ws.cell(row=row, column=col).font = Font(bold=True, color='FF0000')\n\n# Save the workbook\nwb.save('output.xlsx')\n```"
+    },
+    {
+      "id": "82-38",
+      "gold": "golden",
+      "pred": "12/19 cells differ",
+      "em": 0.0,
+      "f1": 0.0,
+      "instruction_type": "Sheet-Level Manipulation",
+      "raw": "```python\nfrom openpyxl import load_workbook\nfrom openpyxl.utils import get_column_letter\n\n# Load the workbook\nwb = load_workbook('input.xlsx')\nsh1 = wb['SH1']\ndata = wb['DATA']\n\n# Step 1: Identify invoice numbers and their corresponding data ranges on SH1\ninvoice_ranges = []\ncurrent_invoice = None\nstart_row = None\n\nfor row in sh1.iter_rows(min_row=1, max_row=sh1.max_row):\n    if row[2].value == 'INVOICE NO':\n        current_invoice = row[3].value\n        start_row = row[0].row\n    elif row[2].value == 'TOTAL':\n        if current_invoice is not None:\n            end_row = row[0].row\n            invoice_ranges.append((current_invoice, start_row, end_row))\n        current_invoice = None\n        start_row = None\n\n# Step 2: Process the DATA sheet to fill in column D\n# Identify the header row and first data row\nheader_row = None\nfor row in data.iter_rows(min_row=1, max_row=data.max_row):\n    if row[0].value == 'ITEM':\n        header_row = row[0].row\n        break\n\nfirst_data_row = header_row + 1\n\n# Collect all unique sheet names from SH1\nsheet_names = {invoice for invoice, _, _ in invoice_ranges}\n\n# Process each row in DATA\nfor row in data.iter_rows(min_row=first_data_row, max_row=data.max_row):\n    sheet_name = row[4].value  # Column E (0-indexed)\n    if sheet_name in sheet_names:\n        invoice_number = row[3].value  # Column D (0-indexed)\n        # Find the corresponding invoice range on SH1\n        for invoice, start_row, end_row in invoice_ranges:\n            if invoice == invoice_number:\n                # Write the invoice number to column D\n                data.cell(row=row[0].row, column=4, value=invoice)\n                break\n\n# Save the workbook\nwb.save('output.xlsx')\n```"
+    },
+    {
+      "id": "105-24",
+      "gold": "golden",
+      "pred": "match",
+      "em": 1.0,
+      "f1": 1.0,
+      "instruction_type": "Sheet-Level Manipulation",
+      "raw": "```python\nfrom openpyxl import load_workbook\n\n# Load the workbook\nwb = load_workbook('input.xlsx')\n\n# Access the 'Open' and 'Productivity' sheets\nopen_sheet = wb['Open']\nproductivity_sheet = wb['Productivity']\n\n# Find the header row in 'Open' sheet\nheader_row = None\nfor row in open_sheet.iter_rows(min_row=1, max_row=23):\n    if any(cell.value is not None for cell in row):\n        header_row = row\n        break\n\n# Find the first data row in 'Open' sheet\ndata_start_row = header_row[0].row + 1\n\n# Find the header row in 'Productivity' sheet\nproductivity_header_row = None\nfor row in productivity_sheet.iter_rows(min_row=1, max_row=21):\n    if any(cell.value is not None for cell in row):\n        productivity_header_row = row\n        break\n\n# Find the data rows in 'Productivity' sheet\nproductivity_data_rows = []\nfor row in productivity_sheet.iter_rows(min_row=productivity_header_row[0].row + 1, max_row=21):\n    productivity_data_rows.append(row)\n\n# Create a dictionary to map IDs to Names from 'Productivity' sheet\nid_to_name = {}\nfor row in productivity_data_rows:\n    id_cell = row[0]\n    name_cell = row[1]\n    if id_cell.value is not None and name_cell.value is not None:\n        id_to_name[id_cell.value] = name_cell.value\n\n# Define the range to update in 'Open' sheet\nstart_row = data_start_row\nend_row = 23\nstart_col = 3  # Column C\nend_col = 3    # Column C\n\n# Update the IDs in Columns C and K of 'Open' sheet with corresponding Names\nfor row in open_sheet.iter_rows(min_row=start_row, max_row=end_row, min_col=start_col, max_col=end_col):\n    cell = row[0]\n    if cell.value in id_to_name:\n        cell.value = id_to_name[cell.value]\n\n# Also update Column K (column 11)\nstart_col_k = 11\nend_col_k = 11\nfor row in open_sheet.iter_rows(min_row=start_row, max_row=end_row, min_col=start_col_k, max_col=end_col_k):\n    cell = row[0]\n    if cell.value in id_to_name:\n        cell.value = id_to_name[cell.value]\n\n# Save the workbook as output.xlsx\nwb.save('output.xlsx')\n```"
+    },
+    {
+      "id": "142-19",
+      "gold": "golden",
+      "pred": "140/164 cells differ",
+      "em": 0.0,
+      "f1": 0.0,
+      "instruction_type": "Sheet-Level Manipulation",
+      "raw": "```python\nfrom openpyxl import load_workbook\nfrom openpyxl.utils import get_column_letter\n\n# Load the workbook and select the worksheet\nwb = load_workbook('input.xlsx')\nws = wb['Sheet1']\n\n# Find the header row and first data row\nheader_row = None\ndata_start_row = None\nfor row in ws.iter_rows(min_row=1, max_row=82):\n    if all(cell.value is None for cell in row):\n        continue\n    if header_row is None:\n        header_row = row[0].row\n    else:\n        data_start_row = row[0].row\n        break\n\n# Find the end of the data range\ndata_end_row = data_start_row\nfor row in ws.iter_rows(min_row=data_start_row, max_row=82):\n    if all(cell.value is None for cell in row):\n        data_end_row = row[0].row - 1\n        break\n\n# Extract the data\ndata = []\nfor row in ws.iter_rows(min_row=data_start_row, max_row=data_end_row):\n    if all(cell.value is None for cell in row):\n        continue\n    data.append([row[0].value, row[1].value])\n\n# Sort the data based on the number in column A\ndata.sort(key=lambda x: int(x[0].split()[1]))\n\n# Write the sorted data back to the worksheet\nfor i, row in enumerate(data, start=data_start_row):\n    ws[f'A{i}'] = row[0]\n    ws[f'B{i}'] = row[1]\n\n# Save the workbook\nwb.save('output.xlsx')\n```"
+    },
+    {
+      "id": "157-4",
+      "gold": "golden",
+      "pred": "match",
+      "em": 1.0,
+      "f1": 1.0,
+      "instruction_type": "Sheet-Level Manipulation",
+      "raw": "```python\nfrom openpyxl import load_workbook\n\n# Load the workbook and select the worksheet\nwb = load_workbook('input.xlsx')\nws = wb['Sheet1']\n\n# Define the range to check (columns F to L, rows 14 to 83)\nstart_row = 14\nend_row = 83\nstart_col = 6  # 'F' is the 6th column\nend_col = 12  # 'L' is the 12th column\n\n# Read the data into a list of lists\ndata = []\nfor row in ws.iter_rows(min_row=start_row, max_row=end_row, min_col=start_col, max_col=end_col):\n    data.append([cell.value for cell in row])\n\n# Identify rows to delete (rows where all cells in F-L are empty)\nrows_to_delete = []\nfor i, row in enumerate(data, start=start_row):\n    if all(cell is None for cell in row):\n        rows_to_delete.append(i)\n\n# Delete the identified rows\nfor row in sorted(rows_to_delete, reverse=True):\n    ws.delete_rows(row)\n\n# Save the modified workbook\nwb.save('output.xlsx')\n```"
+    },
+    {
+      "id": "170-13",
+      "gold": "golden",
+      "pred": "no output.xlsx; TypeError: 'tuple' object does not support item assignment",
+      "em": 0.0,
+      "f1": 0.0,
+      "instruction_type": "Sheet-Level Manipulation",
+      "raw": "```python\nfrom openpyxl import load_workbook\n\n# Load the workbook\nwb = load_workbook('input.xlsx')\n\n# Access the sheets\nsheet1 = wb['Sheet1']\nsheet2 = wb['Sheet2']\nsheet3 = wb['Sheet3']\n\n# Step 1: Identify the header row and data rows for each sheet\n# For Sheet1, the header is row 1, data starts from row 2\nsheet1_header_row = 1\nsheet1_data_start = 2\nsheet1_data_end = sheet1.max_row\n\n# For Sheet2, the header is row 1, data starts from row 2\nsheet2_header_row = 1\nsheet2_data_start = 2\nsheet2_data_end = sheet2.max_row\n\n# For Sheet3, the header is row 1, data starts from row 2\nsheet3_header_row = 1\nsheet3_data_start = 2\nsheet3_data_end = sheet3.max_row\n\n# Step 2: Extract the headers and data from Sheet1 and Sheet2\nsheet1_headers = [cell.value for cell in sheet1[1]]\nsheet1_data = [[cell.value for cell in row] for row in sheet1[sheet1_data_start:sheet1_data_end + 1]]\n\nsheet2_headers = [cell.value for cell in sheet2[1]]\nsheet2_data = [[cell.value for cell in row] for row in sheet2[sheet2_data_start:sheet2_data_end + 1]]\n\n# Step 3: Create a mapping from Sheet2 headers to their data rows\nsheet2_header_to_data = {}\nfor row in sheet2_data:\n    header = row[0]\n    if header:\n        sheet2_header_to_data[header] = row\n\n# Step 4: Find matching headers in Sheet1 and process data\nsheet3_data = []\nfor entry in sheet1_data:\n    entry_header = entry[0]\n    if entry_header in sheet2_header_to_data:\n        # Get the corresponding data from Sheet2\n        sheet2_row = sheet2_header_to_data[entry_header]\n        # Insert the same number of rows as there are in Sheet2 for this header\n        num_rows_to_insert = len(sheet2_data)\n        # Append the entry to Sheet3\n        sheet3_data.append(entry)\n        # Append the data from Sheet2\n        for i in range(num_rows_to_insert):\n            sheet3_data.append(sheet2_row)\n\n# Step 5: Write the results to Sheet3\nsheet3[sheet3_header_row][0] = 'Output'  # Write the header\nfor i, row in enumerate(sheet3_data, start=sheet3_data_start):\n    for j, value in enumerate(row):\n        sheet3.cell(row=i, column=j + 1, value=value)\n\n# Save the workbook\nwb.save('output.xlsx')\n```"
+    },
+    {
+      "id": "194-19",
+      "gold": "golden",
+      "pred": "444/740 cells differ",
+      "em": 0.0,
+      "f1": 0.0,
+      "instruction_type": "Sheet-Level Manipulation",
+      "raw": "```python\nfrom openpyxl import load_workbook\nfrom openpyxl.utils import get_column_letter\n\n# Load the workbook\nwb = load_workbook('input.xlsx')\nsheet1 = wb['Sheet1']\nsheet2 = wb['Sheet2']\n\n# Determine the header row and data rows for both sheets\n# For Sheet1, find the header row (assuming first row is header)\nsheet1_header_row = 1\nsheet1_data_start = 2\nsheet1_data_end = 372  # As per the given range\n\n# For Sheet2, find the header row (assuming first row is header)\nsheet2_header_row = 1\nsheet2_data_start = 2\nsheet2_data_end = 173  # As per the given data\n\n# Read data from Sheet2\nsheet2_data = []\nfor row in sheet2.iter_rows(min_row=sheet2_data_start, max_row=sheet2_data_end, min_col=1, max_col=13):\n    sheet2_data.append({\n        'Meet': row[3].value,\n        'Race#': row[7].value,\n        'Top': row[8].value,\n        '1': row[9].value,\n        '2': row[10].value,\n        '3': row[11].value,\n        '4': row[12].value\n    })\n\n# Read data from Sheet1\nsheet1_data = []\nfor row in sheet1.iter_rows(min_row=sheet1_data_start, max_row=sheet1_data_end, min_col=1, max_col=10):\n    sheet1_data.append({\n        'Meet': row[3].value,\n        'Race#': row[6].value,\n        'ID': row[0].value,\n        'Rank': row[8].value\n    })\n\n# Create a mapping from (Meet, Race#) to the values from Sheet2\nsheet2_mapping = {}\nfor data in sheet2_data:\n    key = (data['Meet'], data['Race#'])\n    sheet2_mapping[key] = {\n        '1': data['1'],\n        '2': data['2'],\n        '3': data['3'],\n        '4': data['4']\n    }\n\n# Process Sheet1 data and fill in H and I columns\nfor sheet1_row in sheet1_data:\n    meet = sheet1_row['Meet']\n    race_number = sheet1_row['Race#']\n    rank = sheet1_row['Rank']\n    \n    # Get the corresponding data from Sheet2\n    key = (meet, race_number)\n    if key in sheet2_mapping:\n        sheet2_values = sheet2_mapping[key]\n        \n        # Determine the value to write in column I based on the rank\n        if rank == 1:\n            value = sheet2_values['1']\n        elif rank == 2:\n            value = sheet2_values['2']\n        elif rank == 3:\n            value = sheet2_values['3']\n        elif rank == 4:\n            value = sheet2_values['4']\n        else:\n            value = None  # No corresponding value\n        \n        # Write the values to Sheet1\n        # Find the row number in Sheet1\n        row_number = sheet1_data.index(sheet1_row) + sheet1_data_start\n        \n        # Write to column H (rank) and I (value)\n        sheet1.cell(row=row_number, column=8, value=rank)\n        sheet1.cell(row=row_number, column=9, value=value)\n\n# Save the workbook\nwb.save('output.xlsx')\n```"
+    },
+    {
+      "id": "236-22",
+      "gold": "golden",
+      "pred": "14/35 cells differ",
+      "em": 0.0,
+      "f1": 0.0,
+      "instruction_type": "Sheet-Level Manipulation",
+      "raw": "```python\nfrom openpyxl import load_workbook\n\n# Load the workbook\nwb = load_workbook('input.xlsx')\nws = wb['Sheet1']\n\n# Define the answer range\nanswer_range = 'Sheet1!A1:E7'\n\n# Parse the answer range to get first and last row and column\nfirst_row, first_col, last_row, last_col = 1, 1, 7, 5\n\n# Convert to 1-indexed column letters\nfirst_col_letter = chr(first_col + 64)\nlast_col_letter = chr(last_col + 64)\n\n# Define the range as a list of cells\nanswer_cells = [\n    (row, col) for row in range(first_row, last_row + 1)\n    for col in range(first_col, last_col + 1)\n]\n\n# Read the data into a list of lists\ndata = []\nfor row in range(1, ws.max_row + 1):\n    data.append([ws.cell(row=row, column=col).value for col in range(1, 6)])\n\n# Find the header row (row with \"Line No\" in column A)\nheader_row = None\nfor row in range(1, len(data) + 1):\n    if data[row - 1][0] == \"Line No\":\n        header_row = row\n        break\n\n# Find all \"Line No\" rows and the row below them\nline_no_rows = []\nfor row in range(1, len(data) + 1):\n    if data[row - 1][0] == \"Line No\":\n        if row + 1 <= len(data):\n            line_no_rows.append((row, row + 1))\n\n# Remove the rows that need to be deleted\nrows_to_delete = set()\nfor line_no_row, blank_row in line_no_rows:\n    rows_to_delete.add(line_no_row)\n    rows_to_delete.add(blank_row)\n\n# Remove the rows from the data\nfiltered_data = []\nfor row in range(1, len(data) + 1):\n    if row not in rows_to_delete:\n        filtered_data.append(data[row - 1])\n\n# Write the filtered data back to the worksheet\nfor row_idx, row_data in enumerate(filtered_data, start=1):\n    for col_idx, value in enumerate(row_data, start=1):\n        ws.cell(row=row_idx, column=col_idx, value=value)\n\n# Save the workbook\nwb.save('output.xlsx')\n```"
+    },
+    {
+      "id": "120-24",
+      "gold": "golden",
+      "pred": "load error: KeyError: \"There is no item named '[Content_Types].xml' in the archive\"",
+      "em": 0.0,
+      "f1": 0.0,
+      "instruction_type": "Sheet-Level Manipulation",
+      "raw": "```python\nfrom openpyxl import load_workbook\nfrom openpyxl.styles import PatternFill\n\n# Load the workbook and select the worksheet\nwb = load_workbook('input.xlsx')\nws = wb['Sheet1']\n\n# Define the range for BN column\nstart_row = 2\nend_row = 45\nstart_col = 'BN'\nend_col = 'BN'\n\n# Define the fill color for BL cells when BL is 'LAG' and BN is populated\nfill = PatternFill(start_color='0070C0', end_color='0070C0', fill_type='solid')\n\n# Iterate through the rows in the specified range\nfor row in range(start_row, end_row + 1):\n    bl_cell = ws[f'BL{row}']\n    bg_cell = ws[f'BG{row}']\n    ay_cell = ws[f'AY{row}']\n    bn_cell = ws[f'BN{row}']\n    \n    # Check the conditions\n    if bl_cell.value == 'LAG':\n        if bg_cell.value in ['OCOGS - Spares - Transfer Price Overhead', 'OFSS - ORCL Consulting Prod Cost I/C']:\n            if ay_cell.value in ['BOA_033E', 'BOA_011G']:\n                bn_cell.value = 'OCOGS - Spares - Transfer Price Overhead'\n            else:\n                bn_cell.value = 'OFSS - ORCL Consulting Prod Cost I/C'\n            # Apply fill color to BL cell\n            bl_cell.fill = fill\n        else:\n            # If BG does not match the required strings, leave BN as is\n            bn_cell.value = None\n            # Remove fill color if it was applied previously\n            bl_cell.fill = None\n    else:\n        # If BL is not 'LAG', leave BN as is\n        bn_cell.value = None\n        # Remove fill color if it was applied previously\n        bl_cell.fill = None\n\n# Save the workbook\nwb.save('output.xlsx')\n```"
+    },
+    {
+      "id": "188-39",
+      "gold": "golden",
+      "pred": "no output.xlsx; SyntaxError: invalid syntax",
+      "em": 0.0,
+      "f1": 0.0,
+      "instruction_type": "Sheet-Level Manipulation",
+      "raw": "```python\nfrom openpyxl import load_workbook\n\n# Load the workbook and select the sheets\nwb = load_workbook('input.xlsx')\nmain_sheet = wb['main sheet']\nresult_sheet = wb['result']\n\n# Define the target range for writing results\nresult_range = 'result'!B2:D12\n\n# Find the header row and first data row in 'main sheet'\nheader_row = None\nfor row in main_sheet.iter_rows():\n    if row[0].value == 'Location':\n        header_row = row[0].row\n        break\n\n# Extract the data rows from 'main sheet'\ndata_rows = []\nfor row in main_sheet.iter_rows(min_row=header_row + 1):\n    data_rows.append(row)\n\n# Process each data row to find matching designations\nfor data_row in data_rows:\n    location = data_row[0].value\n    name = data_row[1].value\n    contact_no = data_row[2].value\n    mail_id = data_row[3].value\n    designation = data_row[4].value\n\n    # Check if the designation matches 'Branch Manager' or 'Branch Credit Manager'\n    if designation in ['Branch Manager', 'Branch Credit Manager']:\n        # Find the corresponding row in 'result' sheet\n        for result_row in result_sheet.iter_rows(min_row=2, min_col=1, max_col=4):\n            if result_row[0].value == location:\n                # Write the computed values into the result sheet\n                result_row[1].value = designation\n                result_row[2].value = contact_no\n                result_row[3].value = mail_id\n                break\n    else:\n        # Find the corresponding row in 'result' sheet and mark as 'N/A'\n        for result_row in result_sheet.iter_rows(min_row=2, min_col=1, max_col=4):\n            if result_row[0].value == location:\n                result_row[1].value = 'N/A'\n                result_row[2].value = 'N/A'\n                result_row[3].value = 'N/A'\n                break\n\n# Save the workbook as output.xlsx\nwb.save('output.xlsx')\n```"
+    },
+    {
+      "id": "247-24",
+      "gold": "golden",
+      "pred": "182/1794 cells differ",
+      "em": 0.0,
+      "f1": 0.0,
+      "instruction_type": "Sheet-Level Manipulation",
+      "raw": "```python\nfrom openpyxl import load_workbook\nfrom openpyxl.utils import get_column_letter\n\n# Load the workbook and select the Main and Lookup sheets\nwb = load_workbook('input.xlsx')\nmain_sheet = wb['Main']\nlookup_sheet = wb['Lookup']\n\n# Step 1: Delete rows where Company is 'Motorcycle'\nrows_to_delete = []\nfor row in main_sheet.iter_rows(min_row=2, max_col=1, max_row=47):\n    if row[0].value == 'Motorcycle':\n        rows_to_delete.append(row[0].row)\n\n# Delete the rows in reverse order to avoid shifting issues\nfor row in sorted(rows_to_delete, reverse=True):\n    main_sheet.delete_rows(row)\n\n# Step 2: Delete rows where Company is 'Ahmed Sons' and Location is Canada\nrows_to_delete = []\nfor row in main_sheet.iter_rows(min_row=2, max_col=2, max_row=main_sheet.max_row):\n    if row[0].value == 'Ahmed Sons' and row[1].value == 'Canada':\n        rows_to_delete.append(row[0].row)\n\n# Delete the rows in reverse order to avoid shifting issues\nfor row in sorted(rows_to_delete, reverse=True):\n    main_sheet.delete_rows(row)\n\n# Step 3: Change 'Bill Rate of Resource' to 180 for rows where Company is 'National TV' and Location is India\nfor row in main_sheet.iter_rows(min_row=2, max_col=1, max_row=main_sheet.max_row):\n    if row[0].value == 'National TV':\n        for cell in main_sheet[row[0].row]:\n            if cell.column == 7:  # Column G is the 7th column\n                cell.value = 180\n\n# Step 4: Insert two new rows immediately following each row where Company is 'Ahmed Sons'\nrows_to_insert_after = []\nfor row in main_sheet.iter_rows(min_row=2, max_col=1, max_row=main_sheet.max_row):\n    if row[0].value == 'Ahmed Sons':\n        rows_to_insert_after.append(row[0].row)\n\n# Insert the rows in reverse order to avoid shifting issues\nfor row in sorted(rows_to_insert_after, reverse=True):\n    main_sheet.insert_rows(row + 1, 2)\n\n# Step 5: Perform a VLOOKUP to populate Column M with 'working Weeks' data from Lookup sheet\n# First, collect all Employee IDs from the Main sheet\nemployee_ids = [cell.value for row in main_sheet.iter_rows(min_row=2, min_col=3, max_col=3) for cell in row]\n\n# Create a dictionary to map Employee IDs to Working Weeks\nlookup_dict = {}\nfor row in lookup_sheet.iter_rows(min_row=2, max_col=2):\n    employee_id = row[0].value\n    working_weeks = row[1].value\n    lookup_dict[employee_id] = working_weeks\n\n# Populate Column M with the Working Weeks data\nfor row in main_sheet.iter_rows(min_row=2, min_col=3, max_col=3):\n    employee_id = row[0].value\n    if employee_id in lookup_dict:\n        main_sheet.cell(row=row[0].row, column=13).value = lookup_dict[employee_id]\n\n# Save the workbook\nwb.save('output.xlsx')\n```"
+    },
+    {
+      "id": "341-14",
+      "gold": "golden",
+      "pred": "45/56 cells differ",
+      "em": 0.0,
+      "f1": 0.0,
+      "instruction_type": "Sheet-Level Manipulation",
+      "raw": "```python\nfrom openpyxl import load_workbook\n\n# Load the workbook\nwb = load_workbook('input.xlsx')\n\n# Access the 'problem' and 'result' sheets\nproblem_sheet = wb['problem']\nresult_sheet = wb['result']\n\n# Read data from 'problem' sheet\nproblem_data = []\nfor row in problem_sheet.iter_rows(min_col=1, max_col=2, min_row=1, max_row=10):\n    if row[0].value is not None:\n        problem_data.append({\n            'letter': row[0].value,\n            'value': row[1].value\n        })\n\n# Determine the range for the result sheet\n# The result range is A1:B28, so we'll write to rows 1-28 and columns A-B\n\n# Write the transformed data to the 'result' sheet\nrow_index = 1\nfor entry in problem_data:\n    # Write the letter to column A\n    result_sheet.cell(row=row_index, column=1, value=entry['letter'])\n    # Write the value to column B if it exists, otherwise leave it blank\n    if entry['value'] is not None:\n        result_sheet.cell(row=row_index, column=2, value=entry['value'])\n    row_index += 1\n\n# Save the workbook as output.xlsx\nwb.save('output.xlsx')\n```"
+    },
+    {
+      "id": "359-21",
+      "gold": "golden",
+      "pred": "14/18 cells differ",
+      "em": 0.0,
+      "f1": 0.0,
+      "instruction_type": "Sheet-Level Manipulation",
+      "raw": "```python\nfrom openpyxl import load_workbook\n\n# Load the workbook and select the worksheet\nwb = load_workbook('input.xlsx')\nws = wb['Delete']\n\n# Identify the header row and data rows\nheader_row = None\ndata_rows = []\n\n# Find the header row (assumed to be the first row with non-empty cells)\nfor row in ws.iter_rows(min_row=1, max_row=9):\n    if any(cell.value for cell in row):\n        header_row = row[0].row\n        break\n\n# Extract data rows\nfor row in ws.iter_rows(min_row=header_row + 1, max_row=9):\n    data_rows.append(row)\n\n# Process data to delete rows where column B is \"STATIONERY\" or \"VEGETABLES\"\nrows_to_keep = []\nfor row in data_rows:\n    if row[1].value not in (\"STATIONERY\", \"VEGETABLES\"):\n        rows_to_keep.append(row)\n\n# Determine the new data range\nnew_data_start_row = header_row + 1\nnew_data_end_row = new_data_start_row + len(rows_to_keep) - 1\n\n# Clear the existing data and write the new data\nfor row in ws.iter_rows(min_row=1, max_row=9):\n    for cell in row:\n        cell.value = None\n\nfor i, row in enumerate(rows_to_keep, start=new_data_start_row):\n    for j, cell in enumerate(row):\n        ws.cell(row=i, column=j + 1, value=cell.value)\n\n# Save the workbook\nwb.save('output.xlsx')\n```"
+    },
+    {
+      "id": "374-31",
+      "gold": "golden",
+      "pred": "7/20 cells differ",
+      "em": 0.0,
+      "f1": 0.0,
+      "instruction_type": "Sheet-Level Manipulation",
+      "raw": "```python\nfrom openpyxl import load_workbook\n\n# Load the workbook and select the worksheet\nwb = load_workbook('input.xlsx')\nws = wb['Sheet1']\n\n# Identify the header row and first data row\nheader_row = None\ndata_row = None\n\nfor row in ws.iter_rows(min_row=1, max_row=5):\n    if row[0].value == \"Code\":\n        header_row = row[0].row\n    elif row[0].value is not None:\n        data_row = row[0].row\n\n# Determine the range to process\nstart_row = 1\nend_row = 5\n\n# Read all data into a list of dictionaries\ndata = []\nfor row in ws.iter_rows(min_row=start_row, max_row=end_row, min_col=1, max_col=4):\n    data.append({\n        'A': row[0].value,\n        'B': row[1].value,\n        'C': row[2].value,\n        'D': row[3].value\n    })\n\n# Find the row with \"Code\" in column A\ncode_row = None\nfor i, row in enumerate(data):\n    if row['A'] == \"Code\":\n        code_row = i\n        break\n\n# Filter out blank rows above the \"Code\" row\nfiltered_data = []\nfor i, row in enumerate(data):\n    if i < code_row and (row['A'] is None or row['A'] == \"\"):\n        continue\n    filtered_data.append(row)\n\n# Write the filtered data back to the worksheet\nfor i, row in enumerate(filtered_data):\n    ws.cell(row=i + start_row, column=1, value=row['A'])\n    ws.cell(row=i + start_row, column=2, value=row['B'])\n    ws.cell(row=i + start_row, column=3, value=row['C'])\n    ws.cell(row=i + start_row, column=4, value=row['D'])\n\n# Save the workbook\nwb.save('output.xlsx')\n```"
+    },
+    {
+      "id": "387-16",
+      "gold": "golden",
+      "pred": "no output.xlsx; TypeError: unsupported operand type(s) for +: 'int' and 'str'",
+      "em": 0.0,
+      "f1": 0.0,
+      "instruction_type": "Sheet-Level Manipulation",
+      "raw": "```python\nfrom openpyxl import load_workbook\n\n# Load the workbook and select the worksheet\nwb = load_workbook('input.xlsx')\nws = wb['Sheet1']\n\n# Identify the header row and data rows\n# Assume first row is header, but check for 'Value' and 'Binaries' to confirm\nheader_row = None\nfor row in ws.iter_rows(min_row=1, max_row=21):\n    if any(cell.value == 'Value' or cell.value == 'Binaries' for cell in row):\n        header_row = row[0].row\n        break\n\n# Find the range of data rows\ndata_rows = []\nfor row in ws.iter_rows(min_row=header_row + 1, max_row=21):\n    data_rows.append(row)\n\n# Extract the 'Value' and 'Binaries' columns\nvalues = [cell.value for cell in ws['A'][1:]]\nbinaries = [cell.value for cell in ws['B'][1:]]\n\n# Extract the 'Result values' column\nresult_values = [cell.value for cell in ws['G'][1:]]  # Assuming 'Result values' is in column G\n\n# Create a set of values to remove\nvalues_to_remove = set(result_values)\n\n# Filter out the values to remove from 'Values' and 'Binaries'\nfiltered_values = [v for v in values if v not in values_to_remove]\nfiltered_binaries = [b for b in binaries if b not in values_to_remove]\n\n# Remove blank cells by shifting remaining values up\nfiltered_values = [v for v in filtered_values if v is not None]\nfiltered_binaries = [b for b in filtered_binaries if b is not None]\n\n# Calculate the solver result (sum of column A)\nsolver_result = sum(filtered_values)\n\n# Calculate the difference\ndifference = solver_result - 65477  # Target value is 65477\n\n# Write the computed values to the answer range\nws['A2'] = solver_result\nws['B2'] = difference\nws['C2'] = 'Difference'\nws['D2'] = 'Solver result'\n\n# Save the workbook\nwb.save('output.xlsx')\n```"
+    },
+    {
+      "id": "399-14",
+      "gold": "golden",
+      "pred": "no output.xlsx; AttributeError: 'tuple' object has no attribute 'number_format'",
+      "em": 0.0,
+      "f1": 0.0,
+      "instruction_type": "Sheet-Level Manipulation",
+      "raw": "```python\nfrom openpyxl import load_workbook\nfrom openpyxl.styles import Font, Alignment\nfrom openpyxl.utils import get_column_letter\n\n# Load the workbook and select the worksheet\nwb = load_workbook('input.xlsx')\nws = wb['Sheet1']\n\n# Define the range for processing\nstart_row = 7\nend_row = 23\nstart_col_n = 'N'\nstart_col_o = 'O'\n\n# Set the font to '\u7b49\u7ebf' for the entire sheet\nfont = Font(name='\u7b49\u7ebf')\n\n# Apply the font to the entire sheet\nfor row in ws.iter_rows():\n    for cell in row:\n        cell.font = font\n\n# Apply number formatting to columns N, O, and P\nfor col in ['N', 'O', 'P']:\n    col_letter = get_column_letter(ord(col) - ord('A') + ord('A'))\n    for cell in ws[f\"{col_letter}{start_row}:{col_letter}{end_row}\"]:\n        cell.number_format = '#,##0.##'\n\n# Apply General formatting to whole numbers in columns N, O, and P\nfor col in ['N', 'O', 'P']:\n    col_letter = get_column_letter(ord(col) - ord('A') + ord('A'))\n    for row in range(start_row, end_row + 1):\n        cell = ws[f\"{col_letter}{row}\"]\n        if cell.value is not None and cell.value == int(cell.value):\n            cell.number_format = 'General'\n\n# Process each row in the range\nfor row in range(start_row, end_row + 1):\n    n_cell = ws[f\"N{row}\"]\n    o_cell = ws[f\"O{row}\"]\n    \n    # Check if the value in column N is greater than 40\n    if n_cell.value > 40:\n        # Set column N to 40\n        n_cell.value = 40\n        # Calculate the overtime hours and set column O\n        o_cell.value = n_cell.value - 40\n    else:\n        # If the value is less than or equal to 40, leave it as is\n        o_cell.value = 0\n\n# Save the workbook\nwb.save('output.xlsx')\n```"
+    },
+    {
+      "id": "414-20",
+      "gold": "golden",
+      "pred": "match",
+      "em": 1.0,
+      "f1": 1.0,
+      "instruction_type": "Sheet-Level Manipulation",
+      "raw": "```python\nfrom openpyxl import load_workbook\n\n# Load the workbook and select the worksheet\nwb = load_workbook('input.xlsx')\nws = wb['Sheet1']\n\n# Find the first occurrence of \"Invoice No.\" in column A (case-insensitive)\ninvoice_row = None\nfor row in ws['A']:\n    if row.value and \"invoice no.\" in row.value.lower():\n        invoice_row = row.row\n        break\n\n# If \"Invoice No.\" is found, delete all rows above it\nif invoice_row:\n    for row in range(1, invoice_row):\n        ws.delete_rows(row)\n\n# Write computed values into the specified range\n# Since the task says to write values into A4:A18, we'll fill those cells with empty strings\nfor row in range(4, 19):  # A4 to A18 (inclusive)\n    ws.cell(row=row, column=1, value='')\n\n# Save the modified workbook\nwb.save('output.xlsx')\n```"
+    },
+    {
+      "id": "438-18",
+      "gold": "golden",
+      "pred": "no output.xlsx; IndexError: slice(2, None, None) is not a valid coordinate or range",
+      "em": 0.0,
+      "f1": 0.0,
+      "instruction_type": "Sheet-Level Manipulation",
+      "raw": "```python\nfrom openpyxl import load_workbook\n\n# Define the mapping of full origin names to their shortened versions\norigin_mapping = {\n    'UNATIDE STATES AMERICAN': 'USA',\n    'FRANCE': 'FRA',\n    'KOREA': 'KOR',\n    'GERMANY': 'GR',\n    'ITALY': 'IT'\n}\n\n# Load the workbook and select the input sheet\nwb = load_workbook('input.xlsx')\ninput_sheet = wb['INPUT']\n\n# Identify the header and data rows in the input sheet\n# Assume the first row is the header\ninput_header_row = input_sheet[1]\ninput_data_rows = input_sheet[2:]\n\n# Read the data from the input sheet\ninput_data = []\nfor row in input_data_rows:\n    row_data = {}\n    for cell in row:\n        # Map column letters to their respective headers\n        col_letter = cell.column_letter\n        header = input_header_row[cell.column - 1].value\n        row_data[header] = cell.value\n    input_data.append(row_data)\n\n# Prepare the output sheet\noutput_sheet = wb.create_sheet('OUTPUT')\noutput_sheet.title = 'OUTPUT'\n\n# Define the header row for the output sheet\noutput_header = ['ITEM', 'BRANDS', 'TYPE', 'ORIGIN']\nfor col_num, header in enumerate(output_header, 1):\n    output_sheet.cell(row=1, column=col_num, value=header)\n\n# Process each row of data and write to the output sheet\nfor idx, row_data in enumerate(input_data, start=2):\n    # Get the origin value and replace it if it's in the mapping\n    origin = row_data.get('ORIGIN', '')\n    if origin in origin_mapping:\n        row_data['ORIGIN'] = origin_mapping[origin]\n    \n    # Write the row to the output sheet\n    for col_num, header in enumerate(output_header, 1):\n        value = row_data.get(header, '')\n        output_sheet.cell(row=idx, column=col_num, value=value)\n\n# Save the workbook\nwb.save('output.xlsx')\n```"
+    },
+    {
+      "id": "486-17",
+      "gold": "golden",
+      "pred": "no output.xlsx; ValueError: invalid literal for int() with base 10: 'atum'",
+      "em": 0.0,
+      "f1": 0.0,
+      "instruction_type": "Sheet-Level Manipulation",
+      "raw": "```python\nfrom openpyxl import load_workbook\n\n# Load the workbook and select the worksheet\nwb = load_workbook('input.xlsx')\nws = wb['Blad1']\n\n# Define the range to process (B2:B130)\nstart_row = 2\nend_row = 130\nstart_col = 2  # Column B is the second column (1-indexed)\n\n# Process each cell in the range\nfor row in range(start_row, end_row + 1):\n    # Get the date string from column A (column 1)\n    date_str = ws[f'A{row}'].value\n    \n    # Convert the date string to a datetime object\n    # The format is '0yyyymmdd', so we remove the leading zero and parse\n    year = int(date_str[1:5])\n    month = int(date_str[5:7])\n    day = int(date_str[7:9])\n    \n    # Format the date as 'yyyy mm dd'\n    formatted_date = f\"{year} {month} {day}\"\n    \n    # Write the formatted date to column B (column 2)\n    ws[f'B{row}'] = formatted_date\n\n# Save the workbook as output.xlsx\nwb.save('output.xlsx')\n```"
+    },
+    {
+      "id": "496-34",
+      "gold": "golden",
+      "pred": "no output.xlsx; TypeError: expected <class 'int'>",
+      "em": 0.0,
+      "f1": 0.0,
+      "instruction_type": "Sheet-Level Manipulation",
+      "raw": "```python\nfrom openpyxl import load_workbook\nfrom openpyxl.styles import Font, Color\nfrom datetime import datetime\n\n# Load workbook and select the worksheet\nwb = load_workbook('input.xlsx')\nws = wb['Sheet1']\n\n# Step 1: Unmerge all merged cells\nfor merged_cell in ws.merged_cells:\n    ws.unmerge_cells(range_string=merged_cell)\n\n# Step 2: Process data to group by ID and sum amounts\ndata = []\nfor row in ws.iter_rows(min_row=2, max_row=8, min_col=1, max_col=4):\n    if row[0].value:\n        data.append({\n            'ID': row[0].value,\n            'Name': row[1].value,\n            'Date': row[2].value,\n            'Amount': row[3].value\n        })\n\n# Group by ID and sum amounts\nid_groups = {}\nfor item in data:\n    if item['ID'] not in id_groups:\n        id_groups[item['ID']] = {\n            'ID': item['ID'],\n            'Name': item['Name'],\n            'Date': item['Date'],\n            'Total': item['Amount']\n        }\n    else:\n        id_groups[item['ID']]['Total'] += item['Amount']\n\n# Step 3: Write the processed data back to the worksheet\nrow_idx = 2\nfor group in id_groups.values():\n    ws.cell(row=row_idx, column=1, value=group['ID'])\n    ws.cell(row=row_idx, column=2, value=group['Name'])\n    ws.cell(row=row_idx, column=3, value=group['Date'])\n    ws.cell(row=row_idx, column=4, value=int(group['Total']))\n    row_idx += 1\n\n# Step 4: Apply formatting\n# Set font color to black and remove bold\nfor row in ws.iter_rows(min_row=2, max_row=row_idx-1, min_col=1, max_col=4):\n    for cell in row:\n        cell.font = Font(color=Color(indexed=8), bold=False)\n\n# Step 5: Handle columns F and G\n# Find the first and last ID in the processed data\nids = [group['ID'] for group in id_groups.values()]\nfirst_id = ids[0]\nlast_id = ids[-1]\n\n# Find the row indices for first and last ID\nfirst_row = None\nlast_row = None\nfor row in ws.iter_rows(min_row=2, max_row=row_idx-1, min_col=1, max_col=1):\n    if row[0].value == first_id:\n        first_row = row[0].row\n    if row[0].value == last_id:\n        last_row = row[0].row\n\n# Write values in columns F and G\nws.cell(row=first_row, column=6, value=140)\nws.cell(row=last_row, column=7, value=45)\n\n# Save the workbook\nwb.save('output.xlsx')\n```"
+    },
+    {
+      "id": "531-18",
+      "gold": "golden",
+      "pred": "no output.xlsx; AttributeError: 'datetime.datetime' object has no attribute 'startswith'",
+      "em": 0.0,
+      "f1": 0.0,
+      "instruction_type": "Sheet-Level Manipulation",
+      "raw": "```python\nfrom openpyxl import load_workbook\nfrom openpyxl.utils import get_column_letter\n\n# Load the workbook and select the 'Data' sheet\nwb = load_workbook('input.xlsx')\ndata_sheet = wb['Data']\ntranspose_sheet = wb.create_sheet('Transpose')\n\n# Identify header and data rows in 'Data' sheet\nheader_row = None\ndata_rows = []\n\nfor row in data_sheet.iter_rows(min_row=1, max_row=28):\n    if row[0].value == 'ITEM':\n        header_row = row\n        break\n\n# Extract column indices for ITEM, DATE, and QTY columns\nitem_col = header_row.index(row[0]) + 1  # 1-indexed\ndate_cols = [i + 1 for i, cell in enumerate(header_row) if cell.value.startswith('2020') or cell.value.startswith('2021')]\nqty_col = header_row.index(row[0]) + 1  # Assuming QTY is the same as ITEM column for now\n\n# Read data rows\nfor row in data_sheet.iter_rows(min_row=7, max_row=28):\n    item = row[item_col - 1].value\n    if item:\n        data_rows.append({\n            'ITEM': item,\n            'DATES': [cell.value for cell in row[date_cols]],\n            'QTYS': [cell.value for cell in row[qty_col - 1]]\n        })\n\n# Write header to 'Transpose' sheet\ntranspose_sheet['A1'] = 'ITEM'\ntranspose_sheet['B1'] = 'Date'\ntranspose_sheet['C1'] = 'Qty'\n\n# Write data to 'Transpose' sheet\nrow_index = 2\nfor data in data_rows:\n    item = data['ITEM']\n    dates = data['DATES']\n    qtys = data['QTYS']\n    \n    for date, qty in zip(dates, qtys):\n        if date and qty:\n            transpose_sheet.cell(row=row_index, column=1, value=item)\n            transpose_sheet.cell(row=row_index, column=2, value=date)\n            transpose_sheet.cell(row=row_index, column=3, value=qty)\n            row_index += 1\n\n# Save the workbook\nwb.save('output.xlsx')\n```"
+    },
+    {
+      "id": "547-43",
+      "gold": "golden",
+      "pred": "no output.xlsx; TypeError: 'int' object is not subscriptable",
+      "em": 0.0,
+      "f1": 0.0,
+      "instruction_type": "Sheet-Level Manipulation",
+      "raw": "```python\nfrom openpyxl import load_workbook, Workbook\nfrom openpyxl.utils import get_column_letter\n\n# Load the workbook and sheets\nwb = load_workbook('input.xlsx')\nemp_sheet = wb['Emp']\nlookup_sheet = wb['Lookup']\nexpected_sheet = wb.create_sheet('Expected')\n\n# Read the 'Emp' sheet to find the header and data rows\nemp_headers = [cell.value for cell in emp_sheet[1]]\nemp_data = [cell.value for row in emp_sheet.iter_rows(min_row=2, max_col=len(emp_headers)) for cell in row]\n\n# Read the 'Lookup' sheet\nlookup_data = []\nfor row in lookup_sheet.iter_rows(min_row=2, max_col=3):\n    lookup_data.append([cell.value for cell in row])\n\n# Extract variable names from the 'Emp' sheet\nemp_variables = emp_headers[4:]  # Skip the first 4 columns (seqno, Empno, ename, Jobid)\n\n# Create a mapping from variable names to category and subcategory\nvariable_mapping = {row[0]: (row[1], row[2]) for row in lookup_data}\n\n# Prepare the data for the 'Expected' sheet\nexpected_data = []\nfor i, variable in enumerate(emp_variables):\n    category, subcategory = variable_mapping[variable]\n    for j, row in enumerate(emp_data[::len(emp_variables)]):\n        # Extract the row data\n        seqno, empno, ename, jobid = row[:4]\n        value = row[4 + i]\n        expected_data.append([\n            seqno, empno, ename, jobid, variable, category, subcategory, value\n        ])\n\n# Write the data to the 'Expected' sheet\nfor row_idx, row_data in enumerate(expected_data, start=2):\n    for col_idx, value in enumerate(row_data, start=1):\n        expected_sheet.cell(row=row_idx, column=col_idx, value=value)\n\n# Save the workbook\nwb.save('output.xlsx')\n```"
+    },
+    {
+      "id": "585-41",
+      "gold": "golden",
+      "pred": "no output.xlsx; TypeError: 'float' object is not iterable",
+      "em": 0.0,
+      "f1": 0.0,
+      "instruction_type": "Sheet-Level Manipulation",
+      "raw": "```python\nfrom openpyxl import load_workbook\n\n# Load the workbook and select the worksheet\nwb = load_workbook('input.xlsx')\nws = wb['Sheet1']\n\n# Define the range to process\nstart_row = 1\nstart_col = 1\nend_row = 1\nend_col = 8\n\n# Process each cell in the range\nfor row in range(start_row, end_row + 1):\n    for col in range(start_col, end_col + 1):\n        cell = ws.cell(row=row, column=col)\n        # Remove all non-numeric characters except the decimal point\n        cleaned_value = ''.join(char for char in cell.value if char.isdigit() or char == '.')\n        # Convert to float if the value is numeric\n        if cleaned_value and cleaned_value.replace('.', '', 1).isdigit():\n            cell.value = float(cleaned_value)\n        else:\n            cell.value = cleaned_value\n\n# Save the workbook\nwb.save('output.xlsx')\n```"
+    },
+    {
+      "id": 30930,
+      "gold": "golden",
+      "pred": "9/65 cells differ",
+      "em": 0.0,
+      "f1": 0.0,
+      "instruction_type": "Cell-Level Manipulation",
+      "raw": "```python\nfrom openpyxl import load_workbook\n\n# Load the workbook and select the active sheet\nwb = load_workbook('input.xlsx')\nws = wb.active\n\n# Find the header row and first data row\nheader_row = None\ndata_start_row = None\n\nfor row in ws.iter_rows(min_row=1, max_row=66):\n    if row[1].value == 1:  # Found the first occurrence of 1 in column B\n        data_start_row = row[0].row\n        break\n\n# Initialize a list to store the results\nresults = []\n\n# Iterate through the rows to calculate the number of values greater than zero\ncurrent_group = []\nin_group = False\n\nfor row in ws.iter_rows(min_row=data_start_row, max_row=66):\n    if row[1].value == 1:\n        if in_group:\n            # End of a group, calculate the count\n            count = sum(1 for cell in current_group if cell.value > 0)\n            results.append(count)\n            current_group = []\n            in_group = False\n        else:\n            # Start of a new group\n            in_group = True\n            current_group.append(row[0])\n    elif in_group:\n        # Add to the current group\n        current_group.append(row[0])\n\n# Handle the last group if it ends without a 1\nif in_group:\n    count = sum(1 for cell in current_group if cell.value > 0)\n    results.append(count)\n\n# Write the results to column C\nfor i, value in enumerate(results):\n    ws.cell(row=data_start_row + i, column=3, value=value)\n\n# Save the workbook\nwb.save('output.xlsx')\n```"
+    },
+    {
+      "id": 37900,
+      "gold": "golden",
+      "pred": "1/1 cells differ",
+      "em": 0.0,
+      "f1": 0.0,
+      "instruction_type": "Cell-Level Manipulation",
+      "raw": "```python\nfrom openpyxl import load_workbook\nfrom datetime import datetime\n\n# Load the workbook and select the active sheet\nwb = load_workbook('input.xlsx')\nws = wb.active\n\n# Identify the header row and data rows\nheader_row = None\ndata_rows = []\n\n# Scan the first few rows to find the header\nfor row in ws.iter_rows(min_row=1, max_row=20):\n    if any(cell.value for cell in row):\n        header_row = row\n        break\n\n# Find the 'Date' and 'Value' columns\ndate_col = None\nvalue_col = None\n\nfor cell in header_row:\n    if cell.value == 'Date':\n        date_col = cell.column\n    elif cell.value == 'Value':\n        value_col = cell.column\n\n# Extract the date and value data\ndates = []\nvalues = []\n\nfor row in ws.iter_rows(min_row=header_row[0].row + 1, max_row=ws.max_row):\n    if row[date_col - 1].value:\n        dates.append(row[date_col - 1].value)\n        values.append(row[value_col - 1].value)\n\n# Get the current date\ncurrent_date = datetime.now().date()\n\n# Find the value corresponding to the current date\ncurrent_value = None\nfor date, value in zip(dates, values):\n    if date.date() == current_date:\n        current_value = value\n        break\n\n# Write the computed value to the specified range\nws['E5'] = current_value\n\n# Save the workbook\nwb.save('output.xlsx')\n```"
+    },
+    {
+      "id": 38703,
+      "gold": "golden",
+      "pred": "no output.xlsx; RuntimeError: Set changed size during iteration",
+      "em": 0.0,
+      "f1": 0.0,
+      "instruction_type": "Cell-Level Manipulation",
+      "raw": "```python\nfrom openpyxl import load_workbook\nfrom openpyxl.utils import get_column_letter\n\n# Load the workbook and select the active sheet\nwb = load_workbook('input.xlsx')\nws = wb.active\n\n# Unmerge all merged cells\nfor merged_range in ws.merged_cells:\n    ws.unmerge_cells(str(merged_range))\n\n# Define the ranges to process\nranges = [\n    ('E2:E10', 'H10'),\n    ('E11:E20', 'H20'),\n    ('E21:E24', 'H24')\n]\n\n# Process each range and compute unique counts\nfor data_range, output_cell in ranges:\n    # Extract the data range\n    start_row, start_col = data_range.split(':')\n    start_row = int(start_row[1:])\n    start_col = int(start_col[1:])\n    end_row, end_col = data_range.split(':')\n    end_row = int(end_row[1:])\n    end_col = int(end_col[1:])\n    \n    # Collect the 'Item No.' values\n    item_nos = []\n    for row in range(start_row, end_row + 1):\n        item_no = ws.cell(row=row, column=start_col).value\n        if item_no is not None:\n            item_nos.append(item_no)\n    \n    # Count unique 'Item No.' values\n    unique_count = len(set(item_nos))\n    \n    # Write the result to the output cell\n    output_col = int(output_cell[1:])\n    ws.cell(row=int(output_cell[0:]), column=output_col).value = unique_count\n\n# Save the workbook\nwb.save('output.xlsx')\n```"
+    },
+    {
+      "id": 39046,
+      "gold": "golden",
+      "pred": "4/5 cells differ",
+      "em": 0.0,
+      "f1": 0.0,
+      "instruction_type": "Cell-Level Manipulation",
+      "raw": "```python\nfrom openpyxl import load_workbook\n\n# Load the workbook and select the active sheet\nwb = load_workbook('input.xlsx')\nws = wb.active\n\n# Define the range for the answer (F2:F6)\nanswer_range = ws['F2':'F6']\n\n# Find the header row and first data row\nheader_row = None\ndata_start_row = None\n\nfor row in ws.iter_rows(min_row=1, max_row=18):\n    if any(cell.value for cell in row):\n        header_row = row[0].row\n        data_start_row = row[0].row + 1\n        break\n\n# Read the data into a list of dictionaries\ndata = []\nfor row in ws.iter_rows(min_row=data_start_row, max_row=18):\n    if not row[0].value:\n        break\n    data.append({\n        'DATE': row[0].value,\n        'REF': row[1].value,\n        'STATUS': row[2].value,\n        'SUBREFS': row[3].value,\n        'Subs?': row[4].value,\n        'No. Subs': row[5].value\n    })\n\n# Process the data to compute the 'No. Subs' column\nfor i, entry in enumerate(data):\n    ref = entry['REF']\n    subrefs = entry['SUBREFS']\n    if subrefs:\n        # Check if any subref contains the parent reference\n        has_match = any(ref in subref for subref in subrefs.split(','))\n        entry['Subs?'] = 'Yes' if has_match else 'No'\n        # Count the number of subrefs\n        entry['No. Subs'] = len(subrefs.split(',')) if subrefs else 0\n    else:\n        entry['Subs?'] = 'No'\n        entry['No. Subs'] = 0\n\n# Write the computed values to the answer range\nfor i, entry in enumerate(data):\n    row_idx = data_start_row + i\n    ws.cell(row=row_idx, column=6, value=entry['No. Subs'])\n\n# Save the workbook\nwb.save('output.xlsx')\n```"
+    },
+    {
+      "id": 39903,
+      "gold": "golden",
+      "pred": "5/5 cells differ",
+      "em": 0.0,
+      "f1": 0.0,
+      "instruction_type": "Cell-Level Manipulation",
+      "raw": "```python\nfrom openpyxl import load_workbook\nfrom openpyxl.styles import Border, Side, Font\n\n# Load the workbook and select the active sheet\nwb = load_workbook('input.xlsx')\nws = wb.active\n\n# Define the range for the answer\nanswer_range = 'C2:C6'\n\n# Find the header row and first data row\nheader_row = None\ndata_row = None\n\nfor row in ws.iter_rows(min_row=1, max_row=16):\n    if any(cell.value for cell in row):\n        header_row = row[0].row\n        break\n\nfor row in ws.iter_rows(min_row=header_row + 1, max_row=16):\n    if any(cell.value for cell in row):\n        data_row = row[0].row\n        break\n\n# Read the data into a list of dictionaries\ndata = []\nfor row in ws.iter_rows(min_row=data_row, max_row=16):\n    product_id = row[0].value\n    locations = row[1].value\n    if locations:\n        data.append({\n            'product_id': product_id,\n            'locations': locations\n        })\n\n# Process the data to count valid bin locations\nvalid_bin_count = 0\nfor entry in data:\n    locations = entry['locations']\n    if isinstance(locations, str):\n        # Split the locations by comma\n        location_list = locations.split(', ')\n        for location in location_list:\n            # Split the location into parts\n            parts = location.split(': ')\n            if len(parts) == 2:\n                location_code = parts[0]\n                quantity = parts[1]\n                # Check if the location starts with 'X' or 'Z'\n                if not location_code.startswith(('X', 'Z')):\n                    # Extract the bin location (everything after the first '-')\n                    bin_location = location_code.split('-')[1:]\n                    bin_location = '-'.join(bin_location)\n                    # Count the quantity\n                    valid_bin_count += int(quantity)\n\n# Write the computed value to the answer range\nws['C2'] = valid_bin_count\n\n# Set borders for cells C2:C6\nborder = Border(left=Side(style='thin'), \n               right=Side(style='thin'), \n               top=Side(style='thin'), \n               bottom=Side(style='thin'))\n\nfor cell in ws['C2':'C6']:\n    for c in cell:\n        c.border = border\n        c.font = Font(name='Courier New', size=9)\n\n# Save the workbook\nwb.save('output.xlsx')\n```"
+    },
+    {
+      "id": 41601,
+      "gold": "golden",
+      "pred": "match",
+      "em": 1.0,
+      "f1": 1.0,
+      "instruction_type": "Cell-Level Manipulation",
+      "raw": "```python\nfrom openpyxl import load_workbook\n\n# Load the workbook\nwb = load_workbook('input.xlsx')\n\n# Access the 'Students' sheet\nstudents_sheet = wb['Students']\n\n# Access the sheets for each student\nstudent_sheets = {\n    'Joe': wb['Joe'],\n    'Bill': wb['Bill'],\n    'Phil': wb['Phil'],\n    'Mary': wb['Mary'],\n    'Larry': wb['Larry'],\n    'Hugo': wb['Hugo']\n}\n\n# Get the list of student names from column A (rows 2 to 7)\nstudent_names = [students_sheet[f'A{i}'].value for i in range(2, 8)]\n\n# For each student, get their age from their respective sheet\nages = {}\nfor name in student_names:\n    if name in student_sheets:\n        age_cell = student_sheets[name]['C2']\n        ages[name] = age_cell.value\n\n# Write the computed ages to the 'Students' sheet in column E (rows 2 to 7)\nfor i, name in enumerate(student_names, start=2):\n    students_sheet[f'E{i}'] = ages.get(name, '')\n\n# Save the workbook as output.xlsx\nwb.save('output.xlsx')\n```"
+    },
+    {
+      "id": 42526,
+      "gold": "golden",
+      "pred": "match",
+      "em": 1.0,
+      "f1": 1.0,
+      "instruction_type": "Cell-Level Manipulation",
+      "raw": "```python\nfrom openpyxl import load_workbook\nfrom openpyxl.styles import PatternFill\n\n# Load the workbook and select the active sheet\nwb = load_workbook('input.xlsx')\nws = wb.active\n\n# Define the range for the answer\nanswer_range = 'B2:B16'\n\n# Step 1: Identify the data range\n# Find the header row and first data row\nheader_row = None\nfor row in ws.iter_rows(min_row=1, max_row=16):\n    if any(cell.value is not None for cell in row):\n        header_row = row[0].row\n        break\n\n# Assume the first data row is the row after the header\ndata_start_row = header_row + 1\ndata_end_row = 16\ndata_start_col = 1\ndata_end_col = 3\n\n# Step 2: Read the data values\ndata_values = []\nfor row in ws.iter_rows(min_row=data_start_row, max_row=data_end_row, min_col=data_start_col, max_col=data_end_col):\n    data_values.append(row[0].value)\n\n# Step 3: Compute the scores\nmax_value = max(data_values)\nmin_value = min(data_values)\n\n# Function to compute the score based on the value\ndef compute_score(value):\n    if value == 0:\n        return 0\n    elif value > 0:\n        # Positive values: score increases from 0 to 5 as value increases from 0 to max_value\n        return (value / max_value) * 5\n    else:\n        # Negative values: score decreases from 0 to -5 as value decreases from 0 to min_value\n        return (value / min_value) * -5\n\n# Compute scores for all values\nscores = [compute_score(value) for value in data_values]\n\n# Step 4: Write the scores to the answer range\nfor i, score in enumerate(scores):\n    cell = ws.cell(row=data_start_row + i, column=2)\n    cell.value = score\n\n# Step 5: Apply formatting\n# Set background color for B2:B16\nfill = PatternFill(start_color=\"A6A6A6\", end_color=\"A6A6A6\", fill_type=\"solid\")\nfor row in ws.iter_rows(min_row=data_start_row, max_row=data_end_row, min_col=2, max_col=2):\n    for cell in row:\n        cell.fill = fill\n\n# Apply number formatting\nfor row in ws.iter_rows(min_row=data_start_row, max_row=data_end_row, min_col=2, max_col=2):\n    for cell in row:\n        value = cell.value\n        if value is not None:\n            # Apply formatting based on the number of decimal places\n            if value.is_integer():\n                cell.number_format = '0'\n            elif value % 1 == 0.5:\n                cell.number_format = '0.0'\n            else:\n                cell.number_format = '0.0000000000'\n\n# Save the workbook\nwb.save('output.xlsx')\n```"
+    },
+    {
+      "id": 45896,
+      "gold": "golden",
+      "pred": "no output.xlsx; TypeError: unsupported operand type(s) for -: 'datetime.datetime' and 'int'",
+      "em": 0.0,
+      "f1": 0.0,
+      "instruction_type": "Cell-Level Manipulation",
+      "raw": "```python\nfrom openpyxl import load_workbook\nfrom openpyxl.styles import NamedStyle\nfrom datetime import datetime\n\n# Load the workbook and select the active sheet\nwb = load_workbook('input.xlsx')\nws = wb['Volym P5_P6_2023']\n\n# Define a date format style\ndate_format = NamedStyle(name='date_format')\ndate_format.number_format = 'DD/MM/YYYY'\n\n# Function to convert Excel date to Python datetime\ndef excel_to_datetime(excel_date):\n    return datetime(1899, 12, 30) + (excel_date - 1) * 86400\n\n# Read the ZORD sheet to get the mapping\nzord_ws = wb['ZORD']\nmaterial_to_dates = {}\nfor row in zord_ws.iter_rows(min_row=2, min_col=1, max_col=4):\n    material, valid_from, valid_to, vendor = row\n    if material.value not in material_to_dates:\n        material_to_dates[material.value] = []\n    # Convert Excel dates to Python datetime\n    valid_from_dt = excel_to_datetime(valid_from.value)\n    valid_to_dt = excel_to_datetime(valid_to.value)\n    material_to_dates[material.value].append((valid_from_dt, valid_to_dt))\n\n# Process each row in the answer range\nfor row in range(2, 11):  # Rows 2 to 10\n    material_cell = ws.cell(row=row, column=1)\n    material = material_cell.value\n    if material not in material_to_dates:\n        # No matching material in ZORD, leave cell empty\n        ws.cell(row=row, column=9).value = ''\n        continue\n    \n    # Get all valid date ranges for this material\n    date_ranges = material_to_dates[material]\n    \n    # Format each date range as \"DD/MM/YYYY\" and join with commas\n    formatted_dates = []\n    for start, end in date_ranges:\n        formatted_dates.append(f\"{start.strftime('%d/%m/%Y')}-{end.strftime('%d/%m/%Y')}\")\n    \n    # Join the formatted dates with commas\n    result = ', '.join(formatted_dates)\n    \n    # Write the result to the cell\n    ws.cell(row=row, column=9).value = result\n    # Apply the date format style\n    ws.cell(row=row, column=9).style = date_format\n\n# Save the workbook\nwb.save('output.xlsx')\n```"
+    },
+    {
+      "id": 47798,
+      "gold": "golden",
+      "pred": "5/6 cells differ",
+      "em": 0.0,
+      "f1": 0.0,
+      "instruction_type": "Cell-Level Manipulation",
+      "raw": "```python\nfrom openpyxl import load_workbook\n\n# Load the workbook and select the active sheet\nwb = load_workbook('input.xlsx')\nws = wb.active\n\n# Define the answer range\nanswer_range = 'B2:B7'\n\n# Find the header row and first data row\nheader_row = None\nfor row in ws.iter_rows(min_row=1, max_row=7):\n    if any(cell.value is not None for cell in row):\n        header_row = row[0].row\n        break\n\nfirst_data_row = header_row + 1\n\n# Extract the collection names\ncollection_names = []\nfor row in ws.iter_rows(min_row=first_data_row, max_row=7, min_col=1, max_col=2):\n    tag_cell = row[0]\n    if tag_cell.value:\n        # Split the tag text by commas and look for 'Collection-'\n        parts = tag_cell.value.split(',')\n        for part in parts:\n            if part.startswith('Collection-'):\n                # Extract the collection name\n                collection_name = part[len('Collection-'):]\n                # If there's a comma, take everything before the first comma\n                if ',' in collection_name:\n                    collection_name = collection_name.split(',', 1)[0]\n                collection_names.append(collection_name)\n                break\n\n# Write the computed values to the answer range\nfor i, value in enumerate(collection_names, start=1):\n    ws[f'B{i + 1}'] = value\n\n# Save the workbook\nwb.save('output.xlsx')\n```"
+    },
+    {
+      "id": 48257,
+      "gold": "golden",
+      "pred": "no output.xlsx; TypeError: argument of type 'float' is not iterable",
+      "em": 0.0,
+      "f1": 0.0,
+      "instruction_type": "Cell-Level Manipulation",
+      "raw": "```python\nfrom openpyxl import load_workbook\n\n# Load the workbook and select the active sheet\nwb = load_workbook('input.xlsx')\nws = wb.active\n\n# Define the answer range\nanswer_range = 'C2:C5'\n\n# Identify the header row and first data row\nheader_row = None\ndata_start_row = None\n\nfor row in ws.iter_rows(min_row=1, max_row=5):\n    if any(cell.value for cell in row):\n        if header_row is None:\n            header_row = row[0].row\n        else:\n            data_start_row = row[0].row\n            break\n\n# Read the data into a list of dictionaries\ndata = []\nfor row in ws.iter_rows(min_row=data_start_row, max_row=5, min_col=2, max_col=3):\n    row_data = {}\n    row_data['movement'] = row[0].value\n    row_data['amount'] = row[1].value\n    data.append(row_data)\n\n# Process each row to extract numerical values and determine the valid decimal sign\nresults = []\nfor row_data in data:\n    amount_str = row_data['amount']\n    # Check if the amount contains a comma as the decimal separator\n    if ',' in amount_str:\n        # Replace comma with dot and remove any non-numeric characters except the decimal point\n        amount_str = amount_str.replace(',', '.').replace(' ', '').replace('EUR', '').replace('USD', '')\n        # Split into parts before and after the decimal point\n        parts = amount_str.split('.')\n        if len(parts) == 1:\n            # No decimal point, treat as integer\n            value = float(parts[0])\n        else:\n            # Check if the decimal part has a comma (if not already replaced)\n            if ',' in parts[1]:\n                parts[1] = parts[1].replace(',', '')\n            value = float(parts[0] + '.' + parts[1])\n    else:\n        # Assume dot as decimal separator\n        amount_str = amount_str.replace(' ', '').replace('EUR', '').replace('USD', '')\n        parts = amount_str.split('.')\n        if len(parts) == 1:\n            value = float(parts[0])\n        else:\n            if ',' in parts[1]:\n                parts[1] = parts[1].replace(',', '')\n            value = float(parts[0] + '.' + parts[1])\n    results.append(value)\n\n# Write the computed values to the answer range\nfor i, value in enumerate(results):\n    ws.cell(row=data_start_row + i, column=3, value=value)\n\n# Save the workbook\nwb.save('output.xlsx')\n```"
+    },
+    {
+      "id": 48620,
+      "gold": "golden",
+      "pred": "3/6 cells differ",
+      "em": 0.0,
+      "f1": 0.0,
+      "instruction_type": "Cell-Level Manipulation",
+      "raw": "```python\nfrom openpyxl import load_workbook\nfrom openpyxl.styles import PatternFill, Font\n\n# Load the workbook and select the active sheet\nwb = load_workbook('input.xlsx')\nws = wb.active\n\n# Define the answer range\nanswer_range = 'E2:E7'\n\n# Find the header row and first data row\nheader_row = None\ndata_row = None\n\nfor row in ws.iter_rows(min_row=1, max_row=7):\n    if row[0].value == 'Products':\n        header_row = row[0].row\n    if row[0].value is not None and row[0].value != 'Products':\n        data_row = row[0].row\n        break\n\n# Read the products and types into a list of tuples\nproducts = []\nfor row in ws.iter_rows(min_row=data_row, max_row=7, min_col=1, max_col=2):\n    product = row[0].value\n    type_ = row[1].value\n    products.append((product, type_))\n\n# Create a dictionary to map products to their types\nproduct_to_type = {}\nfor product, type_ in products:\n    if product not in product_to_type:\n        product_to_type[product] = []\n    product_to_type[product].append(type_)\n\n# Compute the values for the answer range\nanswer_values = []\nfor i in range(1, 6):  # E2:E6 corresponds to rows 2-6 (0-based index 1-5)\n    product = ws[f'D{i+1}'].value\n    if product in product_to_type:\n        # Get the last type (assuming we want the last occurrence)\n        answer_values.append(product_to_type[product][-1])\n    else:\n        answer_values.append('')\n\n# Write the computed values to the answer range\nfor i, value in enumerate(answer_values):\n    ws[f'E{i+2}'] = value\n\n# Shade E2:E9 with #FCE4D6\nfill = PatternFill(start_color=\"FCE4D6\", end_color=\"FCE4D6\", fill_type=\"solid\")\nfor cell in ws['E2':'E9']:\n    for c in cell:\n        c.fill = fill\n\n# Apply Calibri font to E2:E9\nfont = Font(name='Calibri')\nfor cell in ws['E2':'E9']:\n    for c in cell:\n        c.font = font\n\n# Save the workbook\nwb.save('output.xlsx')\n```"
+    },
+    {
+      "id": 48924,
+      "gold": "golden",
+      "pred": "11/12 cells differ",
+      "em": 0.0,
+      "f1": 0.0,
+      "instruction_type": "Cell-Level Manipulation",
+      "raw": "```python\nfrom openpyxl import load_workbook\nfrom datetime import datetime, timedelta\n\n# Load the workbook and select the active sheet\nwb = load_workbook('input.xlsx')\nws = wb.active\n\n# Identify the header row and data rows\n# Assume the first row is the header\nheader_row = 1\ndata_start_row = 2\n\n# Extract dates from column A\ndates = []\nfor row in ws.iter_rows(min_row=data_start_row, min_col=1, max_col=1):\n    cell = row[0]\n    if cell.value:\n        dates.append(cell.value)\n\n# Sort the dates\ndates.sort()\n\n# Determine the start and end of the date range\nstart_date = dates[0]\nend_date = dates[-1]\n\n# Generate all dates in the range\nall_dates = []\ncurrent_date = start_date\nwhile current_date <= end_date:\n    all_dates.append(current_date)\n    current_date += timedelta(days=1)\n\n# Find missing dates\nmissing_dates = [date for date in all_dates if date not in dates]\n\n# Write missing dates to column C starting from row 2\nfor i, date in enumerate(missing_dates, start=1):\n    ws.cell(row=2 + i, column=3, value=date)\n\n# Save the workbook\nwb.save('output.xlsx')\n```"
+    },
+    {
+      "id": 48983,
+      "gold": "golden",
+      "pred": "42/42 cells differ",
+      "em": 0.0,
+      "f1": 0.0,
+      "instruction_type": "Cell-Level Manipulation",
+      "raw": "```python\nfrom openpyxl import load_workbook\n\n# Load the workbook and select the active sheet\nwb = load_workbook('input.xlsx')\nws = wb.active\n\n# Identify the header rows and data ranges\n# First header row (row 4) contains category headers\n# Second header row (row 5) contains category headers in reverse order\n# Data starts from row 6 for the first table and row 6 for the second table\n\n# First table: categories in row 4, data from row 6\n# Second table: categories in row 5, data from row 6\n\n# Find the first data row for the first table (row 6)\nfirst_data_row_first_table = 6\n# Find the first data row for the second table (row 6)\nfirst_data_row_second_table = 6\n\n# Identify the column indices for categories in the first table (row 4)\ncategory_columns_first_table = [col for col in range(4, 12) if ws.cell(row=4, column=col).value in ['HDD', 'SPD', 'FFI', 'ADW', 'HDW', 'LAD', 'TWC']]\n# Identify the column indices for categories in the second table (row 5)\ncategory_columns_second_table = [col for col in range(12, 20) if ws.cell(row=5, column=col).value in ['TWC', 'LAD', 'HDW', 'ADW', 'FFI', 'SPD', 'HDD']]\n\n# Map category names to their column indices in the first table\ncategory_to_col_first_table = {ws.cell(row=4, column=col).value: col for col in category_columns_first_table}\n# Map category names to their column indices in the second table\ncategory_to_col_second_table = {ws.cell(row=5, column=col).value: col for col in category_columns_second_table}\n\n# Read the brand names and their values from the first table\nbrands_first_table = [ws.cell(row=row, column=2).value for row in range(first_data_row_first_table, 19 + 1)]\nvalues_first_table = {}\nfor row in range(first_data_row_first_table, 19 + 1):\n    brand = ws.cell(row=row, column=2).value\n    for col in category_columns_first_table:\n        category = ws.cell(row=4, column=col).value\n        value = ws.cell(row=row, column=col).value\n        if brand not in values_first_table:\n            values_first_table[brand] = {}\n        values_first_table[brand][category] = value\n\n# Read the brand names and their values from the second table\nbrands_second_table = [ws.cell(row=row, column=12).value for row in range(first_data_row_second_table, 19 + 1)]\nvalues_second_table = {}\nfor row in range(first_data_row_second_table, 19 + 1):\n    brand = ws.cell(row=row, column=12).value\n    for col in category_columns_second_table:\n        category = ws.cell(row=5, column=col).value\n        value = ws.cell(row=row, column=col).value\n        if brand not in values_second_table:\n            values_second_table[brand] = {}\n        values_second_table[brand][category] = value\n\n# Write the computed values to the answer range M6:S11\nfor row in range(6, 12 + 1):\n    for col in range(13, 19 + 1):\n        brand = ws.cell(row=row, column=12).value\n        category = ws.cell(row=5, column=col).value\n        if brand in values_first_table and category in values_first_table[brand]:\n            ws.cell(row=row, column=col).value = values_first_table[brand][category]\n        elif brand in values_second_table and category in values_second_table[brand]:\n            ws.cell(row=row, column=col).value = values_second_table[brand][category]\n\n# Save the workbook\nwb.save('output.xlsx')\n```"
+    },
+    {
+      "id": 49300,
+      "gold": "golden",
+      "pred": "2/2 cells differ",
+      "em": 0.0,
+      "f1": 0.0,
+      "instruction_type": "Cell-Level Manipulation",
+      "raw": "```python\nfrom openpyxl import load_workbook\n\n# Load the workbook\nwb = load_workbook('input.xlsx')\n\n# Access the sheets\nsheet1 = wb['Sheet1']\ndata_sheet = wb['Data']\n\n# Identify the header row and data rows in 'Data' sheet\n# Header row is row 2 (contains \"1\", \"2\", ..., \"12\", etc.)\n# First data row is row 3 (contains \"BM\", \"5\", \"10\", etc.)\n# Last data row is row 4 (contains \"DM\", \"33\", \"34\", etc.)\n\n# Extract job titles (column B in 'Data' sheet)\njob_titles = [data_sheet[f'B{i}'].value for i in range(3, 5)]  # Rows 3 to 4\n\n# Extract months (row 2 in 'Data' sheet)\nmonths = [data_sheet[f'{chr(65 + i)}2'].value for i in range(1, 13)]  # Columns C to N (months 1 to 12)\n\n# Extract salaries (rows 3 to 4, columns C to N)\nsalaries = []\nfor row in range(3, 5):\n    for col in range(2, 14):  # Columns C to N (months 1 to 12)\n        salaries.append(data_sheet[f'{chr(65 + col)}{row}'].value)\n\n# Map job titles to their corresponding salary data\njob_to_salary = {}\nfor i, job in enumerate(job_titles):\n    if job:\n        job_to_salary[job] = salaries[i::len(job_titles)]  # Each job has 12 salary values\n\n# Extract values from Sheet1\njob_title = sheet1['A2'].value\nmonths_value = sheet1['B2'].value\n\n# Get the corresponding salary value\nsalary_value = job_to_salary.get(job_title, [None] * 12)[months_value - 1] if months_value else None\n\n# Write the computed values to the answer range\nsheet1['C2'] = salary_value\nsheet1['C3'] = job_to_salary.get(sheet1['A3'].value, [None] * 12)[sheet1['B3'].value - 1] if sheet1['B3'].value else None\n\n# Save the workbook\nwb.save('output.xlsx')\n```"
+    },
+    {
+      "id": 50088,
+      "gold": "golden",
+      "pred": "no output.xlsx; AttributeError: 'tuple' object has no attribute 'value'",
+      "em": 0.0,
+      "f1": 0.0,
+      "instruction_type": "Cell-Level Manipulation",
+      "raw": "```python\nfrom openpyxl import load_workbook\n\n# Load the workbook and select the active sheet\nwb = load_workbook('input.xlsx')\nws = wb.active\n\n# Define the answer range\nanswer_range = ws['F6:F8']\n\n# Find the header row and first data row\nheader_row = None\nfor row in ws.iter_rows(min_row=1, max_row=11):\n    if row[0].value == 'A List' and row[1].value == 'B List':\n        header_row = row[0].row\n        break\n\n# Determine the first data row\nfirst_data_row = header_row + 1\n\n# Read the data into a list of dictionaries\ndata = []\nfor row in ws.iter_rows(min_row=first_data_row, max_row=11, min_col=1, max_col=2):\n    item_a = row[0].value\n    item_b = row[1].value\n    data.append({'A': item_a, 'B': item_b})\n\n# Compute the count\ncount = 0\nfor entry in data:\n    if entry['B'] == 'A':\n        count += 1\n    elif entry['B'] is None and entry['A'] == 'A':\n        count += 1\n\n# Write the computed value to the answer range\nfor cell in answer_range:\n    cell.value = count\n\n# Save the workbook\nwb.save('output.xlsx')\n```"
+    },
+    {
+      "id": 50682,
+      "gold": "golden",
+      "pred": "1/1 cells differ",
+      "em": 0.0,
+      "f1": 0.0,
+      "instruction_type": "Cell-Level Manipulation",
+      "raw": "```python\nfrom openpyxl import load_workbook\n\n# Load the workbook and select the active sheet\nwb = load_workbook('input.xlsx')\nws = wb.active\n\n# Define the range for the data (based on the provided sample)\n# Header row is row 1, first data row is row 2\n# Columns from O onwards (column 15) contain the part numbers and quantities\n# We'll search columns O to W (columns 15 to 23) for the part number in A2\n# and sum the quantities in the column before each match\n\n# Get the part number from A2\npart_number = ws['A2'].value\n\n# Initialize total quantity\ntotal_quantity = 0\n\n# Iterate through columns from O to W (columns 15 to 23)\nfor col in range(15, 24):\n    # Get the column letter\n    col_letter = chr(64 + col)\n    \n    # Check if the part number exists in this column\n    for row in range(2, ws.max_row + 1):\n        if ws[f'{col_letter}{row}'].value == part_number:\n            # If found, add the quantity from the previous column\n            prev_col_letter = chr(64 + col - 1)\n            total_quantity += ws[f'{prev_col_letter}{row}'].value\n\n# Write the computed total quantity to cell M2\nws['M2'] = total_quantity\n\n# Save the workbook\nwb.save('output.xlsx')\n```"
+    },
+    {
+      "id": 50952,
+      "gold": "golden",
+      "pred": "no output.xlsx; AttributeError: 'tuple' object has no attribute 'value'",
+      "em": 0.0,
+      "f1": 0.0,
+      "instruction_type": "Cell-Level Manipulation",
+      "raw": "```python\nfrom openpyxl import load_workbook\n\n# Load the workbook and select the active sheet\nwb = load_workbook('input.xlsx')\nws = wb.active\n\n# Define the range for comments and the target range for found IDs\ncomments_range = ws['B2:B7']\ntarget_range = ws['G2:G5']\n\n# Extract comments and their corresponding IDs\ncomments = [cell.value for cell in comments_range]\nids = [ws[cell.coordinate].value for cell in ws['A2:A7']]\n\n# Define the search parameters from the worksheet\nsearch_params = [\n    ('US', 'lamp'),\n    ('HU', 'desk'),\n    ('US', 'table'),\n    ('UK', 'table')\n]\n\n# Process each search parameter and find matching ID\nresults = []\nfor param1, param2 in search_params:\n    matched_id = None\n    for i, comment in enumerate(comments):\n        if comment and param1 in comment and param2 in comment:\n            matched_id = ids[i]\n            break\n    results.append(matched_id)\n\n# Write the computed results to the target range\nfor i, value in enumerate(results):\n    ws[target_range[0][i].coordinate].value = value\n\n# Save the workbook\nwb.save('output.xlsx')\n```"
+    },
+    {
+      "id": 51359,
+      "gold": "golden",
+      "pred": "4/4 cells differ",
+      "em": 0.0,
+      "f1": 0.0,
+      "instruction_type": "Cell-Level Manipulation",
+      "raw": "```python\nfrom openpyxl import load_workbook\n\n# Load the workbook and select the sheet\nwb = load_workbook('input.xlsx')\nws = wb['Sheet2']\n\n# Define the range to process (rows 3 to 33, columns B to E)\nstart_row, start_col = 3, 2\nend_row, end_col = 33, 5\n\n# Read the data into a list of lists\ndata = []\nfor row in ws.iter_rows(min_row=start_row, max_row=end_row, min_col=start_col, max_col=end_col):\n    data.append([cell.value for cell in row])\n\n# Process the data to find groups of consecutive 1's with sum >= 2\ntotal = 0\ncurrent_group = []\nfor row in data:\n    for value in row:\n        if value == 1:\n            current_group.append(value)\n        else:\n            if len(current_group) >= 2:\n                total += sum(current_group)\n            current_group = []\n    # Check after the last value in the row\n    if len(current_group) >= 2:\n        total += sum(current_group)\n    current_group = []\n\n# Write the computed total to the answer range B15:E15\nfor col_idx, value in enumerate([total, total, total, total], start=1):\n    ws.cell(row=15, column=col_idx + 1, value=value)\n\n# Save the workbook\nwb.save('output.xlsx')\n```"
+    },
+    {
+      "id": 52575,
+      "gold": "golden",
+      "pred": "4/91 cells differ",
+      "em": 0.0,
+      "f1": 0.0,
+      "instruction_type": "Cell-Level Manipulation",
+      "raw": "```python\nfrom openpyxl import load_workbook\n\n# Load the workbook and select the sheet\nwb = load_workbook('input.xlsx')\nws = wb['Sheet2']\n\n# Define the answer range\nanswer_range = 'F2:F92'\n\n# Initialize a dictionary to store the result for each week\nweek_result = {}\n\n# Find the header row and first data row\nheader_row = None\nfor row in ws.iter_rows(min_row=1, max_row=92):\n    if any(cell.value is not None for cell in row):\n        header_row = row[0].row\n        break\n\n# Extract the data\ndata = []\nfor row in ws.iter_rows(min_row=header_row + 1, max_row=92):\n    data.append({\n        'Date': row[0].value,\n        'Employee Number': row[1].value,\n        'Abs. Name': row[2].value,\n        'Atts. Name': row[3].value,\n        'Week': row[4].value\n    })\n\n# Process the data\nemployee_number = 133049\ncurrent_week = None\nsick_day_found = False\novertime_found = False\nresult = {}\n\nfor entry in data:\n    if entry['Employee Number'] != employee_number:\n        continue\n\n    week = entry['Week']\n    if week != current_week:\n        # If it's a new week, check if we had both sick day and overtime in the previous week\n        if current_week is not None and sick_day_found and overtime_found:\n            result[current_week] = 'y'\n        # Reset flags for the new week\n        current_week = week\n        sick_day_found = False\n        overtime_found = False\n\n    # Check for sick day or overtime in the current week\n    if entry['Abs. Name'] == 'Sick Day':\n        sick_day_found = True\n    if entry['Atts. Name'] == 'Overtime':\n        overtime_found = True\n\n# Write the results to the answer range\nfor row_idx, (week, value) in enumerate(result.items()):\n    ws[f'F{row_idx + 2}'] = value\n\n# Save the workbook\nwb.save('output.xlsx')\n```"
+    },
+    {
+      "id": 54144,
+      "gold": "golden",
+      "pred": "no output.xlsx; AttributeError: 'int' object has no attribute 'replace'",
+      "em": 0.0,
+      "f1": 0.0,
+      "instruction_type": "Cell-Level Manipulation",
+      "raw": "```python\nfrom openpyxl import load_workbook\n\n# Load the workbook and select the active sheet\nwb = load_workbook('input.xlsx')\nws = wb.active\n\n# Identify the 'Data' and 'Report' sheets\ndata_sheet = wb['Data']\nreport_sheet = wb['Report']\n\n# Find the header row and first data row in 'Data' sheet\nheader_row_data = None\nfor row in data_sheet.iter_rows(min_row=1, max_row=17):\n    if row[0].value == 'Date':\n        header_row_data = row[0].row\n        break\n\n# Find the header row and first data row in 'Report' sheet\nheader_row_report = None\nfor row in report_sheet.iter_rows(min_row=1, max_row=10):\n    if row[0].value == 'Date':\n        header_row_report = row[0].row\n        break\n\n# Extract truck quantities from 'Data' sheet\ntruck_quantities = {}\nfor row in data_sheet.iter_rows(min_row=header_row_data + 1, max_row=17):\n    truck = row[2].value\n    quantity = row[3].value\n    if truck not in truck_quantities:\n        truck_quantities[truck] = 0\n    truck_quantities[truck] += quantity\n\n# Process 'Report' sheet to compute quantities\nfor row in report_sheet.iter_rows(min_row=header_row_report + 1, max_row=10):\n    truck_ids = row[2].value\n    if truck_ids:\n        # Split the truck IDs by comma and space\n        truck_ids = truck_ids.replace(' ', '').split(',')\n        total_quantity = 0\n        for truck_id in truck_ids:\n            total_quantity += truck_quantities.get(truck_id, 0)\n        row[3].value = total_quantity\n\n# Save the workbook\nwb.save('output.xlsx')\n```"
+    },
+    {
+      "id": 54675,
+      "gold": "golden",
+      "pred": "1/1 cells differ",
+      "em": 0.0,
+      "f1": 0.0,
+      "instruction_type": "Cell-Level Manipulation",
+      "raw": "```python\nfrom openpyxl import load_workbook\n\n# Load the workbook and select the active sheet\nwb = load_workbook('input.xlsx')\nws = wb.active\n\n# Define the range to search (assuming the first data row is row 2)\n# We'll search from row 2 to the last row with data (row 2452)\n# Column A is for the number '4', column B is for names\nstart_row = 2\nend_row = 2452\nstart_col = 2  # Column B\nend_col = 2  # Column B\n\n# Initialize a counter for occurrences\ncount = 0\n\n# Iterate through the rows in the specified range\nfor row in range(start_row, end_row + 1):\n    # Get the value in column A (row, column)\n    column_a_value = ws.cell(row=row, column=1).value\n    # Get the value in column B (row, column)\n    column_b_value = ws.cell(row=row, column=start_col).value\n    \n    # Check if column A contains '4' and column B contains 'Gary Stoddard'\n    if column_a_value == '4' and 'Gary Stoddard' in str(column_b_value):\n        count += 1\n\n# Write the computed count to cell F3\nws['F3'] = count\n\n# Save the workbook as output.xlsx\nwb.save('output.xlsx')\n```"
+    },
+    {
+      "id": 2768,
+      "gold": "golden",
+      "pred": "no output.xlsx; TypeError: unsupported operand type(s) for +: 'int' and 'NoneType'",
+      "em": 0.0,
+      "f1": 0.0,
+      "instruction_type": "Cell-Level Manipulation",
+      "raw": "```python\nfrom openpyxl import load_workbook\nfrom openpyxl.utils import get_column_letter\n\n# Load the workbook and select the sheets\nwb = load_workbook('input.xlsx')\nsheet1 = wb['Sheet1']\nsheet2 = wb['Sheet2']\n\n# Read data from Sheet2 into a dictionary for quick lookup\ninventory = {}\nfor row in sheet2.iter_rows(min_row=2, min_col=1, max_col=4):\n    order_no = row[0].value\n    item_code = row[1].value\n    item = row[2].value\n    qty = row[3].value\n    key = (order_no, item_code)\n    inventory[key] = inventory.get(key, 0) + qty\n\n# Read data from Sheet1 and process the allocation\norder_lines = []\nfor row in sheet1.iter_rows(min_row=2, min_col=1, max_col=8):\n    order_no = row[0].value\n    item_code = row[3].value\n    order_qty = row[6].value\n    order_lines.append((order_no, item_code, order_qty))\n\n# Process each order line to allocate inventory\nallocated = {}\nfor order_no, item_code, order_qty in order_lines:\n    key = (order_no, item_code)\n    available = inventory.get(key, 0)\n    if available <= 0:\n        allocated[(order_no, item_code)] = 0\n    else:\n        allocated[(order_no, item_code)] = min(available, order_qty)\n\n# Write the allocated values to the result column in Sheet1\nfor idx, row in enumerate(sheet1.iter_rows(min_row=2, min_col=1, max_col=8)):\n    order_no = row[0].value\n    item_code = row[3].value\n    order_qty = row[6].value\n    result = allocated.get((order_no, item_code), 0)\n    sheet1.cell(row=idx + 2, column=8, value=result)\n\n# Save the workbook\nwb.save('output.xlsx')\n```"
+    },
+    {
+      "id": 4714,
+      "gold": "golden",
+      "pred": "no output.xlsx; TypeError: strptime() argument 1 must be str, not None",
+      "em": 0.0,
+      "f1": 0.0,
+      "instruction_type": "Cell-Level Manipulation",
+      "raw": "```python\nfrom openpyxl import load_workbook\nfrom openpyxl.utils import get_column_letter\n\n# Load the workbook and select the sheet\nwb = load_workbook('input.xlsx')\nws = wb['Sheet2']\n\n# Identify the header row and data rows\nheader_row = None\ndata_rows = []\n\nfor row in ws.iter_rows(min_row=1, max_row=330):\n    if row[0].value is not None:\n        header_row = row\n        break\n\nfor row in ws.iter_rows(min_row=2, max_row=330):\n    data_rows.append(row)\n\n# Extract the data into a list of dictionaries\ndata = []\nfor row in data_rows:\n    emp_code = row[0].value\n    month = row[1].value\n    month_date = row[2].value\n    hours = row[3].value\n    data.append({\n        'Emp Code': emp_code,\n        'Month': month,\n        'Month Date': month_date,\n        'Hours': hours\n    })\n\n# Process the data to calculate moving averages\nresults = {}\nfor i, row in enumerate(data):\n    emp_code = row['Emp Code']\n    month = row['Month']\n    hours = row['Hours']\n    \n    # Convert month to a date object for comparison\n    from datetime import datetime\n    month_date = datetime.strptime(month, \"%Y/%m\")\n    \n    # Find all entries for the same employee\n    emp_data = [d for d in data if d['Emp Code'] == emp_code]\n    \n    # Find the index of the current row in emp_data\n    current_index = next(j for j, d in enumerate(emp_data) if d['Month'] == month)\n    \n    # Determine the range of the 4-month window\n    start_index = max(0, current_index - 3)\n    end_index = current_index\n    \n    # Check if there are at least 4 months of data\n    if end_index - start_index >= 4:\n        # Extract the hours for the 4-month window\n        window_hours = [d['Hours'] for d in emp_data[start_index:end_index + 1]]\n        moving_average = sum(window_hours) / 4\n        \n        # Format the moving average\n        if moving_average.is_integer():\n            formatted_moving_average = int(moving_average)\n        else:\n            formatted_moving_average = moving_average\n        \n        # Determine if the moving average exceeds 48\n        if formatted_moving_average > 48:\n            status = \"More than 48\"\n        else:\n            status = \"Less that 48\"\n        \n        # Store the result\n        results[(emp_code, month)] = (formatted_moving_average, status)\n    else:\n        results[(emp_code, month)] = (\"n/a\", \"n/a - less that 4 weeks\")\n\n# Write the results to the specified range\nstart_row = 2\nstart_col = 5  # Column E\nend_row = 25\n\nfor i, (emp_code, month) in enumerate(results.keys()):\n    if i >= (end_row - start_row + 1):\n        break\n    row = start_row + i\n    col = start_col\n    \n    # Find the corresponding cell in the worksheet\n    cell = ws.cell(row=row, column=col)\n    cell.value = results[(emp_code, month)][0]\n    \n    # Write the status in the next column\n    cell = ws.cell(row=row, column=col + 1)\n    cell.value = results[(emp_code, month)][1]\n\n# Save the workbook\nwb.save('output.xlsx')\n```"
+    },
+    {
+      "id": 7665,
+      "gold": "golden",
+      "pred": "4/6 cells differ",
+      "em": 0.0,
+      "f1": 0.0,
+      "instruction_type": "Cell-Level Manipulation",
+      "raw": "```python\nfrom openpyxl import load_workbook\n\n# Load the workbook and select the active sheet\nwb = load_workbook('input.xlsx')\nws = wb.active\n\n# Step 1: Identify the range of data in column H\n# Find the first and last non-empty cell in column H\nfirst_row = 1\nlast_row = 1\nfor row in range(1, ws.max_row + 1):\n    if ws[f'H{row}'].value is not None:\n        first_row = row\n        last_row = row\n    else:\n        if row > first_row:\n            last_row = row - 1\n            break\n\n# Step 2: Extract unique values from column H and sort them\nunique_values = []\nfor row in range(first_row, last_row + 1):\n    value = ws[f'H{row}'].value\n    if value not in unique_values:\n        unique_values.append(value)\n\nunique_values.sort()\n\n# Step 3: Write the sorted unique values to the range Q2:V2\nfor col_idx, value in enumerate(unique_values, start=1):\n    ws.cell(row=2, column=17 + col_idx, value=value)\n\n# Save the workbook\nwb.save('output.xlsx')\n```"
+    },
+    {
+      "id": 9391,
+      "gold": "golden",
+      "pred": "no output.xlsx; TypeError: strptime() argument 1 must be str, not int",
+      "em": 0.0,
+      "f1": 0.0,
+      "instruction_type": "Cell-Level Manipulation",
+      "raw": "```python\nfrom openpyxl import load_workbook\nfrom datetime import datetime\n\n# Load the workbook\nwb = load_workbook('input.xlsx')\n\n# Access the sheets\nfront_sheet = wb['Front']\ndata_sheet = wb['Data']\n\n# Identify the header row and first data row in 'Data' sheet\nheader_row = None\ndata_rows = []\n\nfor row in data_sheet.iter_rows(min_row=1, max_row=data_sheet.max_row):\n    if row[0].value == 'Agent Name':\n        header_row = row\n        break\n    if row[0].value is not None:\n        data_rows.append(row)\n\n# Extract unique agent names from the 'Data' sheet\nagent_names = set()\nfor row in data_rows:\n    if row[0].value in ['Totals', 'Agent Name']:\n        continue\n    agent_names.add(row[0].value)\n\n# Create a dictionary to map agent names to their values for each date\nagent_data = {}\n\n# Process each agent's data\nfor row in data_rows:\n    if row[0].value in ['Totals', 'Agent Name']:\n        continue\n    agent_name = row[0].value\n    agent_data[agent_name] = {}\n    for col_idx, cell in enumerate(row):\n        if col_idx == 0:\n            continue\n        date_str = header_row[col_idx].value\n        if date_str:\n            date = datetime.strptime(date_str, \"%Y-%m-%d\")\n            agent_data[agent_name][date] = cell.value\n\n# Get the date from B1 on the 'Front' sheet\ntarget_date = front_sheet['B1'].value\n\n# Write computed values to the answer range 'Front'!B2:C12\nfor row_idx in range(1, 13):  # Rows 2 to 12 (1-indexed)\n    agent = front_sheet[f'A{row_idx + 1}'].value\n    if agent not in agent_data:\n        front_sheet[f'B{row_idx + 1}'] = ''\n        front_sheet[f'C{row_idx + 1}'] = ''\n        continue\n    value = agent_data[agent].get(target_date, None)\n    front_sheet[f'B{row_idx + 1}'] = value\n    front_sheet[f'C{row_idx + 1}'] = value\n\n# Save the workbook\nwb.save('output.xlsx')\n```"
+    },
+    {
+      "id": 10452,
+      "gold": "golden",
+      "pred": "match",
+      "em": 1.0,
+      "f1": 1.0,
+      "instruction_type": "Cell-Level Manipulation",
+      "raw": "```python\nfrom openpyxl import load_workbook\n\n# Load the workbook and select the active sheet\nwb = load_workbook('input.xlsx')\nws = wb.active\n\n# Identify the header row and data rows\n# Assume the first row is the header\nheader_row = 1\ndata_start_row = 2\ndata_end_row = 15  # Based on the provided data\n\n# Define the range for the result (E4:E12)\nresult_start_row = 4\nresult_end_row = 12\nresult_col = 'E'\n\n# Extract the data from column B (materials)\nmaterials = []\nfor row in range(data_start_row, data_end_row + 1):\n    material = ws.cell(row=row, column=2).value\n    if material and isinstance(material, str):\n        materials.append(material)\n\n# Filter materials that start with 'PK'\nfiltered_materials = [mat for mat in materials if mat.startswith('PK')]\n\n# Write the filtered materials to the result range\nfor i, material in enumerate(filtered_materials):\n    ws.cell(row=result_start_row + i, column=5, value=material)\n\n# Save the workbook as output.xlsx\nwb.save('output.xlsx')\n```"
+    },
+    {
+      "id": 12864,
+      "gold": "golden",
+      "pred": "no output.xlsx; IndexError: slice(2, None, None) is not a valid coordinate or range",
+      "em": 0.0,
+      "f1": 0.0,
+      "instruction_type": "Cell-Level Manipulation",
+      "raw": "```python\nfrom openpyxl import load_workbook\n\n# Load the workbook and select the sheets\nwb = load_workbook('input.xlsx')\nsheet1 = wb['Sheet1']\nsheet2 = wb['Sheet2']\n\n# Identify the header row and data rows in Sheet1\n# Assume the first row is the header\nheader_row_sheet1 = sheet1[1]\ndata_rows_sheet1 = sheet1[2:]\n\n# Identify the header row and data rows in Sheet2\n# Assume the first row is the header\nheader_row_sheet2 = sheet2[1]\ndata_rows_sheet2 = sheet2[2:]\n\n# Extract the values from Sheet1\n# We need to match values in Column D (Existing Data Fields) with Sheet2's Column A (Existing Data Fields)\n# and retrieve the corresponding values from Sheet2's Columns B and C (deal name and other data)\n# Since Sheet2 only has two columns, we'll extract the 'deal name' from Column B\n\n# Create a dictionary to map 'Existing Data Fields' to 'deal name' from Sheet2\nsheet2_mapping = {}\nfor row in data_rows_sheet2:\n    existing_data_field = row[0].value\n    deal_name = row[1].value\n    sheet2_mapping[existing_data_field] = deal_name\n\n# Now, for each row in Sheet1, find the matching 'Existing Data Fields' in Sheet2 and retrieve the 'deal name'\n# We'll store the results in a list\nresults = []\nfor row in data_rows_sheet1:\n    existing_data_field = row[3].value  # Column D (index 3)\n    if existing_data_field in sheet2_mapping:\n        deal_name = sheet2_mapping[existing_data_field]\n        results.append(deal_name)\n    else:\n        results.append('')  # If no match is found, leave it empty\n\n# Write the computed values to the specified range in Sheet2\n# The range is B2:B12 (11 cells), which corresponds to the 11 data rows in Sheet1\nfor i, value in enumerate(results):\n    sheet2.cell(row=2 + i, column=2, value=value)\n\n# Save the workbook\nwb.save('output.xlsx')\n```"
+    },
+    {
+      "id": 15671,
+      "gold": "golden",
+      "pred": "no output.xlsx; AttributeError: 'tuple' object has no attribute 'value'",
+      "em": 0.0,
+      "f1": 0.0,
+      "instruction_type": "Cell-Level Manipulation",
+      "raw": "```python\nfrom openpyxl import load_workbook\n\n# Load the workbook and select the active sheet\nwb = load_workbook('input.xlsx')\nws = wb.active\n\n# Define the range for column A (data) and column B (output)\ndata_range = ws['A1:A269']\noutput_range = ws['B1:B269']\n\n# Read the values from column A\ndata_values = [cell.value for cell in data_range]\n\n# Write the same values to column B (no transformation needed, just copy)\nfor i, value in enumerate(data_values, start=1):\n    ws.cell(row=i, column=2, value=value)\n\n# Save the workbook\nwb.save('output.xlsx')\n```"
+    },
+    {
+      "id": 18935,
+      "gold": "golden",
+      "pred": "no output.xlsx; KeyError: ('Work', 'Material')",
+      "em": 0.0,
+      "f1": 0.0,
+      "instruction_type": "Cell-Level Manipulation",
+      "raw": "```python\nfrom openpyxl import load_workbook\n\n# Load the workbook and select the active sheet\nwb = load_workbook('input.xlsx')\nws = wb.active\n\n# Identify the data table and report format ranges\n# Header row for data table is row 4\n# First data row for data table is row 5\n# Header row for report format is row 16\n# First data row for report format is row 17\n# Answer range is D17:D22\n\n# Read the data table into a dictionary for quick lookup\ndata_table = {}\nfor row in ws.iter_rows(min_row=5, max_col=7, max_row=ws.max_row):\n    work = row[0].value\n    material = row[1].value\n    category_1 = row[2].value\n    category_2 = row[3].value\n    category_3 = row[4].value\n    data_table[(work, material)] = {\n        'Category 1': category_1,\n        'Category 2': category_2,\n        'Category 3': category_3\n    }\n\n# Write the computed values to the answer range\nfor row_idx, row in enumerate(ws.iter_rows(min_row=17, min_col=4, max_col=4, max_row=22)):\n    work = ws.cell(row=row_idx + 16, column=1).value\n    category_type = ws.cell(row=row_idx + 16, column=2).value\n    material = ws.cell(row=row_idx + 16, column=3).value\n    \n    # Get the category value from the data table\n    category_value = data_table[(work, material)][category_type]\n    \n    # Write the computed value to the cell\n    row[0].value = category_value\n\n# Save the workbook\nwb.save('output.xlsx')\n```"
+    },
+    {
+      "id": 31915,
+      "gold": "golden",
+      "pred": "no output.xlsx; ValueError: Sheet2 is not a valid coordinate or range",
+      "em": 0.0,
+      "f1": 0.0,
+      "instruction_type": "Cell-Level Manipulation",
+      "raw": "```python\nfrom openpyxl import load_workbook\n\n# Load the workbook and select the active sheet\nwb = load_workbook('input.xlsx')\nws = wb.active\n\n# Identify the header row and data rows\nheader_row = None\nfor row in ws.iter_rows(min_row=1, max_row=156):\n    if row[0].value == 'serial':\n        header_row = row[0].row\n        break\n\n# Extract serial numbers and prices from Sheet2\nserial_numbers = []\nprices = []\nfor row in ws['Sheet2']:\n    if row[0].row == 1:\n        continue  # Skip header row\n    serial_numbers.append(row[0].value)\n    prices.append(row[1].value)\n\n# Create a dictionary to store the sum of prices for each serial number\nserial_price_sum = {}\nfor serial, price in zip(serial_numbers, prices):\n    if serial not in serial_price_sum:\n        serial_price_sum[serial] = 0\n    serial_price_sum[serial] += price\n\n# Write the computed sums to the answer range\nfor idx, serial in enumerate(serial_numbers):\n    ws[f'C{idx + 2}'] = serial_price_sum[serial]\n\n# Save the workbook\nwb.save('output.xlsx')\n```"
+    },
+    {
+      "id": 32293,
+      "gold": "golden",
+      "pred": "match",
+      "em": 1.0,
+      "f1": 1.0,
+      "instruction_type": "Cell-Level Manipulation",
+      "raw": "```python\nfrom openpyxl import load_workbook\n\n# Load the workbook and select the active sheet\nwb = load_workbook('input.xlsx')\nws = wb.active\n\n# Define the mapping from A14 values to B column values and their corresponding multipliers\nvalue_map = {\n    'MNQ': (1, 0.56),\n    'MES': (2, 0.56),\n    'NQ': (3, 2.09),\n    'ES': (4, 2.04)\n}\n\n# Get the value in A14\na14_value = ws['A14'].value\n\n# Determine the corresponding B column value and multiplier\nb_row, multiplier = value_map.get(a14_value, (None, None))\n\n# Write the computed value to B14\nws['B14'].value = multiplier\n\n# Write the computed values to B15:B17 based on the values in A15:A17\nfor row in range(15, 18):\n    a_value = ws[f'A{row}'].value\n    b_row, multiplier = value_map.get(a_value, (None, None))\n    ws[f'B{row}'].value = multiplier\n\n# Save the workbook\nwb.save('output.xlsx')\n```"
+    },
+    {
+      "id": 32612,
+      "gold": "golden",
+      "pred": "no output.xlsx; TypeError: strptime() argument 1 must be str, not datetime.time",
+      "em": 0.0,
+      "f1": 0.0,
+      "instruction_type": "Cell-Level Manipulation",
+      "raw": "```python\nfrom openpyxl import load_workbook\nfrom datetime import datetime, timedelta\nimport re\n\n# Load the workbook and select the active sheet\nwb = load_workbook('input.xlsx')\nws = wb.active\n\n# Define the public holidays list\npublic_holidays = [\n    (\"New Year's Day\", \"2023-01-01\"),\n    (\"New Year's Day\", \"2023-01-02\"),\n    (\"Australia Day\", \"2023-01-26\"),\n    (\"Labour Day\", \"2023-03-13\"),\n    (\"Good Friday\", \"2023-04-07\"),\n    (\"Easter Saturday\", \"2023-04-08\"),\n    (\"Easter Sunday\", \"2023-04-09\"),\n    (\"Easter Monday\", \"2023-04-10\"),\n    (\"Easter Tuesday\", \"2024-04-11\"),\n    (\"Anzac Day\", \"2023-04-25\"),\n    (\"King's Birthday\", \"2023-06-12\"),\n    (\"AFL Grand Final Friday\", \"2023-09-29\"),\n    (\"Melbourne Cup Day\", \"2023-11-07\"),\n    (\"Christmas Day\", \"2023-12-25\"),\n    (\"Boxing Day\", \"2023-12-26\")\n]\n\n# Create a dictionary to map holiday names to their type\nholiday_type_map = {\n    \"PH(non-working)\": \"PH(non-working)\",\n    \"PH(working)\": \"PH(working)\"\n}\n\n# Convert public holidays to datetime objects\nholiday_dates = {}\nfor name, date_str in public_holidays:\n    date = datetime.strptime(date_str, \"%Y-%m-%d\")\n    holiday_dates[date] = name\n\n# Process each row in the range E2:E75\nfor row in range(2, 76):  # Rows 2 to 75 (inclusive)\n    date_cell = ws[f'D{row}']  # DATE column is column D\n    date_str = date_cell.value\n    if not date_str:\n        continue  # Skip if the date is empty\n\n    # Parse the date string\n    try:\n        date = datetime.strptime(date_str, \"%Y-%m-%d %H:%M:%S\").date()\n    except ValueError:\n        try:\n            date = datetime.strptime(date_str, \"%Y-%m-%d\").date()\n        except ValueError:\n            continue  # Skip if the date format is invalid\n\n    # Check if the date is a public holiday\n    if date in holiday_dates:\n        holiday_name = holiday_dates[date]\n        # Find the corresponding holiday type from the provided list\n        holiday_type = None\n        for name, date_str in public_holidays:\n            if name == holiday_name:\n                holiday_type = date_str.split()[-1]  # Extract the type from the string\n                break\n        if holiday_type:\n            ws[f'E{row}'] = holiday_type_map[holiday_type]\n        else:\n            ws[f'E{row}'] = \"PH(non-working)\"  # Default to non-working if type not found\n    else:\n        # Determine the day of the week\n        day_of_week = date.strftime(\"%A\")\n        ws[f'E{row}'] = day_of_week\n\n# Save the workbook\nwb.save('output.xlsx')\n```"
+    },
+    {
+      "id": 34210,
+      "gold": "golden",
+      "pred": "50/55 cells differ",
+      "em": 0.0,
+      "f1": 0.0,
+      "instruction_type": "Cell-Level Manipulation",
+      "raw": "```python\nfrom openpyxl import load_workbook\n\n# Load the workbook and select the active sheet\nwb = load_workbook('input.xlsx')\nws = wb.active\n\n# Identify the header row and first data row\nheader_row = None\ndata_row = None\n\n# Check first few rows to determine header and data rows\nfor row in ws.iter_rows(min_row=1, max_row=10):\n    if any(cell.value for cell in row):\n        if header_row is None:\n            header_row = row[0].row\n        data_row = row[0].row\n\n# Determine the range for column C (C1:C55)\nstart_row = 1\nend_row = 55\nstart_col = 3\nend_col = 3\n\n# Read values from column A and populate column C\ncompany_names = [ws.cell(row=i, column=1).value for i in range(start_row, end_row + 1)]\n\n# Write the company names to column C\nfor i in range(start_row, end_row + 1):\n    ws.cell(row=i, column=start_col, value=company_names[i - start_row])\n\n# Save the workbook\nwb.save('output.xlsx')\n```"
+    },
+    {
+      "id": 36097,
+      "gold": "golden",
+      "pred": "no output.xlsx; TypeError: unsupported operand type(s) for -: 'str' and 'str'",
+      "em": 0.0,
+      "f1": 0.0,
+      "instruction_type": "Cell-Level Manipulation",
+      "raw": "```python\nfrom openpyxl import load_workbook\n\n# Load the workbook and select the active sheet\nwb = load_workbook('input.xlsx')\nws = wb.active\n\n# Define the range for the recoupment calculation\nrecoupment_range = ws['H3':'H6']\n\n# Identify the header row and first data row\nheader_row = None\nfor row in ws.iter_rows(min_row=1, max_row=7):\n    if any(cell.value for cell in row):\n        header_row = row[0].row\n        break\n\n# Determine the first data row\nfirst_data_row = header_row + 1\n\n# Read the necessary data into Python structures\nassets = []\nfor row in ws.iter_rows(min_row=first_data_row, max_row=7, min_col=2, max_col=7):\n    year_of_purchase, cost, book_value, itv, profit, proceeds = row\n    assets.append({\n        'year_of_purchase': year_of_purchase.value,\n        'cost': cost.value,\n        'book_value': book_value.value,\n        'itv': itv.value,\n        'profit': profit.value,\n        'proceeds': proceeds.value\n    })\n\n# Calculate recoupment for each asset\nfor i, asset in enumerate(assets):\n    if asset['proceeds'] < asset['cost']:\n        # Sold at a loss\n        recoupment = asset['itv'] - (asset['cost'] - asset['proceeds'])\n    elif asset['profit'] < asset['cost']:\n        # Profit is less than original cost\n        recoupment = asset['profit']\n    else:\n        # Recoup the cost basis reduced by ITV\n        recoupment = asset['cost'] - asset['itv']\n    \n    # Write the computed value to the worksheet\n    ws.cell(row=first_data_row + i, column=8, value=recoupment)\n\n# Preserve the formatting of column I\nfor cell in ws['I3':'I6']:\n    cell.value = cell.value  # This ensures formatting is preserved\n\n# Save the workbook\nwb.save('output.xlsx')\n```"
+    },
+    {
+      "id": 37229,
+      "gold": "golden",
+      "pred": "no output.xlsx; AttributeError: 'str' object has no attribute 'date'",
+      "em": 0.0,
+      "f1": 0.0,
+      "instruction_type": "Cell-Level Manipulation",
+      "raw": "```python\nfrom openpyxl import load_workbook\nfrom datetime import datetime\n\n# Load the workbook and select the active sheet\nwb = load_workbook('input.xlsx')\nws = wb.active\n\n# Identify the header row and first data row\nheader_row = None\ndata_row = None\n\n# Scan rows to find headers and first data row\nfor row in ws.iter_rows(min_row=1, max_row=60):\n    if row[0].value == 'FORMULAS GO BELOW: F-J, 3-14':\n        header_row = row[0].row\n    elif row[0].value == 'DATE' and row[1].value == 'DK' and row[2].value == 'INSP' and row[3].value == 'CONT' and row[4].value == 'APPR' and row[5].value == 'CLS':\n        data_row = row[0].row\n\n# Define the month names and their corresponding date range\nmonths = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']\nmonth_dates = [ws[f'B{i}'].value for i in range(3, 15)]  # B3:B14\n\n# Extract the dates and values from the data rows\ndate_values = []\ndk_values = []\ninsp_values = []\ncont_values = []\nappr_values = []\ncls_values = []\n\nfor row in ws.iter_rows(min_row=data_row, max_row=60):\n    if row[0].value is not None:\n        date_values.append(row[0].value)\n        dk_values.append(row[1].value)\n        insp_values.append(row[2].value)\n        cont_values.append(row[3].value)\n        appr_values.append(row[4].value)\n        cls_values.append(row[5].value)\n\n# Create a dictionary to map month names to their corresponding date\nmonth_to_date = {}\nfor i in range(len(months)):\n    month_to_date[months[i]] = month_dates[i]\n\n# Calculate the totals for each month\ntotals = {}\nfor i in range(len(months)):\n    month = months[i]\n    target_date = month_to_date[month]\n    total = 0\n    for j in range(len(date_values)):\n        if date_values[j].date() == target_date.date():\n            total += dk_values[j] + insp_values[j] + cont_values[j] + appr_values[j] + cls_values[j]\n    totals[month] = total\n\n# Write the computed totals to the answer range C3:G14\nfor i in range(len(months)):\n    month = months[i]\n    row = i + 3\n    col = 3 + i\n    ws.cell(row=row, column=col, value=totals[month] if totals[month] != 0 else \"\")\n\n# Save the workbook\nwb.save('output.xlsx')\n```"
+    },
+    {
+      "id": 36277,
+      "gold": "golden",
+      "pred": "4/4 cells differ",
+      "em": 0.0,
+      "f1": 0.0,
+      "instruction_type": "Cell-Level Manipulation",
+      "raw": "```python\nfrom openpyxl import load_workbook\n\n# Load the workbook and select the active sheet\nwb = load_workbook('input.xlsx')\nws = wb.active\n\n# Define the answer range (I2:I5)\nanswer_range = ws['I2':'I5']\n\n# Find the header row and first data row\nheader_row = None\ndata_row = None\n\n# Scan the first few rows to find headers and data\nfor row in ws.iter_rows(min_row=1, max_row=25):\n    if any(cell.value is not None for cell in row):\n        if header_row is None:\n            header_row = row[0].row\n        else:\n            data_row = row[0].row\n            break\n\n# Extract the header names for the 'Name' column\nname_header_row = None\nfor cell in ws[header_row]:\n    if cell.value == 'Name':\n        name_header_row = cell.column\n        break\n\n# Extract the 'Name' values from the data rows\nnames = []\nfor row in ws.iter_rows(min_row=data_row, max_row=25):\n    if row[name_header_row - 1].value:\n        names.append(row[name_header_row - 1].value)\n\n# Write the computed values to the answer range\nfor i, cell in enumerate(answer_range):\n    cell[0].value = names[i]\n\n# Save the workbook\nwb.save('output.xlsx')\n```"
+    },
+    {
+      "id": 40892,
+      "gold": "golden",
+      "pred": "no output.xlsx; AttributeError: 'NoneType' object has no attribute 'lower'",
+      "em": 0.0,
+      "f1": 0.0,
+      "instruction_type": "Cell-Level Manipulation",
+      "raw": "```python\nfrom openpyxl import load_workbook\n\n# Load the workbook and select the active sheet\nwb = load_workbook('input.xlsx')\nws = wb.active\n\n# Define the color list from column D (D2:D17)\ncolor_list = [ws.cell(row=i, column=4).value for i in range(2, 18)]\n\n# Define the range for output (B2:B17)\noutput_range = [ws.cell(row=i, column=2) for i in range(2, 18)]\n\n# Process each row in the output range\nfor cell in output_range:\n    row = cell.row\n    # Get the product name from column A\n    product_name = ws.cell(row=row, column=1).value\n    # Search for the color in the product name (case-insensitive)\n    found_color = next((color for color in color_list if color.lower() in product_name.lower()), \"\")\n    # Write the found color to the output cell\n    cell.value = found_color\n\n# Save the workbook as output.xlsx\nwb.save('output.xlsx')\n```"
+    },
+    {
+      "id": 41420,
+      "gold": "golden",
+      "pred": "no output.xlsx; IndexError: list index out of range",
+      "em": 0.0,
+      "f1": 0.0,
+      "instruction_type": "Cell-Level Manipulation",
+      "raw": "```python\nfrom openpyxl import load_workbook\n\n# Load the workbook and select the active sheet\nwb = load_workbook('input.xlsx')\nws = wb.active\n\n# Define the range for the input data (A2:A8)\ninput_range = ws['A2':'A8']\n\n# Process each row in the input range\nfor row in input_range:\n    cell = row[0]  # Get the cell in column A\n    value = cell.value  # Get the value from the cell\n    \n    # Extract digits from the value\n    digits = [c for c in str(value) if c.isdigit()]\n    \n    # Deduplicate and sort the digits\n    unique_sorted_digits = sorted(set(digits))\n    \n    # Write the sorted digits to columns C to G starting from row 2\n    for i, digit in enumerate(unique_sorted_digits, start=2):\n        ws[f'C{row[0].row}'] = digit  # Start writing from column C\n        # Move to the next column for the next digit\n        # If there are more digits than columns, leave the rest blank\n        if i < 5:\n            ws[f'D{row[0].row}'] = unique_sorted_digits[1] if i == 2 else ''\n            ws[f'E{row[0].row}'] = unique_sorted_digits[2] if i == 3 else ''\n            ws[f'F{row[0].row}'] = unique_sorted_digits[3] if i == 4 else ''\n            ws[f'G{row[0].row}'] = unique_sorted_digits[4] if i == 5 else ''\n\n# Save the workbook as output.xlsx\nwb.save('output.xlsx')\n```"
+    },
+    {
+      "id": 42216,
+      "gold": "golden",
+      "pred": "320/320 cells differ",
+      "em": 0.0,
+      "f1": 0.0,
+      "instruction_type": "Cell-Level Manipulation",
+      "raw": "```python\nfrom openpyxl import load_workbook\nfrom datetime import datetime, timedelta\nimport re\n\n# Load the workbook and select the active sheet\nwb = load_workbook('input.xlsx')\nws = wb.active\n\n# Step 1: Identify the header and data ranges\n# Find the header row (row with \"Group A\")\nheader_row = None\nfor row in ws.iter_rows(min_row=1, max_row=261):\n    if row[0].value == \"Group A\":\n        header_row = row[0].row\n        break\n\n# Find the first data row (row with \"1951-01\")\nfirst_data_row = None\nfor row in ws.iter_rows(min_row=header_row + 1, max_row=261):\n    if row[0].value.startswith(\"1951-\"):\n        first_data_row = row[0].row\n        break\n\n# Find the last data row (row with \"1951-11\")\nlast_data_row = None\nfor row in ws.iter_rows(min_row=header_row + 1, max_row=261):\n    if row[0].value.startswith(\"1951-11\"):\n        last_data_row = row[0].row\n        break\n\n# Find the column indices for the data columns (columns 1 to 19)\ndata_cols = []\nfor col in range(1, 20):\n    data_cols.append(col)\n\n# Step 2: Extract data from Group A\ngroup_a_data = []\nfor row in ws.iter_rows(min_row=first_data_row, max_row=last_data_row, min_col=1, max_col=1):\n    date_str = row[0].value\n    if date_str:\n        group_a_data.append({\n            \"date\": date_str,\n            \"values\": []\n        })\n\nfor col in data_cols:\n    for row in ws.iter_rows(min_row=first_data_row, max_row=last_data_row, min_col=col, max_col=col):\n        value = row[0].value\n        if value is not None:\n            group_a_data[-1][\"values\"].append(value)\n\n# Step 3: Process data to convert from Group A to Group B\ngroup_b_data = []\nfor entry in group_a_data:\n    date_str = entry[\"date\"]\n    values = entry[\"values\"]\n    \n    # Parse the date\n    date_parts = date_str.split(\"-\")\n    year = int(date_parts[0])\n    month = int(date_parts[1])\n    \n    # Generate all dates for the month\n    start_date = datetime(year, month, 1)\n    end_date = datetime(year, month + 1, 1)\n    \n    current_date = start_date\n    while current_date < end_date:\n        # Format the date as \"YYYY-MM-DD\"\n        formatted_date = current_date.strftime(\"%Y-%m-%d\")\n        \n        # Find the value for this date\n        value = None\n        for i, val in enumerate(values):\n            if val is not None:\n                if isinstance(val, str) and val == \"NA\":\n                    value = None\n                    break\n                elif isinstance(val, str) and val in [\"-9999\", \"M\"]:\n                    value = None\n                    break\n                else:\n                    value = val\n                    break\n        \n        # Handle the value\n        if value is None:\n            if current_date.month == 4:  # April\n                group_b_data.append({\n                    \"date\": formatted_date,\n                    \"data\": 0\n                })\n            else:\n                group_b_data.append({\n                    \"date\": formatted_date,\n                    \"data\": None\n                })\n        else:\n            if current_date.month == 4:  # April\n                group_b_data.append({\n                    \"date\": formatted_date,\n                    \"data\": value\n                })\n            else:\n                group_b_data.append({\n                    \"date\": formatted_date,\n                    \"data\": value\n                })\n        \n        current_date += timedelta(days=1)\n\n# Step 4: Write the data to the answer range (B20:B339)\nstart_row = 20\nstart_col = 2\nend_row = start_row + len(group_b_data) - 1\n\nfor i, entry in enumerate(group_b_data):\n    ws.cell(row=start_row + i, column=start_col, value=entry[\"date\"])\n    ws.cell(row=start_row + i, column=start_col + 1, value=entry[\"data\"])\n\n# Save the workbook\nwb.save('output.xlsx')\n```"
+    },
+    {
+      "id": 43436,
+      "gold": "golden",
+      "pred": "15/15 cells differ",
+      "em": 0.0,
+      "f1": 0.0,
+      "instruction_type": "Cell-Level Manipulation",
+      "raw": "```python\nfrom openpyxl import load_workbook\nfrom datetime import datetime, timedelta\n\n# Load the workbook and select the active sheet\nwb = load_workbook('input.xlsx')\nws = wb.active\n\n# Define the answer range\nanswer_start_row = 2\nanswer_start_col = 8  # Column I\nanswer_end_row = 6\nanswer_end_col = 10  # Column K\n\n# Find the header row and first data row\nheader_row = None\nfor row in ws.iter_rows(min_row=1, max_row=12):\n    if any(cell.value for cell in row):\n        header_row = row[0].row\n        break\n\n# Find the first data row\nfirst_data_row = None\nfor row in ws.iter_rows(min_row=header_row + 1, max_row=12):\n    if any(cell.value for cell in row):\n        first_data_row = row[0].row\n        break\n\n# Extract the data\nrecords = []\nfor row in ws.iter_rows(min_row=first_data_row, max_row=12):\n    record = {\n        'record_number': row[0].value,\n        'department': row[1].value,\n        'date_created': row[2].value,\n        'date_closed': row[3].value\n    }\n    records.append(record)\n\n# Define the months and their first and last days\nmonths = {\n    'May 2022': (datetime(2022, 5, 1), datetime(2022, 5, 31)),\n    'June 2022': (datetime(2022, 6, 1), datetime(2022, 6, 30)),\n    'July 2022': (datetime(2022, 7, 1), datetime(2022, 7, 31))\n}\n\n# Calculate the number of records open by the end of each month\nresults = {}\nfor month, (first_day, last_day) in months.items():\n    count = 0\n    for record in records:\n        # Check if the record was not closed before the first day of the month\n        if record['date_closed'] is None or record['date_closed'] >= first_day:\n            # Check if the record was not created after the last day of the month\n            if record['date_created'] <= last_day:\n                count += 1\n    results[month] = count\n\n# Write the results to the answer range\nfor i, (month, count) in enumerate(results.items()):\n    ws.cell(row=answer_start_row + i, column=answer_start_col, value=month)\n    ws.cell(row=answer_start_row + i, column=answer_start_col + 1, value=count)\n\n# Save the workbook\nwb.save('output.xlsx')\n```"
+    },
+    {
+      "id": 44628,
+      "gold": "golden",
+      "pred": "3/4 cells differ",
+      "em": 0.0,
+      "f1": 0.0,
+      "instruction_type": "Cell-Level Manipulation",
+      "raw": "```python\nfrom openpyxl import load_workbook\n\n# Load the workbook and select the active sheet\nwb = load_workbook('input.xlsx')\nws = wb.active\n\n# Identify the header row and data rows\nheader_row = None\ndata_rows = []\n\n# Find the header row by checking for the \"Product\" column\nfor row in ws.iter_rows(min_row=1, max_row=10):\n    if row[0].value == \"Product\":\n        header_row = row[0].row\n        break\n\n# Extract data rows\nfor row in ws.iter_rows(min_row=header_row + 1, max_row=10):\n    data_rows.append(row)\n\n# Extract product names and quantities\nproducts = []\nfor row in data_rows:\n    product = row[0].value\n    quantity = row[1].value\n    products.append((product, quantity))\n\n# Group by the first letter of the product name and sum quantities\nfrom collections import defaultdict\ngrouped = defaultdict(int)\nfor product, quantity in products:\n    first_letter = product[0].upper()\n    grouped[first_letter] += quantity\n\n# Prepare the result for D3:G3\nresult = []\nfor col in range(3, 7):  # Columns D to G (1-based index)\n    col_letter = chr(64 + col)  # Convert column number to letter\n    first_letter = chr(65 + (col - 3))  # A, B, C, D for D3:G3\n    total = grouped.get(first_letter, 0)\n    result.append(total)\n\n# Write the computed values to the answer range D3:G3\nfor col_idx, value in enumerate(result, start=3):  # Start from column D (3)\n    ws.cell(row=3, column=col_idx, value=value)\n\n# Save the workbook\nwb.save('output.xlsx')\n```"
+    },
+    {
+      "id": 45944,
+      "gold": "golden",
+      "pred": "4/9 cells differ",
+      "em": 0.0,
+      "f1": 0.0,
+      "instruction_type": "Cell-Level Manipulation",
+      "raw": "```python\nfrom openpyxl import load_workbook\n\n# Load the workbook and select the active sheet\nwb = load_workbook('input.xlsx')\nws = wb.active\n\n# Define the answer ranges\nanswer_ranges = [\n    ('G4', 'G6'),\n    ('G11', 'G13'),\n    ('G20', 'G22')\n]\n\n# Define the header row and data rows for the tables\n# First table: PARTICIPANT_NAME and START_DATE in columns A and B\n# Second table: PARTICIPANT_NAME and START_DATE in columns D and E\n# We'll read the data from these columns\n\n# Read the data from the first table (columns A and B)\ntable1_names = [ws[f'A{i}'].value for i in range(4, 8) if ws[f'A{i}'].value]\ntable1_dates = [ws[f'B{i}'].value for i in range(4, 8) if ws[f'B{i}'].value]\n\n# Read the data from the second table (columns D and E)\ntable2_names = [ws[f'D{i}'].value for i in range(4, 8) if ws[f'D{i}'].value]\ntable2_dates = [ws[f'E{i}'].value for i in range(4, 8) if ws[f'E{i}'].value]\n\n# Create a dictionary to map participant names to their start dates from the first table\nname_to_date = {name: date for name, date in zip(table1_names, table1_dates)}\n\n# Compute the results for each row in the second table\nresults = []\nfor name, date in zip(table2_names, table2_dates):\n    if name in name_to_date:\n        if name_to_date[name] >= date:\n            results.append(True)\n        else:\n            results.append(False)\n    else:\n        results.append(None)\n\n# Write the computed values to the answer ranges\nfor i, (start_row, end_row) in enumerate(answer_ranges):\n    for row in range(int(start_row[1:]), int(end_row[1:]) + 1):\n        ws[f'G{row}'] = results[i]\n\n# Save the workbook\nwb.save('output.xlsx')\n```"
+    },
+    {
+      "id": 49857,
+      "gold": "golden",
+      "pred": "4/7 cells differ",
+      "em": 0.0,
+      "f1": 0.0,
+      "instruction_type": "Cell-Level Manipulation",
+      "raw": "```python\nfrom openpyxl import load_workbook\n\n# Load the workbook and select the active sheet\nwb = load_workbook('input.xlsx')\nws = wb.active\n\n# Identify the header row and first data row\nheader_row = None\nfor row in ws.iter_rows(min_row=1, max_row=50):\n    if any(cell.value for cell in row):\n        header_row = row[0].row\n        break\n\n# Determine the data range\ndata_start_row = header_row + 1\ndata_end_row = 50  # As per the given data, rows 4-10 are filled, others are empty\n\n# Read the values from column F (Pass on to owner?) and column G (PCO #)\ncolumn_f_values = [ws.cell(row=row, column=6).value for row in range(data_start_row, data_end_row + 1)]\ncolumn_g_values = [ws.cell(row=row, column=7).value for row in range(data_start_row, data_end_row + 1)]\n\n# Compute the sequence for column G\nsequence = 1\nresult = []\nfor f_value, g_value in zip(column_f_values, column_g_values):\n    if f_value == \"YES\":\n        result.append(sequence)\n        sequence += 1\n    else:\n        result.append(0)\n\n# Write the computed values to the range G4:G10\nfor row, value in zip(range(data_start_row, data_end_row + 1), result):\n    ws.cell(row=row, column=7, value=value)\n\n# Save the workbook\nwb.save('output.xlsx')\n```"
+    },
+    {
+      "id": 50486,
+      "gold": "golden",
+      "pred": "4/4 cells differ",
+      "em": 0.0,
+      "f1": 0.0,
+      "instruction_type": "Cell-Level Manipulation",
+      "raw": "```python\nfrom openpyxl import load_workbook\n\n# Load the workbook and select the active sheet\nwb = load_workbook('input.xlsx')\nws = wb.active\n\n# Identify the header row and first data row\nheader_row = None\ndata_row = None\n\nfor row in ws.iter_rows(min_row=1, max_row=10):\n    if any(cell.value for cell in row):\n        header_row = row[0].row\n        data_row = row[0].row + 1\n        break\n\n# Determine the range for the answer (A2:A5)\nstart_row = 2\nend_row = 5\nstart_col = 1\nend_col = 1\n\n# Process each row in the answer range\nfor row in range(start_row, end_row + 1):\n    # Get the values from columns B and C\n    col_b = ws.cell(row=row, column=2).value\n    col_c = ws.cell(row=row, column=3).value\n    \n    # Check if B or C contains a numeric value\n    if col_b is not None and isinstance(col_b, (int, float)):\n        ws.cell(row=row, column=start_col, value='Chep')\n    elif col_c is not None and isinstance(col_c, (int, float)):\n        ws.cell(row=row, column=start_col, value='Loscam')\n    else:\n        ws.cell(row=row, column=start_col, value='')\n\n# Save the workbook\nwb.save('output.xlsx')\n```"
+    },
+    {
+      "id": 50811,
+      "gold": "golden",
+      "pred": "no output.xlsx; TypeError: unsupported operand type(s) for -: 'NoneType' and 'int'",
+      "em": 0.0,
+      "f1": 0.0,
+      "instruction_type": "Cell-Level Manipulation",
+      "raw": "```python\nfrom openpyxl import load_workbook\n\n# Load the workbook and select the active sheet\nwb = load_workbook('input.xlsx')\nws = wb.active\n\n# Identify the header row and the first data row\nheader_row = None\ndata_rows = []\n\nfor row in ws.iter_rows(min_row=1, max_row=20):\n    if any(cell.value for cell in row):\n        header_row = row\n        break\n\n# Find the columns for Rep, Client, and %\nrep_col = None\nclient_col = None\npercent_col = None\n\nfor idx, cell in enumerate(header_row):\n    if cell.value == 'Rep':\n        rep_col = idx + 1  # Convert to 1-indexed\n    elif cell.value == 'Client':\n        client_col = idx + 1\n    elif cell.value == '%':\n        percent_col = idx + 1\n\n# Extract the data from the database\ndatabase = []\nfor row in ws.iter_rows(min_row=5, max_row=20):\n    if row[rep_col - 1].value:\n        rep = row[rep_col - 1].value\n        client = row[client_col - 1].value\n        percent = row[percent_col - 1].value\n        database.append((rep, client, percent))\n\n# Create a dictionary to map (Rep, Client) to their percentage\nrep_client_to_percent = {}\nfor rep, client, percent in database:\n    rep_client_to_percent[(rep, client)] = percent\n\n# Write the computed values to the answer range\nfor row_idx, cell in enumerate(ws['D21:D23'], start=21):\n    rep = ws[f'B{row_idx}'].value\n    client = ws[f'C{row_idx}'].value\n    if (rep, client) in rep_client_to_percent:\n        cell.value = rep_client_to_percent[(rep, client)]\n    else:\n        cell.value = 0  # Default value if not found\n\n# Save the workbook\nwb.save('output.xlsx')\n```"
+    },
+    {
+      "id": 51556,
+      "gold": "golden",
+      "pred": "4/5 cells differ",
+      "em": 0.0,
+      "f1": 0.0,
+      "instruction_type": "Cell-Level Manipulation",
+      "raw": "```python\nfrom openpyxl import load_workbook\n\n# Load the workbook and select the active sheet\nwb = load_workbook('input.xlsx')\nws = wb.active\n\n# Define the range for the data (B3:L8)\ndata_start_row = 3\ndata_end_row = 8\ndata_start_col = 2\ndata_end_col = 12\n\n# Find the header row (row 2) and the first data row (row 3)\nheader_row = 2\nfirst_data_row = 3\n\n# Find the column for 'sq ft' (column P, which is column 16)\nsq_ft_col = 16\n\n# Find the column for 'market rent' (column Q, which is column 17)\nmarket_rent_col = 17\n\n# Find the column for 'subject impr. rating' (column S, which is column 19)\nsubject_impr_rating_col = 19\n\n# Find the column for 'Impr. Rating' (column M, which is column 13)\nimpr_rating_col = 13\n\n# Get the value in cell S2 (subject impr. rating)\nsubject_impr_rating = ws.cell(row=2, column=subject_impr_rating_col).value\n\n# Get the unit sizes from the header row (B2:L2)\nunit_sizes = [ws.cell(row=header_row, column=col).value for col in range(data_start_col, data_end_col + 1)]\n\n# Get the values in column P (sq ft)\nsq_ft_values = [ws.cell(row=row, column=sq_ft_col).value for row in range(first_data_row, data_end_row + 1)]\n\n# Get the values in column M (Impr. Rating)\nimpr_rating_values = [ws.cell(row=row, column=impr_rating_col).value for row in range(first_data_row, data_end_row + 1)]\n\n# Get the market rent values from the data range\nmarket_rent_values = []\nfor row in range(first_data_row, data_end_row + 1):\n    for col in range(data_start_col, data_end_col + 1):\n        market_rent_values.append(ws.cell(row=row, column=col).value)\n\n# Map the market rent values to their corresponding unit sizes and improvement ratings\nmarket_rent_data = []\nfor i in range(len(market_rent_values)):\n    unit_size = unit_sizes[i % len(unit_sizes)]\n    sq_ft = sq_ft_values[i // len(unit_sizes)]\n    impr_rating = impr_rating_values[i // len(unit_sizes)]\n    market_rent_data.append((unit_size, sq_ft, impr_rating, market_rent_values[i]))\n\n# Calculate the average market rent for each unit size and improvement rating\naverage_rent = {}\nfor unit_size, sq_ft, impr_rating, rent in market_rent_data:\n    key = (unit_size, impr_rating)\n    if key not in average_rent:\n        average_rent[key] = {'total': 0, 'count': 0}\n    if rent is not None:\n        average_rent[key]['total'] += rent\n        average_rent[key]['count'] += 1\n\n# Write the computed values to the range Q2:Q6\nfor i in range(2, 7):\n    unit_size = sq_ft_values[i - 2]\n    key = (unit_size, subject_impr_rating)\n    if key in average_rent and average_rent[key]['count'] > 0:\n        average = average_rent[key]['total'] / average_rent[key]['count']\n        ws.cell(row=i, column=17, value=average)\n    else:\n        ws.cell(row=i, column=17, value=\"\")\n\n# Save the workbook\nwb.save('output.xlsx')\n```"
+    },
+    {
+      "id": 52233,
+      "gold": "golden",
+      "pred": "no output.xlsx; AttributeError: 'tuple' object has no attribute 'value'",
+      "em": 0.0,
+      "f1": 0.0,
+      "instruction_type": "Cell-Level Manipulation",
+      "raw": "```python\nfrom openpyxl import load_workbook\n\n# Load the workbook and select the active sheet\nwb = load_workbook('input.xlsx')\nws = wb.active\n\n# Define the answer range\nanswer_range = ws['B7:B10']\n\n# Read the data from the sheet\ncompanies = [ws[f'A{i}'].value for i in range(7, 11)]\nvalues = [ws[f'B{i}'].value for i in range(7, 11)]\n\n# Define the headers row\nheaders = [ws[f'{col}2'].value for col in 'BCDE']\n\n# Find the column index for each company in the headers\ncompany_to_col = {company: i + 2 for i, company in enumerate(headers) if company}\n\n# Compute the values for the answer range\nresults = []\nfor i, company in enumerate(companies):\n    if company in company_to_col:\n        col = company_to_col[company]\n        # Get the values in the column\n        column_values = [ws[f'{chr(col + 64)}{row}'].value for row in range(3, 6)]\n        # Find the match in the headers\n        match_index = column_values.index(values[i]) if values[i] in column_values else 0\n        # Sum the values in the column\n        total = sum(column_values)\n        results.append(total)\n    else:\n        results.append(0)\n\n# Write the computed values to the answer range\nfor cell, value in zip(answer_range, results):\n    cell.value = value\n\n# Save the workbook\nwb.save('output.xlsx')\n```"
+    },
+    {
+      "id": 52964,
+      "gold": "golden",
+      "pred": "no output.xlsx; TypeError: unsupported operand type(s) for -: 'str' and 'str'",
+      "em": 0.0,
+      "f1": 0.0,
+      "instruction_type": "Cell-Level Manipulation",
+      "raw": "```python\nfrom openpyxl import load_workbook\nfrom openpyxl.utils import get_column_letter\n\n# Load the workbook and select the active sheet\nwb = load_workbook('input.xlsx')\nws = wb.active\n\n# Define the range for the answer (C2)\nstart_row, start_col = 2, 3  # C2 is row 2, column 3\nend_row, end_col = 2, 3  # Only C2 is needed for now\n\n# Find the header row and the first data row\nheader_row = None\ndata_row = None\n\nfor row in ws.iter_rows(min_row=1, max_row=279):\n    if any(cell.value for cell in row):\n        header_row = row[0].row\n        break\n\nfor row in ws.iter_rows(min_row=header_row + 1, max_row=279):\n    if any(cell.value for cell in row):\n        data_row = row[0].row\n        break\n\n# Identify the columns for MRN, U, and Y\nmrn_col = None\nu_col = None\ny_col = None\n\nfor col in ws.iter_cols(min_row=header_row, max_row=header_row):\n    header = col[0].value\n    if header == \"MRN\":\n        mrn_col = col[0].column\n    elif header == \"LOS  ( ADMITTED PTS DX AL) COMPLETE\":\n        u_col = col[0].column\n    elif header == \"LOS > 14 Days (FORMULA) COMPLETE\":\n        y_col = col[0].column\n\n# Read the MRN values and corresponding U and Y values\nmrn_values = []\nu_values = []\ny_values = []\n\nfor row in ws.iter_rows(min_row=data_row, max_row=279):\n    mrn = row[mrn_col - 1].value\n    if mrn:\n        mrn_values.append(mrn)\n        u_values.append(row[u_col - 1].value)\n        y_values.append(row[y_col - 1].value)\n\n# Create a dictionary to map MRN to the difference between U and Y\nmrn_to_diff = {}\nfor mrn, u, y in zip(mrn_values, u_values, y_values):\n    if u is not None and y is not None:\n        mrn_to_diff[mrn] = u - y\n\n# Write the computed values to the answer range\nfor row in range(start_row, end_row + 1):\n    mrn = ws.cell(row=row, column=1).value\n    if mrn in mrn_to_diff:\n        ws.cell(row=row, column=start_col).value = mrn_to_diff[mrn]\n\n# Save the workbook\nwb.save('output.xlsx')\n```"
+    },
+    {
+      "id": 53449,
+      "gold": "golden",
+      "pred": "2/15 cells differ",
+      "em": 0.0,
+      "f1": 0.0,
+      "instruction_type": "Cell-Level Manipulation",
+      "raw": "```python\nfrom openpyxl import load_workbook\n\n# Load the workbook and select the active sheet\nwb = load_workbook('input.xlsx')\nws = wb.active\n\n# Identify the header row and first data row\nheader_row = None\ndata_rows = []\n\nfor row in ws.iter_rows(min_row=1, max_row=16):\n    if row[0].value == 'Svc_Date':\n        header_row = row[0].row\n    if row[0].value is not None:\n        data_rows.append(row)\n\n# Determine the range for the 'Test' column (G2:G16)\nstart_row = header_row + 1\nend_row = start_row + len(data_rows) - 1\nstart_col = 7  # Column G is the 7th column (1-indexed)\nend_col = start_col\n\n# Read the Procedure Category ID values and determine the 'Test' values\nprocedure_category_ids = [row[5].value for row in data_rows]\ntest_values = ['X' if category == 'Covid Test' else '' for category in procedure_category_ids]\n\n# Write the computed values into the 'Test' column\nfor i, value in enumerate(test_values):\n    ws.cell(row=start_row + i, column=start_col, value=value)\n\n# Save the workbook\nwb.save('output.xlsx')\n```"
+    },
+    {
+      "id": 54274,
+      "gold": "golden",
+      "pred": "match",
+      "em": 1.0,
+      "f1": 1.0,
+      "instruction_type": "Cell-Level Manipulation",
+      "raw": "```python\nfrom openpyxl import load_workbook\n\n# Load the workbook and select the active sheet\nwb = load_workbook('input.xlsx')\nws = wb.active\n\n# Define the target, stretch, over stretch, weight, and total columns\ntarget_col = 'B'\nstretch_col = 'C'\nover_stretch_col = 'D'\nweight_col = 'E'\ntotal_col = 'F'\n\n# Find the header row and first data row\nheader_row = None\nfor row in ws.iter_rows(min_row=1, max_row=15):\n    if any(cell.value for cell in row):\n        header_row = row[0].row\n        break\n\n# Find the first data row\ndata_row = None\nfor row in ws.iter_rows(min_row=header_row + 1, max_row=15):\n    if any(cell.value for cell in row):\n        data_row = row[0].row\n        break\n\n# Read the target, stretch, over stretch, weight, and total values\ntarget = ws[f'{target_col}{data_row}'].value\nstretch = ws[f'{stretch_col}{data_row}'].value\nover_stretch = ws[f'{over_stretch_col}{data_row}'].value\nweight = ws[f'{weight_col}{data_row}'].value\ntotal = ws[f'{total_col}{data_row}'].value\n\n# Compute the points based on the conditions\nif total <= target:\n    points = total / target\nelif target < total < stretch:\n    points = min(total / target, 1.09)\nelif total == stretch:\n    points = min(total / target, 1.1)\nelif stretch < total < over_stretch:\n    points = min(total / target, 1.19)\nelse:  # total >= over_stretch\n    points = min(total / target, 1.2)\n\n# Write the computed value to the specified range\nws['G4'] = points\n\n# Save the workbook\nwb.save('output.xlsx')\n```"
+    },
+    {
+      "id": 54667,
+      "gold": "golden",
+      "pred": "no output.xlsx; ValueError: Test!E3:E58 is not a valid coordinate or range",
+      "em": 0.0,
+      "f1": 0.0,
+      "instruction_type": "Cell-Level Manipulation",
+      "raw": "```python\nfrom openpyxl import load_workbook\n\n# Load the workbook and select the 'Test' sheet\nwb = load_workbook('input.xlsx')\nws = wb['Test']\n\n# Define the ranges\ndata_sheet = 'DATA'\ndata_range = f'{data_sheet}!$A:$E'\ntarget_range = 'Test!G3:G58'\ne_range = 'Test!E3:E58'\nd_range = 'Test!D3:D58'\nm_range = 'Test!M3:M58'\n\n# Read the data from the 'DATA' sheet\ndata_ws = wb[data_sheet]\ndata_rows = data_ws.iter_rows(min_row=3, max_row=82, min_col=1, max_col=5)\ndata_dict = {}\nfor row in data_rows:\n    key = row[0].value  # First column (A)\n    value = row[4].value  # Fifth column (E)\n    data_dict[key] = value\n\n# Read the values from the 'Test' sheet\ne_values = [cell.value for cell in ws[e_range]]\nd_values = [cell.value for cell in ws[d_range]]\nm_values = [cell.value for cell in ws[m_range]]\n\n# Compute the result for each row\nresult = []\nfor e, d, m in zip(e_values, d_values, m_values):\n    if e == d:\n        result.append(m)\n    else:\n        result.append(\"\")\n\n# Write the computed values to the target range\nfor i, value in enumerate(result):\n    ws.cell(row=i + 3, column=7, value=value)\n\n# Save the workbook\nwb.save('output.xlsx')\n```"
+    },
+    {
+      "id": 55060,
+      "gold": "golden",
+      "pred": "match",
+      "em": 1.0,
+      "f1": 1.0,
+      "instruction_type": "Cell-Level Manipulation",
+      "raw": "```python\nfrom openpyxl import load_workbook\n\n# Load the workbook and select the active sheet\nwb = load_workbook('input.xlsx')\nws = wb.active\n\n# Identify the header row and first data row\nheader_row = None\ndata_row = None\n\n# Check first 20 rows to find header and data rows\nfor row in ws.iter_rows(min_row=1, max_row=20):\n    if any(cell.value for cell in row):\n        if header_row is None:\n            header_row = row[0].row\n        else:\n            data_row = row[0].row\n            break\n\n# If data_row not found, assume data starts at row 2\nif data_row is None:\n    data_row = 2\n\n# Define the answer range (J23:N23)\nanswer_range = ws['J23':'N23']\n\n# Read the value from I12\ni12_value = ws['I12'].value\n\n# Compute the value for J23\nj23_value = i12_value if i12_value is not None else None\n\n# Write computed values to the answer range\nfor cell in answer_range:\n    # For J23, write the computed value\n    if cell[0].column == 10:  # J column\n        cell[0].value = j23_value\n    else:\n        # For other cells in the range, write an empty string\n        cell[0].value = ''\n\n# Save the workbook\nwb.save('output.xlsx')\n```"
+    },
+    {
+      "id": 55965,
+      "gold": "golden",
+      "pred": "15/17 cells differ",
+      "em": 0.0,
+      "f1": 0.0,
+      "instruction_type": "Cell-Level Manipulation",
+      "raw": "```python\nfrom openpyxl import load_workbook\nfrom openpyxl.utils import get_column_letter\n\n# Load the workbook\nwb = load_workbook('input.xlsx')\n\n# Access the sheets\ndati_sheet = wb['DATI']\nfoglio1_sheet = wb['Foglio1']\n\n# Identify header and data rows in 'DATI' sheet\nheader_row = None\ndata_rows = []\n\nfor row in dati_sheet.iter_rows(min_row=1, max_row=78):\n    if row[0].value == 'TOT':\n        header_row = row\n        break\n    data_rows.append(row)\n\n# Extract the ID values and corresponding data rows\nid_to_data = {}\nfor row in data_rows:\n    id_value = row[9].value  # ID is in column K (index 9)\n    if id_value is not None:\n        id_to_data[id_value] = row\n\n# Identify header and data rows in 'Foglio1' sheet\nheader_row_foglio1 = None\ndata_rows_foglio1 = []\n\nfor row in foglio1_sheet.iter_rows(min_row=1, max_row=18):\n    if row[0].value == 'date':\n        header_row_foglio1 = row\n        break\n    data_rows_foglio1.append(row)\n\n# Extract the ID values from 'Foglio1' sheet\nids_in_foglio1 = []\nfor row in data_rows_foglio1:\n    id_value = row[4].value  # ID is in column E (index 4)\n    if id_value is not None:\n        ids_in_foglio1.append(id_value)\n\n# Find the last 10 results for each ID in 'DATI' sheet\nresults = {}\nfor id_value in ids_in_foglio1:\n    if id_value in id_to_data:\n        data_row = id_to_data[id_value]\n        result = data_row[8].value  # Result is in column I (index 8)\n        if result is not None:\n            results[id_value] = result\n\n# Write the results to the specified range in 'Foglio1' sheet\nstart_row = 2\nend_row = 18\nstart_col = 7  # Column G (index 6)\nend_col = 7  # Only column G is needed\n\nfor i, id_value in enumerate(ids_in_foglio1):\n    if id_value in results:\n        result = results[id_value]\n        foglio1_sheet.cell(row=start_row + i, column=start_col, value=result)\n\n# Save the workbook\nwb.save('output.xlsx')\n```"
+    },
+    {
+      "id": 56599,
+      "gold": "golden",
+      "pred": "no output.xlsx; TypeError: unsupported operand type(s) for +: 'NoneType' and 'int'",
+      "em": 0.0,
+      "f1": 0.0,
+      "instruction_type": "Cell-Level Manipulation",
+      "raw": "```python\nfrom openpyxl import load_workbook\n\n# Load the workbook and select the active sheet\nwb = load_workbook('input.xlsx')\nws = wb.active\n\n# Identify the header row and data rows\nheader_row = None\ndata_rows = []\n\n# Find the header row by checking for the column headers\nfor row in ws.iter_rows(min_row=1, max_row=30):\n    if row[5].value == 'Slip fm' and row[6].value == 'slip to':\n        header_row = row[0].row\n        break\n\n# Extract data rows\nfor row in ws.iter_rows(min_row=header_row + 1, max_row=30):\n    data_rows.append(row)\n\n# Extract slip numbers and book numbers\nslip_to_values = [row[6].value for row in data_rows]\nbook_no_values = [row[9].value for row in data_rows]\n\n# Get the slip number from M5 (column 13, row 5)\nslip_number = ws['M5'].value\n\n# Find the book number associated with the slip number\nbook_number = \"not found - please re-enter\"\nfor slip, book in zip(slip_to_values, book_no_values):\n    if slip == slip_number:\n        book_number = book\n        break\n\n# Write the result to B2\nws['B2'] = book_number\n\n# Save the workbook\nwb.save('output.xlsx')\n```"
+    },
+    {
+      "id": 57113,
+      "gold": "golden",
+      "pred": "no output.xlsx; AttributeError: 'tuple' object has no attribute 'value'",
+      "em": 0.0,
+      "f1": 0.0,
+      "instruction_type": "Cell-Level Manipulation",
+      "raw": "```python\nfrom openpyxl import load_workbook\n\n# Load the workbook and select the active sheet\nwb = load_workbook('input.xlsx')\nws = wb.active\n\n# Define the range where the results should be written\nresult_range = ws['B2:C3']\n\n# Function to extract hashtags from a tweet\ndef extract_hashtags(tweet):\n    hashtags = []\n    # Split the tweet by spaces and filter out hashtags\n    for word in tweet.split():\n        if word.startswith('#'):\n            hashtags.append(word[1:])  # Remove the '#' symbol\n    return hashtags\n\n# Process each row in the data range\nfor row in ws.iter_rows(min_row=2, max_row=3, min_col=1, max_col=3):\n    tweet_cell = row[0]  # A column\n    tweet_text = tweet_cell.value\n    hashtags = extract_hashtags(tweet_text)\n    \n    # Write the hashtags to the result range\n    for i, hashtag in enumerate(hashtags):\n        result_range[i].value = hashtag\n\n# Save the workbook\nwb.save('output.xlsx')\n```"
+    },
+    {
+      "id": 57743,
+      "gold": "golden",
+      "pred": "match",
+      "em": 1.0,
+      "f1": 1.0,
+      "instruction_type": "Cell-Level Manipulation",
+      "raw": "```python\nfrom openpyxl import load_workbook\n\n# Load the workbook and select the active sheet\nwb = load_workbook('input.xlsx')\nws = wb.active\n\n# Identify the header row and first data row\nheader_row = None\nfor row in ws.iter_rows(min_row=1, max_row=19):\n    if row[0].value == 'Model':\n        header_row = row[0].row\n        break\n\n# Determine the data range\n# Header is in row 1, data starts from row 2\n# Columns A (Model numbers) and C (Model numbers to match), D (Costs)\n# We need to write to B2:B19\n\n# Read the model numbers from column C and their corresponding costs from column D\nmodel_to_cost = {}\nfor row in ws.iter_rows(min_row=2, max_row=19):\n    model_number = row[2].value  # Column C\n    cost = row[3].value  # Column D\n    if model_number is not None:\n        model_to_cost[model_number] = cost\n\n# Write the computed values to the answer range B2:B19\nfor row_idx in range(2, 20):  # Rows 2 to 19\n    model_number = ws[f'A{row_idx}'].value\n    if model_number in model_to_cost:\n        ws[f'B{row_idx}'] = model_to_cost[model_number]\n    else:\n        ws[f'B{row_idx}'] = ''\n\n# Save the workbook\nwb.save('output.xlsx')\n```"
+    },
+    {
+      "id": 58723,
+      "gold": "golden",
+      "pred": "no output.xlsx; TypeError: unsupported operand type(s) for +: 'NoneType' and 'int'",
+      "em": 0.0,
+      "f1": 0.0,
+      "instruction_type": "Cell-Level Manipulation",
+      "raw": "```python\nfrom openpyxl import load_workbook\n\n# Load the workbook and select the active sheet\nwb = load_workbook('input.xlsx')\nws = wb.active\n\n# Identify the header row and data rows\nheader_row = None\ndata_rows = []\n\n# Find the header row by checking for the 'Max' column header\nfor row in ws.iter_rows(min_row=1, max_row=41):\n    if row[11].value == 'Max':\n        header_row = row[11].row\n        break\n\n# Extract data rows\nfor row in ws.iter_rows(min_row=header_row + 1, max_row=41):\n    data_rows.append(row)\n\n# Group entries by Name and find the latest Entry Time\nfrom collections import defaultdict\n\nname_to_entries = defaultdict(list)\nfor row in data_rows:\n    name = row[0].value\n    entry_time = row[7].value\n    name_to_entries[name].append((entry_time, row))\n\n# Find the latest entry time for each name\nlatest_entries = {}\nfor name, entries in name_to_entries.items():\n    latest_time = max(entries, key=lambda x: x[0])[0]\n    latest_entries[name] = latest_time\n\n# Write the 'Latest' or 'Not Latest' labels into the answer range\nfor i, row in enumerate(data_rows, start=2):\n    name = row[0].value\n    entry_time = row[7].value\n    if entry_time == latest_entries[name]:\n        ws.cell(row=i, column=13, value='Latest')\n    else:\n        ws.cell(row=i, column=13, value='Not Latest')\n\n# Save the workbook\nwb.save('output.xlsx')\n```"
+    },
+    {
+      "id": 42902,
+      "gold": "golden",
+      "pred": "no output.xlsx; IndexError: list index out of range",
+      "em": 0.0,
+      "f1": 0.0,
+      "instruction_type": "Cell-Level Manipulation",
+      "raw": "```python\nfrom openpyxl import load_workbook\n\n# Load the workbook and select the active sheet\nwb = load_workbook('input.xlsx')\nws = wb.active\n\n# Identify the header and data rows\n# Based on the data pattern, the first row is the header\nheader_row = 1\ndata_start_row = 2\n\n# Read the data into a list of lists\ndata = []\nfor row in ws.iter_rows(min_row=data_start_row, max_row=21, min_col=1, max_col=1):\n    data.append(row[0].value)\n\n# Transpose the data into columns\n# Each group of 3 rows becomes a record, with each row in D, E, F\n# The answer range is D1:F7, which covers 7 records (21 rows / 3 rows per record)\ntransposed_data = []\nfor i in range(0, len(data), 3):\n    record = data[i:i+3]\n    transposed_data.append(record)\n\n# Write the transposed data into the answer range D1:F7\nfor row_idx, record in enumerate(transposed_data, start=1):\n    ws.cell(row=row_idx + 0, column=4, value=record[0])  # Column D\n    ws.cell(row=row_idx + 0, column=5, value=record[1])  # Column E\n    ws.cell(row=row_idx + 0, column=6, value=record[2])  # Column F\n\n# Save the workbook\nwb.save('output.xlsx')\n```"
+    },
+    {
+      "id": 44913,
+      "gold": "golden",
+      "pred": "no output.xlsx; TypeError: unsupported operand type(s) for +: 'NoneType' and 'int'",
+      "em": 0.0,
+      "f1": 0.0,
+      "instruction_type": "Cell-Level Manipulation",
+      "raw": "```python\nfrom openpyxl import load_workbook\n\n# Load the workbook and select the active sheet\nwb = load_workbook('input.xlsx')\nws = wb.active\n\n# Identify the header row and first data row\nheader_row = None\nfor row in ws.iter_rows(min_row=1, max_row=13):\n    if row[0].value == 'UNIQUE ID':\n        header_row = row[0].row\n        break\n\n# Extract unique IDs and their corresponding turnover amounts\nunique_ids = []\nturnover_data = []\nfor row in ws.iter_rows(min_row=header_row + 1, max_row=13):\n    unique_id = row[0].value\n    amount = row[1].value\n    unique_ids.append(unique_id)\n    turnover_data.append((unique_id, amount))\n\n# Group data by unique ID and find the maximum amount for each ID\nid_to_max_amount = {}\nfor unique_id, amount in turnover_data:\n    if unique_id not in id_to_max_amount or amount > id_to_max_amount[unique_id]:\n        id_to_max_amount[unique_id] = amount\n\n# Write the maximum amount for each ID in column D, only in the row where the maximum occurs\nfor row in ws.iter_rows(min_row=header_row + 1, max_row=13):\n    unique_id = row[0].value\n    amount = row[1].value\n    if unique_id in id_to_max_amount and amount == id_to_max_amount[unique_id]:\n        ws.cell(row=row[3].row, column=4, value=amount)\n    else:\n        ws.cell(row=row[3].row, column=4, value=\"\")\n\n# Save the workbook\nwb.save('output.xlsx')\n```"
+    },
+    {
+      "id": 47827,
+      "gold": "golden",
+      "pred": "match",
+      "em": 1.0,
+      "f1": 1.0,
+      "instruction_type": "Cell-Level Manipulation",
+      "raw": "```python\nfrom openpyxl import load_workbook\nfrom openpyxl.styles import Font, PatternFill\n\n# Load the workbook\nwb = load_workbook('input.xlsx')\nws = wb['3 straights to 3 boxed']\n\n# Identify the header row and data rows\nheader_row = None\ndata_rows = []\n\nfor row in ws.iter_rows(min_row=1, max_row=34):\n    if row[0].value == 'seq_no':\n        header_row = row[0].row\n    elif row[0].value is not None:\n        data_rows.append(row)\n\n# Extract the relevant data\nstraights = []\nfor row in data_rows:\n    seq_no = row[0].value\n    strai_1 = row[1].value\n    strai_2 = row[2].value\n    strai_3 = row[3].value\n    straight = row[4].value\n    boxed = row[6].value\n    straights.append((seq_no, strai_1, strai_2, strai_3, straight, boxed))\n\n# Process the data to create the three-digit numbers\nprocessed_data = []\nfor seq_no, strai_1, strai_2, strai_3, straight, boxed in straights:\n    numbers = [strai_1, strai_2, strai_3]\n    numbers.sort()\n    three_digit_number = ''.join(map(str, numbers))\n    processed_data.append((seq_no, three_digit_number, boxed))\n\n# Write the processed data to the worksheet\nfor idx, (seq_no, three_digit_number, boxed) in enumerate(processed_data):\n    row_num = 2 + idx  # Start from row 2\n    ws[f'G{row_num}'] = three_digit_number\n\n# Apply bold and fill color to the range G2:G16\nfill = PatternFill(start_color=\"EBF1DE\", end_color=\"EBF1DE\", fill_type=\"solid\")\nfont = Font(bold=True)\n\nfor row in ws.iter_rows(min_row=2, max_row=16, min_col=7, max_col=7):\n    for cell in row:\n        cell.fill = fill\n        cell.font = font\n\n# Save the workbook\nwb.save('output.xlsx')\n```"
+    },
+    {
+      "id": 55708,
+      "gold": "golden",
+      "pred": "3/3 cells differ",
+      "em": 0.0,
+      "f1": 0.0,
+      "instruction_type": "Cell-Level Manipulation",
+      "raw": "```python\nfrom openpyxl import load_workbook\n\n# Load the workbook and select the active sheet\nwb = load_workbook('input.xlsx')\nws = wb.active\n\n# Define the range for the data (rows 1 to 13, columns 1 to 3)\ndata_start_row = 1\ndata_end_row = 13\ndata_start_col = 1\ndata_end_col = 3\n\n# Find the header row and first data row\nheader_row = None\nfor row in ws.iter_rows(min_row=data_start_row, max_row=data_end_row):\n    if row[0].value == 'Department':\n        header_row = row[0].row\n        break\n\n# Extract the data rows\ndata_rows = []\nfor row in ws.iter_rows(min_row=header_row + 1, max_row=data_end_row):\n    department = row[0].value\n    status = row[1].value\n    turnaround_time = row[2].value\n    data_rows.append((department, status, turnaround_time))\n\n# Process the data to calculate average turnaround times\ndepartment_averages = {}\n\nfor department, status, turnaround_time in data_rows:\n    if turnaround_time is not None and (status == \"In Progress\" or status == \"In Review\"):\n        if department not in department_averages:\n            department_averages[department] = {'total': 0, 'count': 0}\n        department_averages[department]['total'] += turnaround_time\n        department_averages[department]['count'] += 1\n\n# Write the results to the specified range (B11:B13)\nresult_start_row = 11\nresult_start_col = 2  # Column B\n\nfor i, (department, _) in enumerate(department_averages.items()):\n    average = department_averages[department]['total'] / department_averages[department]['count'] if department_averages[department]['count'] > 0 else None\n    ws.cell(row=result_start_row + i, column=result_start_col, value=average)\n\n# Save the workbook\nwb.save('output.xlsx')\n```"
+    },
+    {
+      "id": 56563,
+      "gold": "golden",
+      "pred": "no output.xlsx; AttributeError: 'tuple' object has no attribute 'value'",
+      "em": 0.0,
+      "f1": 0.0,
+      "instruction_type": "Cell-Level Manipulation",
+      "raw": "```python\nfrom openpyxl import load_workbook\n\n# Load the workbook and select the active sheet\nwb = load_workbook('input.xlsx')\nws = wb.active\n\n# Define the range for the 'Amount' column (column C, rows 2 to 13)\namount_range = ws['C2':'C13']\n\n# Extract the values from the range\namount_values = [cell.value for cell in amount_range if cell.value is not None]\n\n# Calculate the sum of valid numeric values (excluding #NUM! errors)\ntotal = sum(amount_values)\n\n# Write the computed total to the specified cell (C14)\nws['C14'] = total\n\n# Save the workbook as output.xlsx\nwb.save('output.xlsx')\n```"
+    },
+    {
+      "id": 57117,
+      "gold": "golden",
+      "pred": "2/4 cells differ",
+      "em": 0.0,
+      "f1": 0.0,
+      "instruction_type": "Cell-Level Manipulation",
+      "raw": "```python\nfrom openpyxl import load_workbook\n\n# Load the workbook and select the active sheet\nwb = load_workbook('input.xlsx')\nws = wb.active\n\n# Define the range for the answer (F2:F5)\nanswer_range = ws['F2':'F5']\n\n# Iterate over the rows in the answer range and set the value\nfor row in answer_range:\n    for cell in row:\n        # Get the value from column D (4th column, 0-indexed)\n        d_value = ws[cell.row][3].value\n        # Write the value from column D to the current cell\n        cell.value = d_value\n\n# Save the workbook as output.xlsx\nwb.save('output.xlsx')\n```"
+    },
+    {
+      "id": 57612,
+      "gold": "golden",
+      "pred": "match",
+      "em": 1.0,
+      "f1": 1.0,
+      "instruction_type": "Cell-Level Manipulation",
+      "raw": "```python\nfrom openpyxl import load_workbook\n\n# Load the workbook and select the active sheet\nwb = load_workbook('input.xlsx')\nws = wb.active\n\n# Define the answer range\nanswer_range = ws['D4:D15']\n\n# Process each cell in the answer range\nfor row in answer_range:\n    c_cell = ws[f'C{row[0].row}']\n    value = float(c_cell.value)\n    \n    if 5 <= value <= 6:\n        result = 5\n    elif 3 <= value <= 4:\n        result = 3.75\n    elif 1 <= value <= 2:\n        result = 1\n    else:\n        result = 0\n    \n    # Write the computed value to the cell\n    row[0].value = result\n\n# Save the workbook\nwb.save('output.xlsx')\n```"
+    },
+    {
+      "id": 58109,
+      "gold": "golden",
+      "pred": "1/1 cells differ",
+      "em": 0.0,
+      "f1": 0.0,
+      "instruction_type": "Cell-Level Manipulation",
+      "raw": "```python\nfrom openpyxl import load_workbook\nfrom datetime import datetime, timedelta\n\n# Load the workbook and select the active sheet\nwb = load_workbook('input.xlsx')\nws = wb.active\n\n# Identify the header row and data rows\nheader_row = None\ndata_rows = []\n\nfor row in ws.iter_rows(min_row=1, max_row=31):\n    if row[0].value == 'Sales':\n        header_row = row\n    else:\n        data_rows.append(row)\n\n# Extract dates and sales values\ndates = []\nsales = []\n\nfor row in data_rows:\n    date_cell = row[0]\n    sales_cell = row[1]\n    if date_cell.value:\n        dates.append(date_cell.value)\n        sales.append(sales_cell.value)\n\n# Get the date in cell I4 (today's date)\ntoday_date = ws['I4'].value\n\n# Function to find the last n weekdays before a given date\ndef get_last_weekdays(date, n):\n    weekdays = []\n    current_date = date - timedelta(days=1)\n    while len(weekdays) < n:\n        current_date -= timedelta(days=1)\n        if current_date.weekday() < 5:  # Monday to Friday (0-4)\n            weekdays.append(current_date)\n    return weekdays\n\n# Get the last 4 weekdays before today\nlast_four_weekdays = get_last_weekdays(today_date, 4)\n\n# Find the sales values for those dates\nsum_sales = 0\nfor date in last_four_weekdays:\n    for d, s in zip(dates, sales):\n        if d == date:\n            sum_sales += s\n            break\n\n# Write the computed sum to cell I6\nws['I6'] = sum_sales\n\n# Save the workbook\nwb.save('output.xlsx')\n```"
+    },
+    {
+      "id": 58942,
+      "gold": "golden",
+      "pred": "17/20 cells differ",
+      "em": 0.0,
+      "f1": 0.0,
+      "instruction_type": "Cell-Level Manipulation",
+      "raw": "```python\nfrom openpyxl import load_workbook\nfrom datetime import datetime\n\n# Load the workbook and select the active sheet\nwb = load_workbook('input.xlsx')\nws = wb.active\n\n# Define the range for the answer\nanswer_range = 'B2:C11'\n\n# Extract the timeline dates from column A (row 1 to row 11)\ntimeline_dates = []\nfor row in ws.iter_rows(min_row=1, max_row=11, min_col=1, max_col=1):\n    cell = row[0]\n    if cell.value:\n        timeline_dates.append(cell.value)\n\n# Extract the source dates and values from columns E and F (row 2 to row 6)\nsource_dates = []\nsource_values = []\nfor row in ws.iter_rows(min_row=2, max_row=6, min_col=5, max_col=6):\n    date_cell = row[0]\n    value_cell = row[1]\n    if date_cell.value:\n        source_dates.append(date_cell.value)\n    if value_cell.value:\n        source_values.append(value_cell.value)\n\n# Create a dictionary to map source dates to their corresponding values\ndate_to_value = {}\nfor date, value in zip(source_dates, source_values):\n    date_to_value[date] = value\n\n# Write the timeline dates and corresponding values to the answer range\nfor i, timeline_date in enumerate(timeline_dates):\n    # Find the corresponding value from the source data\n    value = date_to_value.get(timeline_date, None)\n    \n    # Write the timeline date to column B\n    ws.cell(row=i + 2, column=2, value=timeline_date)\n    \n    # Write the corresponding value to column C if it exists\n    if value is not None:\n        ws.cell(row=i + 2, column=3, value=value)\n\n# Save the workbook\nwb.save('output.xlsx')\n```"
+    },
+    {
+      "id": 59358,
+      "gold": "golden",
+      "pred": "no output.xlsx; AttributeError: 'tuple' object has no attribute 'value'",
+      "em": 0.0,
+      "f1": 0.0,
+      "instruction_type": "Cell-Level Manipulation",
+      "raw": "```python\nfrom openpyxl import load_workbook\n\n# Load the workbook and select the active sheet\nwb = load_workbook('input.xlsx')\nws = wb.active\n\n# Define the ranges for B2:B23 and D2:D23\nb_range = ws['B2':'B23']\nd_range = ws['D2':'D23']\nf_range = ws['F2':'F23']\n\n# Extract values from the ranges\nb_values = [cell.value for cell in b_range]\nd_values = [cell.value for cell in d_range]\nf_values = [cell.value for cell in f_range]\n\n# Find the first occurrence where a value in B matches a value in D\nmatch_index = None\nfor i in range(len(b_values)):\n    if b_values[i] == d_values[i]:\n        match_index = i\n        break\n\n# Write the corresponding value from F to L7:L9\nif match_index is not None:\n    # The first match is at index match_index, so the corresponding F value is f_values[match_index]\n    # Write the value to L7 (which is the first cell in the answer range)\n    ws['L7'] = f_values[match_index]\n    # Write empty values to L8 and L9 as they are not part of the match\n    ws['L8'] = ''\n    ws['L9'] = ''\nelse:\n    # No match found, write empty values to all cells in the answer range\n    ws['L7'] = ''\n    ws['L8'] = ''\n    ws['L9'] = ''\n\n# Save the workbook\nwb.save('output.xlsx')\n```"
+    },
+    {
+      "id": 59794,
+      "gold": "golden",
+      "pred": "no output.xlsx; TypeError: unsupported operand type(s) for +: 'NoneType' and 'int'",
+      "em": 0.0,
+      "f1": 0.0,
+      "instruction_type": "Cell-Level Manipulation",
+      "raw": "```python\nfrom openpyxl import load_workbook\nfrom openpyxl.styles import PatternFill\n\n# Load the workbook and select the active sheet\nwb = load_workbook('input.xlsx')\nws = wb.active\n\n# Define the range where the result should be written\nresult_range = 'C3:M5'\n\n# Find the header row and first data row\nheader_row = None\ndata_row = None\n\nfor row in ws.iter_rows(min_row=1, max_row=7):\n    if row[0].value == 'INITIAL INFORMATION Column1':\n        header_row = row[0].row\n    if row[0].value == 'EXAMPLE OF WHAT WHAT INFORMATION I CURRE':\n        data_row = row[0].row\n\n# Determine the data range\nstart_col = 1  # Column A\nend_col = 11   # Column K\nstart_row = data_row + 1  # First data row\nend_row = data_row + 4   # Last data row (rows 3-5)\n\n# Read the data from column A\ndata = []\nfor row in ws.iter_rows(min_row=start_row, min_col=start_col, max_row=end_row, max_col=start_col):\n    cell = row[0]\n    if cell.value:\n        data.append(cell.value)\n\n# Split the data by '/' and distribute across columns C to M\nresult_cols = ['C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M']\nresult_start_row = start_row\nresult_start_col = 3  # Column C\n\n# Write the split data into the result range\nfor i, value in enumerate(data):\n    parts = value.split('/')\n    for j, part in enumerate(parts):\n        col = result_cols[j]\n        ws[f\"{col}{result_start_row + i}\"] = part\n\n# Apply shading to the result range\nfill = PatternFill(start_color=\"E2EFDA\", end_color=\"E2EFDA\", fill_type=\"solid\")\nfor row in ws.iter_rows(min_row=start_row, min_col=result_start_col, max_row=end_row, max_col=result_start_col + 10):\n    for cell in row:\n        cell.fill = fill\n\n# Save the workbook\nwb.save('output.xlsx')\n```"
+    }
+  ]
+}
