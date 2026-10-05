@@ -1,0 +1,31 @@
+{
+  "_comment": [
+    "Integrity expectations for the upstream SpreadsheetBench Verified 400.",
+    "",
+    "The tarball this project uses is BYTE-IDENTICAL to the official release",
+    "(sha256 10ef893dd29cb13a..., 14958255 bytes). Nothing here is a local",
+    "modification -- the two excluded tasks below ship excluded by upstream.",
+    "",
+    "02_benchmark_data.sh checks these after unpacking. The point is not to",
+    "patch anything, it is to notice if a re-download ever differs from what",
+    "the reported cells ran against: a changed task count or a dropped",
+    "exclusion would move every SpreadsheetBench number without any error.",
+    "",
+    "Effective n is 398: upstream ships 400 and excludes 2 as ungradeable."
+  ],
+  "sha256": "10ef893dd29cb13a",
+  "n_tasks": 400,
+  "n_excluded": 2,
+  "exclusions": [
+    {
+      "id": 56225,
+      "reason": "ignore, initial file already passes verification",
+      "detail": "input.xlsx already satisfies the answer condition, so the task measures nothing: a model that does nothing scores correct."
+    },
+    {
+      "id": 56274,
+      "reason": "golden has data validation dropdown set to a completely different value",
+      "detail": "the golden workbook disagrees with its own instruction at D9:D12, so no correct edit can match it."
+    }
+  ]
+}

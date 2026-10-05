@@ -11,6 +11,11 @@
 # ---------------------------------------------------------------------------
 data/*.jsonl
 data/*.json
+# ...but sb400_expected.json is OURS, not benchmark content: it records the
+# task count and the 2 upstream exclusions so 02_benchmark_data.sh can tell if
+# a re-download ever differs from what the reported cells ran against. Without
+# it the SpreadsheetBench integrity check cannot run at all.
+!data/sb400_expected.json
 data/officeqa_docs/
 data/spreadsheetbench_verified_400/
 data/spreadsheetbench_raw/
