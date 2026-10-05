@@ -27,33 +27,33 @@ The answer it produced is negative, and that is the finding. See
 
 ---
 
-## ⚠ Read this first: a git clone is not enough
+## Before you start: data and credentials
 
-The benchmark data is **deliberately not in git** (gated dataset, answer keys —
-see `DATA.md`). That means there are two ways to receive this project, and they
-are not equivalent:
+All three benchmarks **download**. The data is not redistributed here (answer
+keys, and OfficeQA's licence forbids it), but `setup.sh` fetches everything:
 
-| you have | data present? | can run |
+| benchmark | source | credentials |
 |---|---|---|
-| **the directory itself** (copy, tarball, shared drive) | yes — `data/` is populated | everything |
-| **a `git clone`** | no — `data/` holds only the prepare scripts | the embedding pipeline, reporting, tests |
+| LiveMath | `LiveMathematicianBench/LiveMathematicianBench` | **none** |
+| SpreadsheetBench | `KAKA22/SpreadsheetBench` (Verified 400) | **none** |
+| OfficeQA | `databricks/officeqa` | **a Hugging Face token** |
 
-If you cloned, three things must come from the project owner out of band:
+OfficeQA's document corpus is gated (`gated: auto` — approval is instant, but it
+must be accepted once per account):
 
-| what you need | why it isn't in git | without it |
-|---|---|---|
-| `data/lm_20*.json` — 8 LiveMath monthly raw files | no public downloader exists; supplied by the benchmark authors | **LiveMath cannot run** |
-| `data/spreadsheetbench_verified_400/` — the verified subset + its manifest | the reported cells use a verified 400-task subset; the manifest was produced once and no script here regenerates it | **SpreadsheetBench cannot run as reported** |
-| your own `HF_TOKEN` + accepting the OfficeQA terms | `databricks/officeqa` is gated per-account | OfficeQA fetch returns 401 |
+1. open <https://huggingface.co/datasets/databricks/officeqa> and accept the terms
+2. `export HF_TOKEN=hf_...`
 
-Two more gaps either way:
+Without a token the other two still work; only OfficeQA is skipped.
+
+Two more things to know:
 
 - **vLLM is not in `requirements/`.** Both agent benchmarks need a served model:
   `.venv/bin/pip install vllm`.
-- **`setup.sh` has not been verified from a cold start.** The `.agentvenv` and
-  `.plotvenv` were built from `requirements/` and work; the torch environment
-  (`.venv`) has not been built by this script end to end. Budget time for it to
-  need fixing.
+- **`setup.sh` has not been verified end to end from a cold start.** The data
+  fetchers and the `.agentvenv` / `.plotvenv` steps are tested; the torch
+  environment has not been built by this script from scratch. Budget time for it
+  to need fixing.
 
 ## Quick start
 

@@ -17,47 +17,52 @@ Two reasons, and the first is not negotiable:
 
 ## LiveMath (LiveMathematicianBench)
 
-608 research-level mathematics questions, 5-way multiple choice.
+608 research-level mathematics questions, 5-way multiple choice, across 8
+monthly releases (202511–202606).
 
-**Not automatically downloadable.** `data/prepare_livemath.py` builds
-`data/livemath.jsonl` from monthly raw files it expects to find alongside it:
-
-```
-data/lm_202511.json  …  data/lm_202606.json      (8 files)
-```
-
-Obtain those from the benchmark authors, drop them in `data/`, then:
+**Public and ungated** — `LiveMathematicianBench/LiveMathematicianBench` on
+Hugging Face. No token needed.
 
 ```bash
-.venv/bin/python data/prepare_livemath.py
+./00_setup/02_benchmark_data.sh livemath
 ```
+
+The months are pinned to the 8 the reported cells used. It is a *live*
+benchmark: each month adds questions from arXiv papers published after the
+models' training cutoffs, which is what makes it contamination-resistant — and
+also why the set must be pinned, or a re-run silently evaluates on more data
+than the published numbers did.
 
 The preparation step is not cosmetic. In the raw files the correct choice is
 labelled `A` in **all 608 questions** — the letters encode canonical roles
 (A = correct, C = weaker-true, D = wildcard trap), not a presentation order.
 Served unshuffled, "always answer A" scores 100%. `prepare_livemath.py` shuffles
-the options with a per-question deterministic seed: reproducible across runs and
-conditions, not guessable.
-
-If you run against unshuffled data, every number is meaningless. Expect the
-baseline near 20% (chance), not near 100%.
+with a per-question deterministic seed: reproducible across runs and conditions,
+not guessable. A correct build shows answers spread over A–E and a baseline near
+20% (chance), not near 100%.
 
 ## SpreadsheetBench
 
-400 spreadsheet-editing tasks with golden workbooks.
+The upstream **Verified 400** release (December 2025) — 400 expert-annotated
+spreadsheet-editing tasks with golden workbooks.
 
-**Not gated, and not downloaded.** This project does not evaluate on the upstream
-benchmark — it evaluates on a **verified 400-task subset**, built once by checking
-every task golden-vs-golden (394/394 pass; init-vs-golden disagreement 0.3%). The
-result was kept, the procedure was not, so the subset cannot be regenerated from
-this repository.
-
-It travels as a single file: **`data/sb400.tar.gz`, 15 MB**, workbooks and manifest
-together. Ask the project owner for it, drop it in `data/`, then:
+**Public and ungated** — `KAKA22/SpreadsheetBench` on Hugging Face, mirrored at
+<https://github.com/RUCKBReasoning/SpreadsheetBench>. No token needed.
 
 ```bash
 ./00_setup/02_benchmark_data.sh spreadsheet
 ```
+
+The tarball this project used is **byte-identical to the official release**
+(sha256 `10ef893dd29cb13a…`, 14 958 255 bytes) — there is no local modification.
+Upstream ships 400 tasks and marks 2 as ungradeable (one whose input already
+satisfies the answer, one whose golden workbook contradicts its own
+instruction), so the **effective n is 398**.
+
+`data/sb400_expected.json` records that shape and the script checks it after
+unpacking. The point is not to patch anything — it is to notice if a future
+re-download differs from what the reported cells ran against, since a changed
+task count would move every SpreadsheetBench number with no error anywhere.
 
 ## OfficeQA
 
