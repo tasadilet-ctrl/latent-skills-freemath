@@ -10,12 +10,13 @@
 # agent never read it" rather than "the procedure did not help". A steering
 # vector is applied unconditionally, so its text counterpart must be too.
 #
-# THE SKILL IS compare_claims.md -- one canonical file, no versions. Two
-# earlier drafts were deleted on 2026-10-05: three near-identical filenames in
-# one folder is exactly how a run gets pointed at the wrong one, which fails
-# silently and looks like a result. The history is in skills/notes/README.md,
-# including why the first draft HURT (~24% against a 26.15% baseline -- it
-# ranked candidates by strength before checking derivability).
+# THE SKILL IS strength_audit.md -- one canonical file, no versions. It
+# replaced compare_claims.md (v3) on 2026-10-05; all compare_claims drafts are
+# in skills/archive/ under *_SUPERSEDED names, so a run pointed at the old name
+# fails loudly instead of silently running the wrong text. The history is in
+# skills/notes/README.md, including why compare_claims v1 HURT (~24% against a
+# 26.15% baseline -- it ranked candidates by strength before checking
+# derivability).
 set -uo pipefail
 source "$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)/lib/common.sh"
 require_env "$PY_EVAL" eval

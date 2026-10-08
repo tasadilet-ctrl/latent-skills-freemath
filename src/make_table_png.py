@@ -63,11 +63,13 @@ def collect():
             continue
         bench, harness, model, col = k
         # A benchmark's own skill IS its text arm (spreadsheet_edit, officeqa_lookup).
-        # Only LiveMath's ablation variants (v2/matched/notation/register) are
-        # extra conditions and are left out of the headline grid.
+        # Only LiveMath's ablation variants (v2/matched/notation/register, and
+        # the archived compare_claims / compare_claims_v3) are extra conditions
+        # and are left out of the headline grid. Folding compare_claims in here
+        # would merge it with strength_audit by question id, silently.
         if col.startswith("text:"):
-            variant = col.split(":", 1)[1]
-            if variant in ("v2", "matched", "notation", "register"):
+            variant = col.split(":", 1)[1].replace("@usr", "")
+            if variant in ("v2", "v3", "claims", "matched", "notation", "register"):
                 continue
             col = "text" + ("@usr" if col.endswith("@usr") else "")
         for r in b["records"]:

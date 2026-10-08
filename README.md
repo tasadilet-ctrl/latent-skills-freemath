@@ -78,7 +78,7 @@ RUNNER=local GPU=0,1 01_livemath_direct/run_baseline.sh
 
 ## How it works
 
-**A skill** is a markdown file — a written procedure, e.g. `skills/compare_claims.md`.
+**A skill** is a markdown file — a written procedure, e.g. `skills/strength_audit.md`.
 There is exactly **one canonical skill file per benchmark**; see
 [Configuration](#configuration-reference).
 
@@ -325,7 +325,7 @@ Everything is an environment variable, read by `env.sh`. Nothing needs editing t
 | `BS` | `8` | batch size; lower if you run out of VRAM |
 | `SHARDS` | `4` | parallel shards, one per GPU |
 | `MAXNEW` | `2048` | generation cap. **The 27B needs 4096** |
-| `SKILL_LIVEMATH` | `compare_claims.md` | the canonical LiveMath skill |
+| `SKILL_LIVEMATH` | `strength_audit.md` | the canonical LiveMath skill |
 | `SKILL_SPREADSHEET` | `spreadsheet_edit.md` | |
 | `SKILL_OFFICEQA` | `officeqa_lookup.md` | |
 | `SKILL_PLACEBO` | `placebo_matched.md` | the length-matched control |
@@ -334,9 +334,10 @@ Everything is an environment variable, read by `env.sh`. Nothing needs editing t
 
 **One skill file per benchmark, by design.** Three near-identical filenames in one
 folder is how a run gets pointed at the wrong one — which fails silently and looks
-like a result. The two superseded `compare_claims` drafts were deleted on
-2026-10-05; their history, and why the first one *hurt*, is in
-`skills/notes/README.md`.
+like a result. LiveMath's skill was replaced on 2026-10-05: `strength_audit.md`
+is canonical, and all three `compare_claims` drafts are in `skills/archive/`.
+Their history, why the first one *hurt*, and the measured effect of the
+replacement are in `skills/notes/README.md`.
 
 ---
 

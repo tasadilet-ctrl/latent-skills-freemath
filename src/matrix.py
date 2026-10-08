@@ -94,11 +94,12 @@ def classify(s):
         # fixes matrix.py to match. No accuracy number changes -- only which
         # column a cell is printed in.
         #
-        # compare_claims was consolidated to one file on the same date.
-        # Results written earlier name it compare_claims_v3, which is the SAME
-        # text as today's compare_claims.md, so both map to "text". The
-        # superseded drafts are in skills/archive/ and keep their own columns.
-        CANON = {"compare_claims", "compare_claims_v3", "spreadsheet_edit",
+        # LiveMath's canonical skill is strength_audit since 2026-10-05.
+        # compare_claims (v1-v3) is archived and keeps its own columns
+        # ("text:claims", "text:v3", "text:v2") -- it must NOT share the
+        # "text" column with strength_audit, or two different interventions
+        # merge into one cell.
+        CANON = {"strength_audit", "spreadsheet_edit",
                  "officeqa_lookup", "decompose_verify"}
         sk = (s.get("skill") or "").replace(".md", "")
         col = "text" if (not sk or sk in CANON) else "text:" + sk.split("_")[-1]

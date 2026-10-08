@@ -158,16 +158,19 @@ do not tune it until the embedding arm looks better.
   yours differ, something differs in the setup -- check MODEL_ID, LIMIT and
   which SKILL file, in that order.
 
-* ONE CANONICAL SKILL FILE PER BENCHMARK, by design. compare_claims.md,
-  spreadsheet_edit.md, officeqa_lookup.md. The two superseded compare_claims
-  drafts were deleted on 2026-10-05 -- three near-identical filenames is how a
-  run gets pointed at the wrong one, and that fails silently and looks like a
-  result. History in skills/notes/README.md.
+* ONE CANONICAL SKILL FILE PER BENCHMARK, by design. strength_audit.md,
+  spreadsheet_edit.md, officeqa_lookup.md. strength_audit.md replaced
+  compare_claims.md as LiveMath's skill on 2026-10-05; all compare_claims
+  drafts now live in skills/archive/ as *_SUPERSEDED.md -- three near-identical
+  filenames is how a run gets pointed at the wrong one, and that fails
+  silently and looks like a result. History in skills/notes/README.md.
 
-  One trap it leaves behind: the name compare_claims.md USED to mean the first
-  draft, which hurt (~24% against a 26.15% baseline). Old result files naming
-  it are not comparable with new ones. The kit ships an empty results/, so
-  this only bites if you copy old files in.
+  One trap it leaves behind: the name compare_claims.md has meant two
+  different texts (v1, which hurt -- ~24% against a 26.15% baseline -- and
+  later v3). Neither is the current skill. Old result files naming it are not
+  comparable with strength_audit runs, and the reports keep them in separate
+  columns. The kit ships an empty results/, so this only bites if you copy
+  old files in.
 
 * PENDING IS NORMAL on a shared cluster. Do not "fix" it by lowering
   --gpus-per-node or switching partition. In this project 11 of 12 hours on

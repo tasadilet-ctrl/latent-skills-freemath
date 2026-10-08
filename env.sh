@@ -78,9 +78,10 @@ export SHARDS="${SHARDS:-4}"     # parallel shards, one per GPU
 export MAXNEW="${MAXNEW:-2048}"  # generation cap. The 27B needs 4096 -- see
                                  # START_HERE.txt, "the truncation trap".
 
-# Default skills per benchmark. One canonical file per benchmark -- the v1/v2
-# compare_claims drafts were deleted on 2026-10-05 (see skills/notes/README.md).
-export SKILL_LIVEMATH="${SKILL_LIVEMATH:-compare_claims.md}"
+# Default skills per benchmark. One canonical file per benchmark. LiveMath's is
+# strength_audit.md since 2026-10-05; compare_claims (v1-v3) is archived in
+# skills/archive/ (see skills/notes/README.md).
+export SKILL_LIVEMATH="${SKILL_LIVEMATH:-strength_audit.md}"
 export SKILL_SPREADSHEET="${SKILL_SPREADSHEET:-spreadsheet_edit.md}"
 export SKILL_OFFICEQA="${SKILL_OFFICEQA:-officeqa_lookup.md}"
 export SKILL_PLACEBO="${SKILL_PLACEBO:-placebo_matched.md}"
