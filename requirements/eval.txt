@@ -8,3 +8,11 @@ numpy
 openpyxl            # SpreadsheetBench grading + the single-turn arm
 fastapi             # src/serve_hooked.py -- steering behind an OpenAI API
 uvicorn
+
+# accelerate is NOT optional. transformers raises on any device_map /
+# torch.device use without it:
+#   ValueError: Using a `device_map` ... requires `accelerate`
+# Every extraction and every eval cell loads the model that way, so a venv
+# missing it fails the instant a job reaches a GPU -- after the full queue
+# wait. It was absent from the bundle venv this project borrows and took out
+# all 12 extractions before being spotted.
