@@ -162,8 +162,17 @@ if [ "$WAVE" = wave2 ]; then
     export MODEL_ID="$M" MODEL_TAG="$TAG"
     for SK in $SKILLS; do
       for ARM in placebo none; do
-        VEC=$(ls "$VECTORS"/v_"$TAG"_"$SK"*${ARM/none/}*.pt 2>/dev/null | head -1)
-        [ -n "$VEC" ] || { warn "no $ARM vector for $TAG/$SK yet -- skipping"; continue; }
+        # EXACT paths, never a glob. extract_vectors names the two arms
+        # ..._placebo.pt and ..._plain.pt, and "strength_audit*" also matches
+        # "strength_audit_nometa*" while "*${ARM/none/}*" degenerates to "**"
+        # for the none arm -- so a glob here silently resolved the none arm to
+        # the PLACEBO vector, running the wrong contrast under the right label.
+        case "$ARM" in
+          placebo) SUF=placebo ;;
+          none)    SUF=plain   ;;
+        esac
+        VEC="$VECTORS/v_${TAG}_${SK}_neutral_n50_${SUF}.pt"
+        [ -f "$VEC" ] || { warn "no $ARM vector for $TAG/$SK ($(basename "$VEC")) -- skipping"; continue; }
         EXTRA=()
         [ "$ARM" = placebo ] && EXTRA=(--baseline-skill "$KIT/skills/$PLACEBO")
         say "$TAG :: fidelity $SK/$ARM"
