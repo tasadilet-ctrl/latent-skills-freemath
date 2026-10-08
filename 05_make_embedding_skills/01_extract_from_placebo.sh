@@ -25,7 +25,7 @@ PL="$(skill_path "${PLACEBO:-$SKILL_PLACEBO}")"
 [ -f "$SK" ] || fail "no such skill: $SK"
 [ -f "$PL" ] || fail "no such placebo: $PL"
 say "extracting $(basename "$SK")  vs  $(basename "$PL")   [$MODEL_TAG]"
-RUNNER="${RUNNER}" SHARDS=1 submit "extract_placebo_${MODEL_TAG}" "$PY_EVAL" \
+NO_SHARD=1 SHARDS=1 submit "extract_placebo_${MODEL_TAG}" "$PY_EVAL" \
   "$KIT/src/extract_vectors.py" \
   --pool "${POOL:-neutral}" --n "${NPOOL:-50}" \
   --skill "$SK" --baseline-skill "$PL"

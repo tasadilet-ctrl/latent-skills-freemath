@@ -111,14 +111,14 @@ if [ "$WAVE" = wave1 ]; then
 
       # Extraction is one forward pass per pool prompt -- one GPU is enough.
       say "$TAG :: extract $SK from placebo"
-      SHARDS=1 SLURM_GPUS=1 WALLTIME=04:00:00 \
+      NO_SHARD=1 SHARDS=1 SLURM_GPUS=1 WALLTIME=04:00:00 \
       submit "extract_${TAG}_${SK}_placebo" "$PY_EVAL" \
         "$KIT/src/extract_vectors.py" --pool neutral --n 50 \
         --skill "$KIT/skills/$SK.md" --baseline-skill "$KIT/skills/$PLACEBO"
       submitted=$((submitted+1))
 
       say "$TAG :: extract $SK from nothing"
-      SHARDS=1 SLURM_GPUS=1 WALLTIME=04:00:00 \
+      NO_SHARD=1 SHARDS=1 SLURM_GPUS=1 WALLTIME=04:00:00 \
       submit "extract_${TAG}_${SK}_none" "$PY_EVAL" \
         "$KIT/src/extract_vectors.py" --pool neutral --n 50 \
         --skill "$KIT/skills/$SK.md"
@@ -127,6 +127,32 @@ if [ "$WAVE" = wave1 ]; then
   done
   say "wave 1 submitted: $submitted jobs"
   note "watch: squeue -u \$USER     then: ./sweep_skill_comparison.sh wave2"
+  exit 0
+fi
+
+if [ "$WAVE" = extract ]; then
+  # Just the 12 extractions. Exists because wave1 bundles them with the eval
+  # cells, and re-running wave1 to recover an extraction failure would submit
+  # nine duplicate benchmark runs that each overwrite a real result file.
+  for M in $MODELS; do
+    read -r TAG BS_M MAXNEW_M <<< "$(cfg "$M")"
+    export MODEL_ID="$M" MODEL_TAG="$TAG"
+    for SK in $SKILLS; do
+      say "$TAG :: extract $SK from placebo"
+      NO_SHARD=1 SHARDS=1 SLURM_GPUS=1 WALLTIME=04:00:00 \
+      submit "extract_${TAG}_${SK}_placebo" "$PY_EVAL" \
+        "$KIT/src/extract_vectors.py" --pool neutral --n 50 \
+        --skill "$KIT/skills/$SK.md" --baseline-skill "$KIT/skills/$PLACEBO"
+      submitted=$((submitted+1))
+      say "$TAG :: extract $SK from nothing"
+      NO_SHARD=1 SHARDS=1 SLURM_GPUS=1 WALLTIME=04:00:00 \
+      submit "extract_${TAG}_${SK}_none" "$PY_EVAL" \
+        "$KIT/src/extract_vectors.py" --pool neutral --n 50 \
+        --skill "$KIT/skills/$SK.md"
+      submitted=$((submitted+1))
+    done
+  done
+  say "extractions submitted: $submitted jobs"
   exit 0
 fi
 
@@ -141,7 +167,7 @@ if [ "$WAVE" = wave2 ]; then
         EXTRA=()
         [ "$ARM" = placebo ] && EXTRA=(--baseline-skill "$KIT/skills/$PLACEBO")
         say "$TAG :: fidelity $SK/$ARM"
-        SHARDS=1 SLURM_GPUS=1 WALLTIME=06:00:00 \
+        NO_SHARD=1 SHARDS=1 SLURM_GPUS=1 WALLTIME=06:00:00 \
         submit "fid_${TAG}_${SK}_${ARM}" "$PY_EVAL" "$KIT/src/fidelity.py" \
           --vectors "$VEC" --skill "$KIT/skills/$SK.md" --probe livemath \
           --n 16 --mode relative "${EXTRA[@]}"

@@ -83,10 +83,19 @@ require_steering() {
 # Shards are independent: each takes every Nth item and writes its own result
 # file; report.py merges them. Sharding across GPUs is ~4x faster than one
 # model spread over four.
+#
+# NO_SHARD=1 omits the --shard argument. The benchmark runners take --shard;
+# the vector-pipeline scripts (extract_vectors, fidelity, calibrate,
+# compliance_check) do NOT, and argparse rejects the unknown flag instantly --
+# the job dies in 9 seconds with "unrecognized arguments: --shard 0/1" after
+# waiting however long in the queue. Set it for anything that is not a
+# sharded benchmark run.
 # ---------------------------------------------------------------------------
 submit() {
   local name="$1" py="$2" script="$3"; shift 3
   local args=("$@")
+  local shard_flag=1
+  [ -n "${NO_SHARD:-}" ] && shard_flag=0
 
   if [ "$RUNNER" = "sbatch" ]; then
     local sb; sb="$(mktemp "${TMPDIR:-/tmp}/${name}.XXXXXX.sbatch")"
@@ -110,8 +119,13 @@ submit() {
       echo "echo \"[job] node=\$(hostname -s) model=\$MODEL_ID cell=${name}\""
       echo "pids=()"
       echo "for i in \$(seq 0 \$((SHARDS-1))); do"
-      echo "  CUDA_VISIBLE_DEVICES=\$i '$py' '$script' ${args[*]@Q} \\"
-      echo "    --shard \"\$i/\$SHARDS\" > '$LOGS/${name}'_\"\$SLURM_JOB_ID\"_shard\$i.log 2>&1 &"
+      if [ "$shard_flag" = 1 ]; then
+        echo "  CUDA_VISIBLE_DEVICES=\$i '$py' '$script' ${args[*]@Q} \\"
+        echo "    --shard \"\$i/\$SHARDS\" > '$LOGS/${name}'_\"\$SLURM_JOB_ID\"_shard\$i.log 2>&1 &"
+      else
+        echo "  CUDA_VISIBLE_DEVICES=\$i '$py' '$script' ${args[*]@Q} \\"
+        echo "    > '$LOGS/${name}'_\"\$SLURM_JOB_ID\"_shard\$i.log 2>&1 &"
+      fi
       echo "  pids+=(\$!)"
       echo "done"
       # A bare `wait` returns only the LAST job's status, so a dead shard goes
@@ -137,8 +151,13 @@ submit() {
     say "running $name locally on GPU(s) $GPU  ($n shard(s))"
     local pids=() i
     for i in $(seq 0 $((n-1))); do
-      CUDA_VISIBLE_DEVICES="${gpus[$i]}" "$py" "$script" "${args[@]}" \
-        --shard "$i/$n" > "$LOGS/${name}_shard$i.log" 2>&1 &
+      if [ "$shard_flag" = 1 ]; then
+        CUDA_VISIBLE_DEVICES="${gpus[$i]}" "$py" "$script" "${args[@]}" \
+          --shard "$i/$n" > "$LOGS/${name}_shard$i.log" 2>&1 &
+      else
+        CUDA_VISIBLE_DEVICES="${gpus[$i]}" "$py" "$script" "${args[@]}" \
+          > "$LOGS/${name}_shard$i.log" 2>&1 &
+      fi
       pids+=($!)
       note "shard $i/$n -> GPU ${gpus[$i]}  (log: $LOGS/${name}_shard$i.log)"
     done

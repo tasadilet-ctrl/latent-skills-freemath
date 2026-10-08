@@ -22,7 +22,7 @@ require_env "$PY_EVAL" eval
 VEC="${1:?usage: ./05_check_degeneration.sh <vectors.pt>}"
 [ -f "$VEC" ] || VEC="$VECTORS/$(basename "$VEC")"
 [ -f "$VEC" ] || fail "no such vector: $VEC"
-SHARDS=1 submit "calibrate_${MODEL_TAG}" "$PY_EVAL" "$KIT/src/calibrate.py" \
+NO_SHARD=1 SHARDS=1 submit "calibrate_${MODEL_TAG}" "$PY_EVAL" "$KIT/src/calibrate.py" \
   --vectors "$VEC" --domain "${DOMAIN:-livemath}" --n "${NCAL:-32}" \
   --batch-size "${BS:-8}" --mode relative \
   --bands "${BANDS:-32,40,48,24-40,40-56}" \

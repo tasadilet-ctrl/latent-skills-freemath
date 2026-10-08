@@ -14,7 +14,7 @@ require_env "$PY_EVAL" eval
 SK="$(skill_path "${SKILL:-$SKILL_LIVEMATH}")"
 [ -f "$SK" ] || fail "no such skill: $SK"
 say "extracting $(basename "$SK")  vs  nothing   [$MODEL_TAG]"
-SHARDS=1 submit "extract_none_${MODEL_TAG}" "$PY_EVAL" \
+NO_SHARD=1 SHARDS=1 submit "extract_none_${MODEL_TAG}" "$PY_EVAL" \
   "$KIT/src/extract_vectors.py" \
   --pool "${POOL:-neutral}" --n "${NPOOL:-50}" --skill "$SK"
 note "writes ../vectors/v_${MODEL_TAG}_<skill>.pt"

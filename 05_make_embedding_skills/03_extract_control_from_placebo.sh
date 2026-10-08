@@ -16,6 +16,6 @@ require_env "$PY_EVAL" eval
 PL="$(skill_path "${PLACEBO:-$SKILL_PLACEBO}")"
 [ -f "$PL" ] || fail "no such placebo: $PL"
 say "extracting CONTROL from $(basename "$PL")   [$MODEL_TAG]"
-SHARDS=1 submit "extract_control_${MODEL_TAG}" "$PY_EVAL" \
+NO_SHARD=1 SHARDS=1 submit "extract_control_${MODEL_TAG}" "$PY_EVAL" \
   "$KIT/src/extract_vectors.py" \
   --pool "${POOL:-neutral}" --n "${NPOOL:-50}" --skill "$PL"

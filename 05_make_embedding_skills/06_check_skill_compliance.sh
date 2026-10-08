@@ -15,4 +15,4 @@
 set -uo pipefail
 source "$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)/lib/common.sh"
 require_env "$PY_EVAL" eval
-SHARDS=1 submit "compliance_${MODEL_TAG}" "$PY_EVAL" "$KIT/src/compliance_check.py"
+NO_SHARD=1 SHARDS=1 submit "compliance_${MODEL_TAG}" "$PY_EVAL" "$KIT/src/compliance_check.py"

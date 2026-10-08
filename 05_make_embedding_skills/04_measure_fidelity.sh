@@ -41,5 +41,5 @@ case "$(basename "$VEC")" in
              note "measuring against placebo (matches how it was extracted)" ;;
   *)         note "measuring against no system message" ;;
 esac
-SHARDS=1 submit "fidelity_${MODEL_TAG}" "$PY_EVAL" "$KIT/src/fidelity.py" "${ARGS[@]}"
+NO_SHARD=1 SHARDS=1 submit "fidelity_${MODEL_TAG}" "$PY_EVAL" "$KIT/src/fidelity.py" "${ARGS[@]}"
 note "next: ./05_check_degeneration.sh on the setting this suggests"
