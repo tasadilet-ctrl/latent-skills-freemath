@@ -32,7 +32,7 @@ from src import evaluate, hooks, qwen  # noqa: E402
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
-def load_pool(name: str, n: int) -> list[str]:
+def load_pool(name: str, n: int, ids: list[str] | None = None) -> list[str]:
     if name == "neutral":
         path = os.path.join(ROOT, "pools", "neutral_tasks.jsonl")
         key = "prompt"
@@ -68,6 +68,11 @@ def load_pool(name: str, n: int) -> list[str]:
     with open(path) as f:
         for line in f:
             row = json.loads(line)
+            # --ids restricts the in-domain pool to named questions (e.g. the
+            # items a third-party skill was trained on, which are then
+            # excluded from scoring).
+            if ids is not None and row["id"] not in ids:
+                continue
             # The in-domain pool must present the SAME prompt shape the
             # benchmark does -- question plus the five options plus the answer
             # cue. Extracting on a bare question would build the vector from a
@@ -105,12 +110,15 @@ def main():
                          "prepends the skill to the user turn instead, so both "
                          "arms have no system message at all and that jump "
                          "never enters the contrast.")
+    ap.add_argument("--ids", default=None,
+                    help="livemath pool only: JSON list of question ids to draw from")
     ap.add_argument("--out", default=None)
     args = ap.parse_args()
 
     skill_text = open(args.skill).read()
     base_texts = [open(b).read() for b in (args.baseline_skill or [])] or [None]
-    prompts = load_pool(args.pool, args.n)
+    ids = set(json.load(open(args.ids))) if args.ids else None
+    prompts = load_pool(args.pool, args.n, ids)
     print(f"[extract] pool={args.pool} n={len(prompts)} skill={os.path.basename(args.skill)}",
           flush=True)
 
@@ -158,7 +166,8 @@ def main():
         "vectors": {l: mean[l].clone() for l in range(n_layers)},
         "norm": mean.norm(dim=-1),
         "coherence": coherence,
-        "meta": {"pool": args.pool, "n": len(prompts), "n_layers": n_layers,
+        "meta": {"pool": args.pool, "n": len(prompts),
+                 "ids": os.path.basename(args.ids) if args.ids else None, "n_layers": n_layers,
                  "skill": os.path.basename(args.skill), "model": qwen.MODEL_ID,
                  "model_tag": qwen.model_tag(),
                  "skill_position": args.skill_position,

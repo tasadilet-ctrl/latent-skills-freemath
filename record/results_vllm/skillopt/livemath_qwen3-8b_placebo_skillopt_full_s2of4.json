@@ -1,0 +1,1236 @@
+{
+ "summary": {
+  "domain": "livemath",
+  "engine": "vllm",
+  "condition": "placebo_skillopt_full",
+  "model": "Qwen/Qwen3-8B",
+  "model_tag": "qwen3-8b",
+  "skill": "placebo_skillopt_full.md",
+  "n": 152,
+  "em": 0.24342105263157895,
+  "parse_rate": 1.0,
+  "forced": 0,
+  "forced_rate": 0.0,
+  "max_new_tokens": 2048,
+  "seconds": 140.4,
+  "shard": "2/4"
+ },
+ "records": [
+  {
+   "id": "livemath-202511-11",
+   "gold": "D",
+   "pred": "A",
+   "em": 0.0,
+   "gen_tokens": 488,
+   "raw": "The question concerns the uniform weighted Gagliardo\u2013Nirenberg inequality for radial functions in $H^2_{rd}$. The inequality is of the form:\n\n$$\n\\int_{\\mathbb R^N} |v(x)|^{1+q}|x|^b\\,dx \\le C\\,\\|v\\|^E\\,\\|\\Delta v\\|^D,\n$$\n\nwith the exponents $D$ and $E$ defined as:\n\n$$\nD = \\frac{N(q-1)-2b}{4}, \\quad E = q + 1 - D.\n$$\n\nThe key point is whether the inequality holds for all $v \\in H^2_{rd}$ with a constant $C > 0$ that is uniform across all such functions, and whether the inequality remains valid at the endpoint $q = 1 + \\frac{2b}{N-1}$, which is the critical exponent for the embedding.\n\nOption A states that there exists a constant $C > 0$ such that the inequality holds for all $v \\in H^2_{rd}$, and this is the standard form of the Gagliardo\u2013Nirenberg inequality. However, it does not claim sharpness or endpoint validity.\n\nOption B claims the existence of a sharp constant $\\texttt{C}_{opt} > 0$ and that the inequality remains valid at the endpoint $q = 1 + \\frac{2b}{N-1}$. This is a stronger statement than A, as it includes sharpness and endpoint validity.\n\nOption C swaps the exponents $D$ and $E$, which would not be consistent with the standard form of the Gagliardo\u2013Nirenberg inequality.\n\nOption D is a placeholder for a stronger result, but the question asks for the strongest statement that can be proved, not for an unlisted option.\n\nOption E claims that for each $v \\in H^2_{rd}$, there exists a constant $C_v > 0$ such that the inequality holds. This is weaker than A, as it allows the constant to depend on $v$.\n\nThus, the strongest statement that can be proved is that there exists a constant $C > 0$ such that the inequality holds for all $v \\in H^2_{rd}$, which is the content of Option A.\n\nAnswer: A"
+  },
+  {
+   "id": "livemath-202511-15",
+   "gold": "C",
+   "pred": "C",
+   "em": 1.0,
+   "gen_tokens": 413,
+   "raw": "The question concerns the quantitative boundary regularity estimate for the solution $ u $ of a fractional Laplace equation in a domain $ \\Omega \\subset \\mathbb{R}^n $ that is locally $ C^{1,1} $. The solution $ u $ is nonnegative and satisfies the equation $ (-\\Delta)^s u = g $ in $ \\Omega \\cap B_4 $, with $ u = 0 $ in $ B_4 \\setminus \\Omega $, and $ g \\in L^\\infty(\\Omega \\cap B_4) $.\n\nThe key point is to determine the strongest possible regularity result for $ u $ in $ \\Omega \\cap B_{1/2} $. The fractional Laplacian $ (-\\Delta)^s $ introduces nonlocal effects, and the regularity of the solution depends on the regularity of the domain and the right-hand side $ g $.\n\nIn the context of such problems, it is known that for a nonnegative solution $ u $ of the fractional Laplace equation with $ g \\in L^\\infty $, and under the assumption that the domain is locally $ C^{1,1} $, the solution $ u $ is H\u00f6lder continuous in the interior of the domain. The H\u00f6lder exponent is typically related to the order $ s $ of the fractional Laplacian.\n\nThe correct result is that $ u \\in C^s(\\Omega \\cap B_{1/2}) $, and the H\u00f6lder norm of $ u $ can be bounded in terms of the $ L^\\infty $ norms of $ g $ and $ u $, with the constant depending on $ n $, $ s $, and the local $ C^{1,1} $ norm of the boundary.\n\nThis is consistent with the statement in option **C**, which correctly states that $ u \\in C^s(\\Omega \\cap B_{1/2}) $ and provides the correct bound on the H\u00f6lder norm.\n\nAnswer: C"
+  },
+  {
+   "id": "livemath-202511-19",
+   "gold": "C",
+   "pred": "C",
+   "em": 1.0,
+   "gen_tokens": 566,
+   "raw": "The given PDE is a nonlinear dispersive equation of the form $\\partial_t u + \\partial_x(\\partial_x^2 u + u^2) = 0$, which can be rewritten as $\\partial_t u + \\partial_x^3 u + \\partial_x(u^2) = 0$. This is a third-order nonlinear evolution equation with a boundary condition at $x = 0$ and initial data on $\\mathbb{R}^+$.\n\nThe equation is nonlinear due to the $u^2$ term, and the presence of the third-order spatial derivative suggests that the problem is of higher regularity. The initial data $u_0 \\in H^s(\\mathbb{R}^+)$ and the boundary data $f \\in H^{\\frac{s+1}{3}}_{\\text{loc}}(\\mathbb{R}^+)$ are given with compatibility conditions at $(x,t) = (0,0)$, which is necessary for the well-posedness of the problem.\n\nThe key to determining the strongest statement about existence and uniqueness lies in the regularity of the solution. The condition $s > \\frac{3}{4}$ ensures that the solution space is sufficiently regular to handle the nonlinear term and the boundary conditions. The space $H^s(\\mathbb{R}^+)$ is a Sobolev space of order $s$, and the space $H^{s+1}_{\\text{loc}}(\\mathbb{R}^+)$ is a local Sobolev space of order $s+1$, which is appropriate for the spatial regularity of the solution.\n\nThe solution is required to be continuous in time with values in $H^s(\\mathbb{R}^+)$ and to be in $L^2(0,T; H^{s+1}_{\\text{loc}}(\\mathbb{R}^+))$, which is a standard space for such problems. The inclusion of the local Sobolev space $H^{s+1}_{\\text{loc}}(\\mathbb{R}^+)$ is necessary because the solution may not be globally in $H^{s+1}(\\mathbb{R}^+)$, especially near the boundary.\n\nAmong the options, option C states that there exists exactly one solution $u$ such that $u \\in C((0,T); H^s(\\mathbb{R}^+)) \\cap L^2(0,T; H^{s+1}_{\\text{loc}}(\\mathbb{R}^+))$. This is the strongest statement that can be proved about existence and uniqueness for this initial-boundary value problem under the given conditions.\n\nAnswer: C"
+  },
+  {
+   "id": "livemath-202511-22",
+   "gold": "C",
+   "pred": "E",
+   "em": 0.0,
+   "gen_tokens": 351,
+   "raw": "The question concerns the local H\u00f6lder continuity of the integrated density of states $\\mathcal N(\\omega,E)$ for a quasi-periodic Schr\u00f6dinger operator on a strip. The key parameters are the Diophantine frequency $\\omega$, the energy $E_0$, and the acceleration $\\kappa^d(\\omega,E_0)$, which is related to the rate of change of the Lyapunov exponents.\n\nThe H\u00f6lder continuity of $\\mathcal N(\\omega,E)$ near $E_0$ is known to depend on the acceleration $\\kappa^d(\\omega,E_0)$. Specifically, the best H\u00f6lder exponent $\\beta$ for which $\\mathcal N(\\omega,E)$ is H\u00f6lder continuous is bounded by $\\beta < 1/(2\\kappa^d(\\omega,E_0))$. This result is a consequence of the theory of Schr\u00f6dinger operators with analytic potentials and the connection between the Lyapunov exponents and the integrated density of states.\n\nOption E states that there exists a neighborhood $I_{E_0}$ of $E_0$ such that for all $E,E'\\in I_{E_0}$, the H\u00f6lder inequality\n$$\n|\\mathcal N(\\omega,E)-\\mathcal N(\\omega,E')|\\le |E-E'|^{\\beta}\n$$\nholds for every exponent $0<\\beta<1/\\kappa^d(\\omega,E_0)$.\n\nThis is the strongest statement that can be proved, as it covers all exponents $\\beta$ less than $1/\\kappa^d(\\omega,E_0)$, which is consistent with the known results in the field.\n\nAnswer: E"
+  },
+  {
+   "id": "livemath-202511-26",
+   "gold": "A",
+   "pred": "C",
+   "em": 0.0,
+   "gen_tokens": 179,
+   "raw": "The map $\\mathsf{Frob}$ is induced by the direct image of a flat bundle, which relates the holonomy of a bundle over $Y$ to that of its pushforward over $X-B$. The Poisson structures on the character varieties arise from the symplectic geometry of the moduli spaces of flat connections. The direct image operation preserves the holonomy data and induces a map between the character varieties. However, the Poisson compatibility is not guaranteed globally, and the map may not be injective due to the possibility of distinct conjugacy classes being identified under the induced map. The strongest statement that can be proved is that $\\mathsf{Frob}$ is a Poisson map on the smooth loci, but induction from the finite-index subgroup can identify distinct conjugacy classes, so $\\mathsf{Frob}$ need not be injective.\n\nAnswer: C"
+  },
+  {
+   "id": "livemath-202511-3",
+   "gold": "E",
+   "pred": "C",
+   "em": 0.0,
+   "gen_tokens": 120,
+   "raw": "The correct characterization of a selfless $(M,\\varphi)$ is that for every nontrivial $\\mathrm{W}^*$-probability space $(N,\\psi)$, the first-factor inclusion $(M,\\varphi) \\subset (M,\\varphi) \\ast (N,\\psi)$ is existentially closed. This is the most general and precise condition that captures the selfless property, as it applies to all possible free product extensions, not just specific ones like with $\\operatorname{L}(\\mathbb{Z})$ or a single ultrafilter.\n\nAnswer: C"
+  },
+  {
+   "id": "livemath-202511-7",
+   "gold": "A",
+   "pred": "E",
+   "em": 0.0,
+   "gen_tokens": 362,
+   "raw": "The Torelli group $ T(X_n) $ of a 4-manifold $ X_n = 2\\mathbb{CP}^2 \\# n\\overline{\\mathbb{CP}^2} $ is the subgroup of the mapping class group consisting of diffeomorphisms isotopic to the identity. The question concerns the existence of homomorphisms from $ T(X_n) $ to $ \\mathbb{Z}^\\infty $, the direct sum of countably infinitely many copies of $ \\mathbb{Z} $.\n\nIt is known that for such manifolds, the Torelli group can be non-trivial and has a rich structure. However, constructing a surjective homomorphism to $ \\mathbb{Z}^\\infty $ is highly non-trivial. While there are constructions using Seiberg\u2013Witten invariants or other invariants, these typically yield homomorphisms with infinite rank but not necessarily surjective onto $ \\mathbb{Z}^\\infty $.\n\nOption A is too strong, as it claims a surjective homomorphism for all $ n \\ge 10 $, which is not generally known. Option B is also too strong, as it claims a surjective homomorphism via the Seiberg\u2013Witten construction for every $ n \\ge 10 $, which is not established. Option D suggests a single surjective homomorphism for all sufficiently large $ n $, but this is not known to be true. Option E is the weakest and most cautious, stating that for every $ n \\ge 10 $, there exists a homomorphism with an infinite image, which is a known result in the literature.\n\nAnswer: E"
+  },
+  {
+   "id": "livemath-202512-10",
+   "gold": "C",
+   "pred": "E",
+   "em": 0.0,
+   "gen_tokens": 4,
+   "raw": "Answer: E"
+  },
+  {
+   "id": "livemath-202512-14",
+   "gold": "C",
+   "pred": "C",
+   "em": 1.0,
+   "gen_tokens": 4,
+   "raw": "Answer: C"
+  },
+  {
+   "id": "livemath-202512-18",
+   "gold": "D",
+   "pred": "D",
+   "em": 1.0,
+   "gen_tokens": 4,
+   "raw": "Answer: D"
+  },
+  {
+   "id": "livemath-202512-21",
+   "gold": "B",
+   "pred": "E",
+   "em": 0.0,
+   "gen_tokens": 240,
+   "raw": "The question concerns the consistency phenomena of $\\sigma$-complete ultrafilters under the assumption of a measurable cardinal, and the behavior of the Lipschitz order ($<_L$) and the Ketonen order ($<_k$) on these ultrafilters. The Weak Ultrapower Axiom (WUA) is also involved.\n\nOption **E** is the strongest and most accurate statement. It asserts that relative to a measurable cardinal, it is consistent that there exist two $\\sigma$-complete ultrafilters $\\mathcal{V}$ and $\\mathcal{W}$ such that $\\mathcal{V}<_L\\mathcal{W}$, while $\\mathcal{V}$ and $\\mathcal{W}$ are Ketonen-incomparable. Furthermore, it states that in every model of the Weak Ultrapower Axiom, any relation $\\mathcal{V}<_L\\mathcal{W}$ already implies that $\\mathcal{V}$ and $\\mathcal{W}$ are comparable in the Ketonen order. This captures the most comprehensive and precise result about the interaction between the two orders and the role of WUA.\n\nAnswer: E"
+  },
+  {
+   "id": "livemath-202512-25",
+   "gold": "A",
+   "pred": "E",
+   "em": 0.0,
+   "gen_tokens": 4,
+   "raw": "Answer: E"
+  },
+  {
+   "id": "livemath-202512-29",
+   "gold": "A",
+   "pred": "E",
+   "em": 0.0,
+   "gen_tokens": 4,
+   "raw": "Answer: E"
+  },
+  {
+   "id": "livemath-202512-32",
+   "gold": "D",
+   "pred": "A",
+   "em": 0.0,
+   "gen_tokens": 4,
+   "raw": "Answer: A"
+  },
+  {
+   "id": "livemath-202512-36",
+   "gold": "D",
+   "pred": "D",
+   "em": 1.0,
+   "gen_tokens": 377,
+   "raw": "The homotopy type of the gauge group $\\mathcal{G}_k$ of a principal $G_2$-bundle over $S^4$ classified by $k \\in \\pi_4(BG_2) \\cong \\mathbb{Z}$ depends on the value of $k$ modulo the order of the group $G_2$. The group $G_2$ has order 1344, and its cohomology and homotopy properties are well understood. The key result is that the homotopy type of $\\mathcal{G}_k$ is determined by $k$ modulo 84, which is the least common multiple of the orders of the Sylow subgroups of $G_2$.\n\nThus, if $\\mathcal{G}_k \\simeq \\mathcal{G}_{k'}$, then $(k, 84) = (k', 84)$. Conversely, if $(k, 84) = (k', 84)$, then $\\mathcal{G}_k \\simeq \\mathcal{G}_{k'}$. Moreover, the homotopy equivalence is $p$-local for each prime $p$ dividing 84, i.e., $p = 2, 3, 7$.\n\nTherefore, the strongest statement is that if $\\mathcal{G}_k \\simeq \\mathcal{G}_{k'}$, then $(k, 84) = (k', 84)$, and if $(k, 84) = (k', 84)$, then $\\mathcal{G}_k \\simeq_{(p)} \\mathcal{G}_{k'}$ for every prime $p$.\n\nAnswer: D"
+  },
+  {
+   "id": "livemath-202512-4",
+   "gold": "C",
+   "pred": "D",
+   "em": 0.0,
+   "gen_tokens": 276,
+   "raw": "The key elements of the question are the existence of a non-real manifold of positive dimension in the zero set of a central polynomial over $\\mathbb A$, and the behavior of the gradient flow under a generically non-central analytic deformation. The deformation is such that the automorphism stabilizer becomes trivial for $\\epsilon \\neq 0$, indicating a loss of symmetry. The gradient flow $\\dot{x} = -\\nabla \\mathcal{V}_\\epsilon(x)$ is used to study the collapse of the zero set $V_0$ onto $V_\\epsilon$ as $\\epsilon \\to 0$.\n\nThe critical slowing down and the scaling of the collapse time are determined by the analyticity of the deformation and the nature of the zero set. The Lojasiewicz inequality, which is relevant in the study of gradient flows, typically gives a bound on the convergence rate. For analytic deformations, the Lojasiewicz exponent is known to be $1/2$, leading to a collapse time that scales as $\\epsilon^{-2}$.\n\nThis result holds for analytic deformations, including non-generic ones, due to the analyticity condition. The gradient flow realizes the collapse as a deformation retract, and the characteristic collapse time diverges as $\\epsilon \\to 0$ with a power law of $\\epsilon^{-2}$.\n\nAnswer: D"
+  },
+  {
+   "id": "livemath-202512-43",
+   "gold": "D",
+   "pred": "A",
+   "em": 0.0,
+   "gen_tokens": 198,
+   "raw": "The given conditions imply that the curvature of the connection has no $(0,2)$-component on $M$, which is a key requirement for the existence of a holomorphic structure. The Levi form condition at $\\zeta_0$ ensures that the boundary is either strongly pseudoconvex or strongly pseudoconcave, both of which are favorable for the existence of such a structure. The regularity of the bundle and the connection also plays a role in determining the smoothness of the holomorphic structure.\n\nUnder these hypotheses, it is known that a holomorphic vector bundle structure exists in a neighborhood of $\\zeta_0$, and the regularity of this structure is determined by the regularity of the original bundle and the connection. The result typically guarantees a holomorphic structure of class $C^{1/2}$ (or $\\Lambda^{r+1/2}$) in the $Lip$ (or $\\Lambda^{r+1}$) case.\n\nAnswer: A"
+  },
+  {
+   "id": "livemath-202512-47",
+   "gold": "B",
+   "pred": "A",
+   "em": 0.0,
+   "gen_tokens": 240,
+   "raw": "The event $\\mathcal B_\\varepsilon$ concerns the existence of two disjoint subpaths of the Brownian motion trajectory from $\\varepsilon\\mathbb S^1$ to $\\tfrac{1}{2}\\mathbb S^1$ before hitting the boundary of the unit disk. This is related to the geometry of Brownian motion in the complex plane and the behavior of its paths near the boundary.\n\nIt is known from the theory of planar Brownian motion that the probability of such a \"double crossing\" event decays logarithmically with respect to $\\varepsilon$. Specifically, the probability $\\mathbb P[\\mathcal B_\\varepsilon]$ is known to be asymptotically of the form $\\frac{C}{|\\log \\varepsilon|}$ for some constant $C$, and this decay is uniform over $\\varepsilon \\in (0, 1/10)$.\n\nThis result is consistent with the behavior of Brownian motion in the unit disk and the scaling properties of its paths. The logarithmic decay is a well-established feature in such problems, and the bounds in option A reflect this behavior accurately.\n\nAnswer: A"
+  },
+  {
+   "id": "livemath-202512-50",
+   "gold": "D",
+   "pred": "C",
+   "em": 0.0,
+   "gen_tokens": 4,
+   "raw": "Answer: C"
+  },
+  {
+   "id": "livemath-202512-7",
+   "gold": "E",
+   "pred": "C",
+   "em": 0.0,
+   "gen_tokens": 354,
+   "raw": "The given inequality involves the Hausdorff measure with respect to the metric $ g_+^t = g_1 \\times t^2 g_2 $, and it is stated that for $ t \\le 1 $,\n$$\n\\mathcal H_{g_+^t}^{m_1+m_2-1}(\\Sigma) \\le t^{m_2-1} \\mathcal H_g^{m_1+m_2-1}(\\Sigma).\n$$\nEquality in this inequality is equivalent to a condition on the geometry of $ \\Sigma $, particularly the behavior of its normal vector with respect to the product metric $ g $.\n\nOption **C** states that if the $ g $-unit normal is written as $ \\nu = a\\nu_1 + b\\nu_2 $ with $ a^2 + b^2 = 1 $, then equality is equivalent to the identity $ t^2 a^2 + b^2 = 1 $ holding at every regular point of a dense subset of $ \\Sigma $. This condition reflects the scaling of the metric $ g_+^t $, which scales the $ M_2 $-factor by $ t^2 $. For the Hausdorff measure to remain invariant under this scaling (up to the factor $ t^{m_2-1} $), the normal vector must align in a way that accounts for the anisotropic scaling. The identity $ t^2 a^2 + b^2 = 1 $ ensures that the normal vector is appropriately weighted with respect to the scaled metric.\n\nThis is the most precise and direct characterization of the equality condition in the given inequality.\n\nAnswer: C"
+  },
+  {
+   "id": "livemath-202601-10",
+   "gold": "B",
+   "pred": "D",
+   "em": 0.0,
+   "gen_tokens": 4,
+   "raw": "Answer: D"
+  },
+  {
+   "id": "livemath-202601-14",
+   "gold": "D",
+   "pred": "D",
+   "em": 1.0,
+   "gen_tokens": 42,
+   "raw": "The normalized Chow quotient $ X $ of $ F $ by $ H $ is a singular del Pezzo surface of degree 4 with two singularities of type $ A_1 $.\n\nAnswer: D"
+  },
+  {
+   "id": "livemath-202601-18",
+   "gold": "E",
+   "pred": "E",
+   "em": 1.0,
+   "gen_tokens": 447,
+   "raw": "The given condition states that the sequence $\\{x_n\\}$ is $r$-$\\mathcal{I}$ convergent to $x_*$, meaning that for every $\\varepsilon > 0$, the set $\\{n \\in \\mathbb{N} : d(x_n, x_*) \\ge r + \\varepsilon\\} \\in \\mathcal{I}$. This implies that the set of indices where the distance from $x_n$ to $x_*$ exceeds $r + \\varepsilon$ is \"negligible\" in the sense of the ideal $\\mathcal{I}$.\n\nThe Ky Fan metric $\\rho(X, Y)$ is defined as the infimum of $\\eta > 0$ such that $\\mathbb{P}(d(X, Y) > \\eta) \\le \\eta$. For the constant random variables $X_n(s) = x_n$, the Ky Fan metric $\\rho(X_n, X_*)$ is equivalent to the distance $d(x_n, x_*)$, because the probability of the event $d(X_n, X_*) > \\eta$ is either 0 or 1, depending on whether $d(x_n, x_*) > \\eta$.\n\nThus, the condition $X_n \\xrightarrow[r]{\\mathcal{I}^\\mathbb{P}} X_*$ is equivalent to the condition that for every $\\varepsilon > 0$, the set $\\{n \\in \\mathbb{N} : d(x_n, x_*) \\ge r + \\varepsilon\\} \\in \\mathcal{I}$, which is exactly the given $r$-$\\mathcal{I}$ convergence of $\\{x_n\\}$ to $x_*$.\n\nTherefore, the strongest statement that can be proved is that there exists a random variable $X_*$ such that $\\mathbb{P}(X_* = x_*) = 1$ and $X_n \\xrightarrow[r]{\\mathcal{I}^\\mathbb{P}} X_*$. This is directly implied by the given conditions.\n\nAnswer: E"
+  },
+  {
+   "id": "livemath-202601-21",
+   "gold": "C",
+   "pred": "D",
+   "em": 0.0,
+   "gen_tokens": 4,
+   "raw": "Answer: D"
+  },
+  {
+   "id": "livemath-202601-25",
+   "gold": "D",
+   "pred": "B",
+   "em": 0.0,
+   "gen_tokens": 555,
+   "raw": "The question concerns the Moser\u2013Trudinger functional on a complete noncompact Riemannian manifold $(M,g)$ with Ricci curvature bounded below and a positive injectivity radius. The functional in question is defined using the function $\\phi_n(t) = e^t - \\sum_{k=0}^{n-2} t^k/k!$, and the norm $\\|u\\|_{1,\\tau} = \\|\\nabla_g u\\|_{L^n(M)} + \\tau \\|u\\|_{L^n(M)}$.\n\nThe key point is the sharpness of the constant $\\alpha_n = n \\omega_{n-1}^{1/(n-1)}$, which is the critical exponent in the Moser\u2013Trudinger inequality on the Euclidean space. In the context of manifolds with Ricci curvature bounded below and positive injectivity radius, it is known that the Moser\u2013Trudinger inequality holds with the same sharp constant $\\alpha_n$, provided the norm $\\|u\\|_{1,\\tau}$ is used with $\\tau > \\epsilon$, where $\\epsilon$ depends on the curvature and injectivity radius.\n\nOption **B** states that the inequality holds for all $\\tau > 0$ and that $\\alpha_n$ is sharp. However, this is not correct, as the Moser\u2013Trudinger inequality on manifolds typically requires a lower bound on $\\tau$ to ensure the inequality holds, and the constant $\\alpha_n$ is indeed sharp.\n\nOption **C** claims the inequality holds with the exponential function and that $\\alpha_n$ is sharp. However, the functional in the question is not the exponential function but $\\phi_n$, which is a truncated exponential.\n\nOption **E** claims that the inequality holds with a constant $C$ independent of the manifold $M$, which is not generally true in the context of noncompact manifolds with curvature bounds, as the geometry of the manifold can affect the constant.\n\nOption **A** is the only one that correctly reflects the dependence on $\\tau > \\epsilon$ and the boundedness of the functional for $\\alpha < \\alpha_n$, but it does not claim sharpness of $\\alpha_n$, which is a key aspect of the Moser\u2013Trudinger inequality.\n\nOption **D** is incorrect because a stronger result can indeed be proven, and the correct answer is not among the remaining options.\n\nThus, the strongest statement that can be proved is that the inequality holds with $\\alpha_n$ being sharp, and the constant $C$ depends on $n$, $\\tau$, and the manifold $M$, but not on the curvature or injectivity radius directly.\n\nAnswer: B"
+  },
+  {
+   "id": "livemath-202601-29",
+   "gold": "B",
+   "pred": "E",
+   "em": 0.0,
+   "gen_tokens": 143,
+   "raw": "The three-page index $\\alpha_3(L)$ of a link $L$ is related to its crossing number $c(L)$ through known bounds in knot theory. For non-split, nontrivial links that are not the Hopf link, it is known that $\\alpha_3(L) \\leq 3c(L) - 2$. This bound is tight for certain classes of links, but it is not universally true that $\\alpha_3(L) = 3c(L) - 1$ for all such links. Therefore, the strongest statement that can be proved is that $\\alpha_3(L) \\leq 3c(L) - 2$.\n\nAnswer: E"
+  },
+  {
+   "id": "livemath-202601-32",
+   "gold": "A",
+   "pred": "E",
+   "em": 0.0,
+   "gen_tokens": 4,
+   "raw": "Answer: E"
+  },
+  {
+   "id": "livemath-202601-36",
+   "gold": "C",
+   "pred": "D",
+   "em": 0.0,
+   "gen_tokens": 331,
+   "raw": "The question concerns the size of the sumset $ A^{r_1} + \\cdots + A^{r_k} $, where $ A \\subseteq \\mathbb{F}_p $ has size $ |A| \\gg p $, and $ r_1, \\ldots, r_k $ are integer exponents. The goal is to find the strongest asymptotic lower bound for the size of this sumset.\n\nA well-known result in additive combinatorics over finite fields, particularly in the context of sum-product estimates, provides a lower bound for the size of such sumsets. The key idea is that when $ |A| $ is large (i.e., $ |A| \\gg p $), the sumset $ A^{r_1} + \\cdots + A^{r_k} $ cannot be too small, due to the additive structure of the field and the multiplicative structure of the exponents.\n\nThe strongest known asymptotic lower bound for the size of the sumset $ A^{r_1} + \\cdots + A^{r_k} $ is:\n\n$$\n\\big|A^{r_1} + \\cdots + A^{r_k}\\big| \\ge (1 - o(1)) \\, k \\, p^{\\frac{k-1}{k}} |A|^{1/k}.\n$$\n\nThis bound is tight in many cases and is known to hold for all tuples of integer exponents $ (r_1, \\ldots, r_k) $, provided $ |A| \\gg p $.\n\nAnswer: D"
+  },
+  {
+   "id": "livemath-202601-4",
+   "gold": "E",
+   "pred": "B",
+   "em": 0.0,
+   "gen_tokens": 4,
+   "raw": "Answer: B"
+  },
+  {
+   "id": "livemath-202601-43",
+   "gold": "E",
+   "pred": "E",
+   "em": 1.0,
+   "gen_tokens": 516,
+   "raw": "The question concerns the properties of algebraic groups and their torsors in the context of $\\#A^1$-homotopy theory. The key points to consider are:\n\n1. **$\\pi_0^{\\#A^1}(G)$** is the Nisnevich sheaf of $\\#A^1$-connected components of $G$. For a perfect field $k$, it is known that $\\pi_0^{\\#A^1}(G)$ is a strongly $\\#A^1$-invariant sheaf. This is a standard result in $\\#A^1$-homotopy theory for algebraic groups over perfect fields.\n\n2. **Nisnevich locally trivial $G$-torsors** in $\\mathcal H(k)$ are classified by the classifying space $BG$. In the unstable Nisnevich $\\#A^1$-homotopy category, the sequence $\\mathcal P \\to \\mathcal X \\to BG$ forms a $\\#A^1$-fiber sequence. This is a consequence of the fact that the Nisnevich topology is well-suited for the study of torsors and classifying spaces in this context.\n\n3. The distinction between **Nisnevich** and **\u00e9tale** local triviality is important. The question specifies **Nisnevich** local triviality, so any option referring to **\u00e9tale** local triviality is incorrect.\n\n4. The sequence $\\mathcal P \\to \\mathcal X \\to BG$ is a $\\#A^1$-fiber sequence, not necessarily a simplicial fiber sequence, in the unstable Nisnevich $\\#A^1$-homotopy category.\n\n5. The correct target of the sequence is $BG$, not $B\\pi_0^{\\#A^1}(G)$, because the classifying space of $G$ is the correct object for classifying $G$-torsors.\n\nThus, the strongest statement that can be proved is that $\\pi_0^{\\#A^1}(G)$ is a strongly $\\#A^1$-invariant sheaf, and for every Nisnevich locally trivial $G$-torsor $\\mathcal P \\to \\mathcal X$ in $\\mathcal H(k)$, the sequence $\\mathcal P \\to \\mathcal X \\to BG$ is a $\\#A^1$-fiber sequence.\n\nAnswer: E"
+  },
+  {
+   "id": "livemath-202601-5",
+   "gold": "E",
+   "pred": "B",
+   "em": 0.0,
+   "gen_tokens": 4,
+   "raw": "Answer: B"
+  },
+  {
+   "id": "livemath-202601-9",
+   "gold": "C",
+   "pred": "C",
+   "em": 1.0,
+   "gen_tokens": 105,
+   "raw": "The kernel of $d\\mathcal P_{B,f}^k$ modulo $\\Lie(T)$ is determined by the condition that for every $v \\in \\Int(k\\Delta) \\cap M$, the sum $w + v$ must lie in $\\Int((k+1)\\Delta) \\cup \\Int((k+1)\\Gamma)$. This ensures that the elements $g_{\\Gamma}(f)x^w$ are in the kernel. The correct choice is C.\n\nAnswer: C"
+  },
+  {
+   "id": "livemath-202602-12",
+   "gold": "C",
+   "pred": "E",
+   "em": 0.0,
+   "gen_tokens": 154,
+   "raw": "The abelianization of a group $H(n,m)$ being isomorphic to $\\mathbb{Z}^2$ implies that the abelianization has rank 2. This typically occurs when the group $H(n,m)$ has a presentation with two independent relations, or when the group is such that its commutator subgroup is of finite index and the quotient has rank 2.\n\nGiven the options, the correct condition for $H(n,m)^{\\mathrm{ab}} \\cong \\mathbb{Z}^2$ is when $n \\equiv 0 \\pmod{6}$ and $m \\equiv 2 \\pmod{n/3}$. This ensures that the abelianization has the correct structure.\n\nAnswer: E"
+  },
+  {
+   "id": "livemath-202602-16",
+   "gold": "A",
+   "pred": "A",
+   "em": 1.0,
+   "gen_tokens": 4,
+   "raw": "Answer: A"
+  },
+  {
+   "id": "livemath-202602-2",
+   "gold": "C",
+   "pred": "B",
+   "em": 0.0,
+   "gen_tokens": 279,
+   "raw": "The blow-up of the solution $u$ as $t \\to T_{u_0}^*$ is typically associated with the unbounded growth of certain norms of the solution or its derivatives. In the context of the given equation, which involves nonlinear terms and a convolution with a kernel $G$, the blow-up behavior is often linked to the growth of the gradient of $u$, specifically $\\|\\nabla u(t)\\|_{L^\\infty(\\mathbb R^2)}$.\n\nAmong the options, the strongest and most general statement about the blow-up behavior is that the $L^\\infty$ norm of the gradient of $u$ must become unbounded as $t \\to T_{u_0}^*$. This is a standard result in the study of blow-up for nonlinear dispersive or hyperbolic equations, where the $L^\\infty$ norm of the gradient is a key indicator of potential singularity formation.\n\nOption B states that the $\\limsup$ of the $L^\\infty$ norm of $\\nabla u(t)$ is infinite as $t \\to T_{u_0}^*$. This is the most direct and general statement about the blow-up behavior, as it captures the essential feature of unbounded growth without requiring the integral of a power of the norm to diverge.\n\nAnswer: B"
+  },
+  {
+   "id": "livemath-202602-23",
+   "gold": "E",
+   "pred": "D",
+   "em": 0.0,
+   "gen_tokens": 505,
+   "raw": "The given conditions state that $ A $ is a Noetherian domain of characteristic 0, and $ X \\subset \\mathbb{P}^n_A $ is a closed subscheme smooth over $ \\operatorname{Spec} A $. The sheaf $ \\mathcal{F} = \\mathcal{O}_{\\mathbb{P}^n_A}(j) $ is a line bundle on $ \\mathbb{P}^n_A $, and $ X_t $ denotes the $ t $-th thickening of $ X $, defined by the ideal sheaf $ \\mathcal{I}^t $.\n\nSmoothness of $ X $ over $ \\operatorname{Spec} A $ implies that $ X $ is flat over $ A $, and since $ A $ is Noetherian, the cohomology groups $ \\operatorname{H}^i(X_t, \\mathcal{O}_{X_t} \\otimes_{\\mathcal{O}_{\\mathbb{P}^n_A}} \\mathcal{F}) $ are finitely generated $ A $-modules. Moreover, the flatness of $ X $ over $ A $ ensures that the cohomology groups behave well under base change.\n\nThe key point is that the cohomology groups $ \\operatorname{H}^i(X_t, \\mathcal{O}_{X_t} \\otimes_{\\mathcal{O}_{\\mathbb{P}^n_A}} \\mathcal{F}) $ are finitely generated $ A $-modules, and the localization $ \\otimes_A A_a $ for some nonzero $ a \\in A $ will preserve flatness. Since $ A $ is a domain of characteristic 0, and $ X $ is smooth over $ A $, the cohomology groups are also coherent sheaves on $ X_t $, and their localizations at $ a $ are flat over $ A_a $.\n\nAmong the options, **D** is the strongest consequence. It asserts that the localized cohomology modules are flat over $ A_a $, and their rank is independent of $ t $, which is a stronger condition than flatness alone (as in E). The independence of rank over $ t $ is a consequence of the smoothness and the structure of the thickenings, which ensures that the cohomology stabilizes in a controlled way.\n\nAnswer: D"
+  },
+  {
+   "id": "livemath-202602-27",
+   "gold": "A",
+   "pred": "A",
+   "em": 1.0,
+   "gen_tokens": 491,
+   "raw": "The question concerns the relationship between two capacities: the relative capacity $ \\text{cap}(E, \\Omega) $ and the functional $ \\texttt{c}(E) $. These are defined in the context of complex analysis and Sobolev spaces.\n\nThe relative capacity $ \\text{cap}(E, \\Omega) $ is defined using plurisubharmonic functions $ u $ bounded between $-1$ and $0$, and it measures the \"size\" of $ E $ in terms of the integral of the $ n $-th power of the complex Monge\u2013Amp\u00e8re operator $ (dd^c u)^n $.\n\nThe functional $ \\texttt{c}(E) $ is defined using functions $ v \\in W^*(\\Omega) $, which are likely in a Sobolev space, and it measures the \"energy\" of a function that dominates $-1$ in a neighborhood of $ E $.\n\nThe question asks for the strongest statement that can be proved about the uniform comparison between $ \\texttt{c}(E) $ and $ \\text{cap}(E, \\Omega) $.\n\nIn the theory of complex analysis and potential theory, it is known that there is a relationship between these two capacities. Specifically, it is a classical result that the relative capacity $ \\text{cap}(E, \\Omega) $ is comparable to the $ L^2 $-capacity $ \\texttt{c}(E) $, with the comparison involving a power of the capacity, typically $ 1/n $, due to the nature of the complex Monge\u2013Amp\u00e8re operator.\n\nOption A states that there exists a constant $ A > 0 $ such that $ \\texttt{c}(E) \\le A [\\text{cap}(E, \\Omega)]^{1/n} $, and for every subdomain $ D \\Subset \\Omega $, there exists a constant $ A' > 0 $ such that $ \\frac{1}{A'} \\text{cap}(E, \\Omega) \\le \\texttt{c}(E) $. This is the strongest possible statement, as it provides both an upper and a lower bound for the comparison between $ \\texttt{c}(E) $ and $ \\text{cap}(E, \\Omega) $, with the constants depending on the domain.\n\nAnswer: A"
+  },
+  {
+   "id": "livemath-202602-30",
+   "gold": "D",
+   "pred": "E",
+   "em": 0.0,
+   "gen_tokens": 4,
+   "raw": "Answer: E"
+  },
+  {
+   "id": "livemath-202602-34",
+   "gold": "D",
+   "pred": "E",
+   "em": 0.0,
+   "gen_tokens": 234,
+   "raw": "The given condition $\\lambda_{k,p}^{\\rm LS}(\\Omega) < \\mathcal{E}_p(\\Omega)$ implies that the $k$-th Lusternik\u2013Schnirelmann minmax value is strictly less than the first eigenvalue of the Dirichlet $p$-Laplacian. This is a key inequality in the theory of eigenvalues for the $p$-Laplacian, and it is known that under such a condition, the first $k$ minmax values are eigenvalues of the Dirichlet $p$-Laplacian. This result is a direct consequence of the minmax characterization of eigenvalues and the properties of the Lusternik\u2013Schnirelmann category.\n\nOption E is the strongest statement that can be proved under the given assumptions. It not only asserts that the first $k$ minmax values are eigenvalues but also includes an additional result about exponential decay of eigenfunctions when $\\mathcal{E}_p(\\Omega) = +\\infty$, which is a known property in the case of unbounded domains.\n\nAnswer: E"
+  },
+  {
+   "id": "livemath-202602-38",
+   "gold": "A",
+   "pred": "A",
+   "em": 1.0,
+   "gen_tokens": 4,
+   "raw": "Answer: A"
+  },
+  {
+   "id": "livemath-202602-41",
+   "gold": "C",
+   "pred": "A",
+   "em": 0.0,
+   "gen_tokens": 413,
+   "raw": "For surfaces $ S = \\mathbb{R}\\mathrm{P}^2 $ and $ M $ (the M\u00f6bius strip), the group $ \\mathrm{Homeo}_0(S) $ consists of homeomorphisms isotopic to the identity. The commutator subgroup $[G, G]$ is the subgroup generated by all commutators $[g, h] = g h g^{-1} h^{-1}$ for $g, h \\in G$. \n\nFor $ S = \\mathbb{R}\\mathrm{P}^2 $, it is known that $ \\mathrm{Homeo}_0(\\mathbb{R}\\mathrm{P}^2) $ is isomorphic to the group of orientation-preserving diffeomorphisms of the sphere $ S^2 $, and the commutator subgroup of this group is known to be perfect (equal to its own commutator subgroup). Moreover, it is known that the commutator length on this group is unbounded, meaning for every $ N $, there exists an element $ g \\in [G, G] $ such that $ \\operatorname{cl}_G(g) \\geq N $.\n\nFor $ S = M $, the M\u00f6bius strip, the group $ \\mathrm{Homeo}_0(M) $ is also known to have an unbounded commutator length. This is due to the fact that the group is not perfect, and the commutator subgroup is not trivial. The structure of the group and its action on the M\u00f6bius strip allows for the construction of elements with arbitrarily large commutator length.\n\nThus, the strongest statement that can be proved about commutator length on $[\\mathrm{Homeo}_0(S), \\mathrm{Homeo}_0(S)]$ for $ S \\in \\{\\mathbb{R}\\mathrm{P}^2, M\\} $ is that the commutator length is unbounded.\n\nAnswer: A"
+  },
+  {
+   "id": "livemath-202602-45",
+   "gold": "C",
+   "pred": "A",
+   "em": 0.0,
+   "gen_tokens": 4,
+   "raw": "Answer: A"
+  },
+  {
+   "id": "livemath-202602-49",
+   "gold": "B",
+   "pred": "D",
+   "em": 0.0,
+   "gen_tokens": 427,
+   "raw": "The given Stratonovich SDE is $ dF_\\tau = F_\\tau \\circ dB_\\tau $, with $ F_0 = I $, where $ B_\\tau $ is a Brownian motion on $ \\mathfrak{sl}(n) $, the space of traceless $ n \\times n $ matrices. The squared Frobenius norm is $ |F|^2 = \\operatorname{tr}(F^*F) $, and we are to analyze the $ 2p $-th moment $ \\mathbb{E}|F_\\tau|^{2p} $.\n\nThis SDE is a matrix-valued stochastic differential equation driven by Brownian motion on the Lie algebra $ \\mathfrak{sl}(n) $. The Stratonovich form implies that the equation is equivalent to an It\u00f4 SDE with a specific correction term. The solution to this SDE is a stochastic process that evolves by multiplying with the Brownian motion increment in a Stratonovich sense.\n\nThe key insight is that the Frobenius norm squared $ |F_\\tau|^2 $ satisfies a scalar stochastic differential equation. By applying It\u00f4's formula to $ |F_\\tau|^2 $, one can derive a differential equation for the expected value of $ |F_\\tau|^{2p} $, which leads to exponential growth in time.\n\nThe correct result is that the $ 2p $-th moment of the Frobenius norm of $ F_\\tau $ grows exponentially in time with a specific exponent that depends on $ p $ and $ n $. The exact form of the exponent is $ p + \\frac{2p(p-1)}{n+2} $, and the bounds on the moments are exponential with this exponent.\n\nAmong the options, **Option D** states that the $ 2p $-th moment is given exactly by an exponential function with the exponent $ p + \\frac{2p(p-1)}{n+2} $, which matches the known result for this type of SDE.\n\nAnswer: D"
+  },
+  {
+   "id": "livemath-202602-7",
+   "gold": "E",
+   "pred": "A",
+   "em": 0.0,
+   "gen_tokens": 174,
+   "raw": "The statement that the consistently oriented double ray is ubiquitous means that any digraph containing, for every $ n \\in \\mathbb{N} $, $ n $ pairwise disjoint copies of a consistently oriented double ray must contain infinitely many such copies. This is a general statement about all digraphs.\n\nOption A states that for every fixed $ n \\in \\mathbb{N} $, every one-ended digraph containing $ n $ pairwise disjoint copies of a consistently oriented double ray contains infinitely many such copies. This is a direct restatement of the ubiquity condition, but restricted to one-ended digraphs. It is equivalent to the original definition of ubiquity, because it captures the same logical structure: if a digraph (in this case, one-ended) contains finitely many disjoint copies, it must contain infinitely many.\n\nAnswer: A"
+  },
+  {
+   "id": "livemath-202603-10",
+   "gold": "A",
+   "pred": "B",
+   "em": 0.0,
+   "gen_tokens": 4,
+   "raw": "Answer: B"
+  },
+  {
+   "id": "livemath-202603-103",
+   "gold": "B",
+   "pred": "E",
+   "em": 0.0,
+   "gen_tokens": 4,
+   "raw": "Answer: E"
+  },
+  {
+   "id": "livemath-202603-107",
+   "gold": "C",
+   "pred": "D",
+   "em": 0.0,
+   "gen_tokens": 229,
+   "raw": "The recurrence for $\\widetilde u_n(x,\\lambda)$ is defined with integer coefficients, and the initial conditions are $\\widetilde u_{-1} = 0$ and $\\widetilde u_0 = 1$. The recurrence involves only rational coefficients and operations that preserve integrality over $\\mathbb Z[x,\\lambda]$. Therefore, $\\widetilde u_n(x,\\lambda)$ is a polynomial in $x$ and $\\lambda$ with integer coefficients for all $n \\ge 0$.\n\nSince $u_n(b,\\lambda) = \\widetilde u_n(b^2,\\lambda)$, and $\\widetilde u_n(x,\\lambda) \\in \\mathbb Z[x,\\lambda]$, it follows that $u_n(b,\\lambda) \\in \\mathbb Z[b^2,\\lambda]$. This is because substituting $x = b^2$ into a polynomial with integer coefficients in $x$ and $\\lambda$ results in a polynomial in $b^2$ and $\\lambda$ with integer coefficients.\n\nThus, the correct statement is:\n\nAnswer: D"
+  },
+  {
+   "id": "livemath-202603-110",
+   "gold": "A",
+   "pred": "C",
+   "em": 0.0,
+   "gen_tokens": 4,
+   "raw": "Answer: C"
+  },
+  {
+   "id": "livemath-202603-13",
+   "gold": "A",
+   "pred": "C",
+   "em": 0.0,
+   "gen_tokens": 4,
+   "raw": "Answer: C"
+  },
+  {
+   "id": "livemath-202603-17",
+   "gold": "A",
+   "pred": "A",
+   "em": 1.0,
+   "gen_tokens": 190,
+   "raw": "The $j$-invariant of the discriminant binary quartic is a classical invariant associated with the pencil of quadrics. It is defined on the smooth locus $U_{\\mathrm{sm}}$, and it is known that this invariant is invariant under the action of $\\operatorname{PGL}(V)$. Therefore, there exists a rational $\\operatorname{PGL}(V)$-invariant map $p\\colon G \\dashrightarrow \\mathbb P^1$ whose restriction to $U_{\\mathrm{sm}}$ is exactly the $j$-invariant of the discriminant binary quartic.\n\nOption A asserts the existence of such a map and specifies that it is $\\operatorname{PGL}(V)$-invariant. This is the strongest statement among the options, as it includes the invariance property, which is essential for the map to be meaningful in this context.\n\nAnswer: A"
+  },
+  {
+   "id": "livemath-202603-20",
+   "gold": "C",
+   "pred": "E",
+   "em": 0.0,
+   "gen_tokens": 4,
+   "raw": "Answer: E"
+  },
+  {
+   "id": "livemath-202603-24",
+   "gold": "B",
+   "pred": "D",
+   "em": 0.0,
+   "gen_tokens": 4,
+   "raw": "Answer: D"
+  },
+  {
+   "id": "livemath-202603-28",
+   "gold": "E",
+   "pred": "E",
+   "em": 1.0,
+   "gen_tokens": 269,
+   "raw": "The values of $s$ in the range $2^k \\le s < 2^{k+1}$ are all integers from $2^k$ to $2^{k+1} - 1$, inclusive. This range contains $2^k$ integers. The function $F(s)$ is defined as an integer-valued function, and the question is about the multiset of values $F(s)$ for these $s$.\n\nThe key is to understand how the values of $F(s)$ are structured. The expression $3 + \\operatorname{ord}_2(j)$ suggests that the values of $F(s)$ are related to the 2-adic valuation of integers $j$ in a certain range.\n\nOption E states that the multiset is $\\{\\,3 + \\operatorname{ord}_2(j): 1 \\le j \\le 2^k\\,\\}$, with multiplicities. This matches the number of values in the range $2^k \\le s < 2^{k+1}$, which is $2^k$, and the form of the values is consistent with the given function.\n\nOther options either include incorrect ranges for $j$, add extra values not justified by the problem, or misrepresent the structure of the multiset.\n\nAnswer: E"
+  },
+  {
+   "id": "livemath-202603-31",
+   "gold": "E",
+   "pred": "D",
+   "em": 0.0,
+   "gen_tokens": 4,
+   "raw": "Answer: D"
+  },
+  {
+   "id": "livemath-202603-35",
+   "gold": "D",
+   "pred": "E",
+   "em": 0.0,
+   "gen_tokens": 4,
+   "raw": "Answer: E"
+  },
+  {
+   "id": "livemath-202603-39",
+   "gold": "A",
+   "pred": "E",
+   "em": 0.0,
+   "gen_tokens": 4,
+   "raw": "Answer: E"
+  },
+  {
+   "id": "livemath-202603-42",
+   "gold": "E",
+   "pred": "D",
+   "em": 0.0,
+   "gen_tokens": 121,
+   "raw": "The given conditions\u2014disjoint forbidden regions and a unique gradient path\u2014imply that the persistence pair $\\alpha$ can be removed via a single allowed move in the discrete Morse function $h$. This allows for the construction of a new discrete Morse function $h'$ that agrees with $h$ on all critical cells of $\\mathcal V_{h'}$ and has $\\bd(h') = \\bd(h) \\setminus \\{\\alpha\\}$. The key is that the move is allowed and does not affect the critical cells of $\\mathcal V_{h'}$.\n\nAnswer: D"
+  },
+  {
+   "id": "livemath-202603-46",
+   "gold": "D",
+   "pred": "A",
+   "em": 0.0,
+   "gen_tokens": 4,
+   "raw": "Answer: A"
+  },
+  {
+   "id": "livemath-202603-5",
+   "gold": "B",
+   "pred": "B",
+   "em": 1.0,
+   "gen_tokens": 579,
+   "raw": "The question asks about the asymptotic bounds for the function $\\operatorname{NRD}(R_{299},n)$ as $n \\to \\infty$. The key is to compare the lower and upper bounds in each option and determine which one is the tightest and most consistent with known results in computational complexity and analysis of algorithms.\n\n- **Option A** provides a lower bound of $n^3 / 2^{O(\\log^* n)}$ and an upper bound of $n^3 / 2^{\\Omega(\\sqrt{\\log n})}$. This implies that the function decays slower than $2^{\\Omega(\\sqrt{\\log n})}$ but faster than $2^{O(\\log^* n)}$. However, the iterated logarithm $\\log^* n$ grows extremely slowly, and the upper bound here is weaker than the lower bound in some other options.\n\n- **Option B** provides a lower bound of $n^3 / 2^{O(\\sqrt{\\log n})}$ and an upper bound of $n^3 / 2^{\\Omega(\\log^* n)}$. This is the reverse of Option A, and the bounds are tighter than those in Option A. The lower bound here is stronger than the upper bound in Option A, and the upper bound is weaker than the lower bound in Option A.\n\n- **Option C** only provides an upper bound of $n^3 / 2^{\\Omega(\\log^* n)}$, which is weaker than the bounds in Options A and B. It does not provide a lower bound, so it is not a two-sided bound.\n\n- **Option D** provides a lower bound of $n^3 / 2^{O((\\log n)^{1/3})}$ and an upper bound of $n^3 / 2^{\\Omega(\\sqrt{\\log n})}$. The lower bound here is weaker than the lower bound in Option B, and the upper bound is the same as in Option A. This makes the bounds less tight than those in Option B.\n\n- **Option E** provides a lower bound of $n^3 / 2^{O(\\log^* n)}$ and an upper bound of $n^3 / (\\log n)^{\\Omega(1)}$. The upper bound here is weaker than the upper bound in Option B, and the lower bound is the same as in Option A. This makes the bounds less tight than those in Option B.\n\nAmong all the options, **Option B** provides the tightest two-sided bound, with the lower bound being stronger than the upper bound in Option A and the upper bound being stronger than the lower bound in Option A. It is also more consistent with known results in the analysis of algorithms and complexity theory.\n\nAnswer: B"
+  },
+  {
+   "id": "livemath-202603-53",
+   "gold": "D",
+   "pred": "E",
+   "em": 0.0,
+   "gen_tokens": 4,
+   "raw": "Answer: E"
+  },
+  {
+   "id": "livemath-202603-57",
+   "gold": "E",
+   "pred": "E",
+   "em": 1.0,
+   "gen_tokens": 4,
+   "raw": "Answer: E"
+  },
+  {
+   "id": "livemath-202603-60",
+   "gold": "C",
+   "pred": "B",
+   "em": 0.0,
+   "gen_tokens": 4,
+   "raw": "Answer: B"
+  },
+  {
+   "id": "livemath-202603-64",
+   "gold": "A",
+   "pred": "C",
+   "em": 0.0,
+   "gen_tokens": 4,
+   "raw": "Answer: C"
+  },
+  {
+   "id": "livemath-202603-68",
+   "gold": "B",
+   "pred": "B",
+   "em": 1.0,
+   "gen_tokens": 151,
+   "raw": "The key issue is the behavior of the bias in the normal equations as $ T \\to \\infty $ with fixed $ \\Delta t $. In weak regression for SDEs, the bias typically grows with $ T $, and if it grows faster than the variance, the estimator remains asymptotically biased. The correct analysis shows that the bias grows like $ O(T \\Delta t^{3/2}) $, not $ O(T \\Delta t) $, and normalizing by $ T $ reduces the bias to $ O(\\Delta t^{3/2}) $. However, increasing $ T $ alone does not reduce the error because the bias still dominates. Thus, the estimator is not consistent at fixed sampling rate.\n\nAnswer: B"
+  },
+  {
+   "id": "livemath-202603-71",
+   "gold": "A",
+   "pred": "A",
+   "em": 1.0,
+   "gen_tokens": 4,
+   "raw": "Answer: A"
+  },
+  {
+   "id": "livemath-202603-75",
+   "gold": "C",
+   "pred": "C",
+   "em": 1.0,
+   "gen_tokens": 329,
+   "raw": "The effective action $S^W_{\\mathrm{eff}}(t)$ is constructed from the logarithm of the spanning tree partition function $\\mathcal{D}_W(t)$, which is a sum over all spanning trees weighted by the product of edge weights and exponential terms. The integral $K(W)$ involves a convex function $f$ of the weighted sum $\\sum p_i e^{t_i}$, and the exponential of the negative effective action.\n\nThe effective action includes a term involving the logarithm of $\\mathcal{D}_W(t)$, which is a sum over all spanning trees. Increasing an edge weight $W_{ij}$ increases the contribution of all spanning trees that include that edge, thereby increasing $\\mathcal{D}_W(t)$. The logarithm of $\\mathcal{D}_W(t)$ is then increased, and the effective action $S^W_{\\mathrm{eff}}(t)$ is decreased. The exponential of the negative effective action is thus increased, and the integral $K(W)$ is increased.\n\nHowever, the convexity of $f$ and the structure of the effective action imply that increasing a single edge weight $W_{ij}$ leads to a non-increasing effect on $K(W)$, as the effective action is designed to penalize larger weights. This is consistent with the structure of the effective action and the convexity of $f$.\n\nThe strongest conclusion is that for each edge weight $W_{ij}$, with all other weights held fixed, $K(W)$ is a non-increasing function of $W_{ij}$.\n\nAnswer: C"
+  },
+  {
+   "id": "livemath-202603-79",
+   "gold": "D",
+   "pred": "E",
+   "em": 0.0,
+   "gen_tokens": 191,
+   "raw": "The $L$-polynomial of an elliptic curve over $\\mathbb{F}_q(t)$ is known to factor completely into cyclotomic polynomials under certain conditions, such as when the discriminant $4+27D(t)^2$ is squarefree. This is a well-established result in the theory of elliptic curves over function fields. Furthermore, the Tate\u2013Shafarevich group $\\Sha(E_D)$ has an order that is determined by the cyclotomic factorization type of the $L$-polynomial. This is because the order of $\\Sha(E_D)$ is related to the product of the local factors of the $L$-function, which in turn depend on the cyclotomic factors of the $L$-polynomial. Therefore, the cyclotomic factorization type of the $L$-polynomial determines the order of $\\Sha(E_D)$.\n\nAnswer: E"
+  },
+  {
+   "id": "livemath-202603-82",
+   "gold": "D",
+   "pred": "D",
+   "em": 1.0,
+   "gen_tokens": 187,
+   "raw": "The correct answer is based on known results in the theory of pro-$p$ Demushkin groups. A pro-$p$ Demushkin group $G$ with minimal number of generators $n$, torsion invariant $q$, and orientation character $\\chi$ has specific properties depending on the value of $n$ and $p$.\n\n- If $n$ is divisible by 4, then $G$ is a pro-$p$ limit group.\n- If $p = 2$ and $n > 2$ is even, then $G$ is a pro-2 limit group.\n- In both cases, $G$ is fully residually free pro-$p$.\n\nThis conclusion is consistent with the structure of pro-$p$ Demushkin groups and their residual properties. The condition on the orientation character in option A is not required for full residual freeness in these cases.\n\nAnswer: D"
+  },
+  {
+   "id": "livemath-202603-86",
+   "gold": "D",
+   "pred": "B",
+   "em": 0.0,
+   "gen_tokens": 4,
+   "raw": "Answer: B"
+  },
+  {
+   "id": "livemath-202603-9",
+   "gold": "A",
+   "pred": "D",
+   "em": 0.0,
+   "gen_tokens": 4,
+   "raw": "Answer: D"
+  },
+  {
+   "id": "livemath-202603-93",
+   "gold": "A",
+   "pred": "C",
+   "em": 0.0,
+   "gen_tokens": 4,
+   "raw": "Answer: C"
+  },
+  {
+   "id": "livemath-202603-97",
+   "gold": "C",
+   "pred": "E",
+   "em": 0.0,
+   "gen_tokens": 410,
+   "raw": "The Poisson--Hermite semigroup $(P_t)_{t\\ge0}$ is known to not satisfy any non-trivial $L^p\\to L^q$ operator-norm estimates for $1 < p < q < \\infty$, as it is not bounded on $L^p$ for any $p \\neq 2$. Similarly, the Poisson--Laguerre semigroup $(P_t^{\\alpha})_{t\\ge0}$ with $\\alpha > -1$ also fails to satisfy such estimates for $1 < p < q < \\infty$. \n\nFor the Poisson--Jacobi semigroup $(P_t^{\\alpha,\\beta})_{t\\ge0}$ with $\\alpha, \\beta \\ge -1/2$, the operator norms $\\|P_t^{\\alpha,\\beta}\\|_{p\\to q}$ are known to satisfy the estimate $\\|P_t^{\\alpha,\\beta}\\|_{p\\to q} \\lesssim (1 \\wedge t)^{-(p^{-1} - q^{-1})(\\max\\{\\alpha,\\beta\\} + 1)}$ for $1 \\le p \\le q \\le \\infty$ and $t > 0$. This is consistent with the known decay rates of the semigroup on these spaces.\n\nOption E incorrectly states the exponent as $(p^{-1} - q^{-1})(\\alpha + \\beta + 2)$, which is not the correct form. Option D has a similar exponent but restricts $q < \\infty$, which is not necessary. Option B incorrectly claims that the norms are finite under a condition involving $q - 1 \\le e^{2t}(p - 1)$, which is not valid for the Poisson--Hermite and Poisson--Laguerre semigroups. Option C is not a valid choice as it does not provide a specific answer.\n\nAnswer: E"
+  },
+  {
+   "id": "livemath-202604-10",
+   "gold": "D",
+   "pred": "C",
+   "em": 0.0,
+   "gen_tokens": 140,
+   "raw": "The descent algebra $\\Des_F(\\mathrm{A}_{n-1})$ over a field $F$ of characteristic $p$ has finite representation type if and only if the field has characteristic $p = 2$ and $n \\leq 3$, or $p = 3$ and $n \\leq 4$, or $p \\geq 5$ and $n \\leq 4$. This result is well-established in the theory of descent algebras and their representation types.\n\nOption C correctly captures this condition. It specifies the exact constraints on $p$ and $n$ for the descent algebra to have finite representation type.\n\nAnswer: C"
+  },
+  {
+   "id": "livemath-202604-103",
+   "gold": "E",
+   "pred": "B",
+   "em": 0.0,
+   "gen_tokens": 173,
+   "raw": "The non-wandering set of a map includes all points that are not eventually mapped out of any neighborhood. For the second iterate $ L_{a,b}^2 $, the non-wandering set can include more than just fixed points, especially if there are periodic orbits. The distinguished period-two orbit $ \\ell = \\{P, P'\\} $ is a candidate for being part of the non-wandering set. However, the fixed points $ X, Y $ are also potential candidates. Statement B correctly identifies that the non-wandering set is a subset of $ \\ell \\cup \\{X, Y\\} $, and further notes that $ \\ell $ is an eventually trapping region, which aligns with the behavior of such dynamical systems. Other options either overstate or mischaracterize the non-wandering set.\n\nAnswer: B"
+  },
+  {
+   "id": "livemath-202604-107",
+   "gold": "C",
+   "pred": "B",
+   "em": 0.0,
+   "gen_tokens": 242,
+   "raw": "The extension class $ m_{p+q} $ corresponds to the middle term in the extension of MHS, and its image under the given isomorphism is determined by the geometry of the hyperelliptic curve. The second component of the image is a class in $ \\mathrm{Pic}^0(C) $, and it is known that for a hyperelliptic curve, the difference $ p' + q' - p - q $ is related to the canonical divisor $ K_C $ and the base point $ b $.\n\nIn particular, the correct expression for the second component is:\n$$\np' + q' - p - q + (2g - 2)b - K_C\n$$\nThis is because the canonical divisor $ K_C $ is related to the hyperelliptic involution and the base point, and the term $ (2g - 2)b $ accounts for the degree of the canonical divisor.\n\nThe first component of the image is a 2-torsion point in $ JH $, which is not uniquely determined by the given data, but it is known to exist. Therefore, the correct answer is:\n\nAnswer: B"
+  },
+  {
+   "id": "livemath-202604-13",
+   "gold": "B",
+   "pred": "A",
+   "em": 0.0,
+   "gen_tokens": 128,
+   "raw": "The Hodge-to-de Rham spectral sequence of a curve $X$ degenerates at the $E_2$-page if and only if the curve is a **rational curve** with **only rational singularities**. For an integral projective curve with local complete intersection singularities, this is equivalent to the condition that all singularities are **quasihomogeneous local complete intersection singularities** and **no singularity has maximal embedding dimension**. This ensures that the Hodge numbers match the Betti numbers, leading to the degeneration of the spectral sequence at $E_2$.\n\nAnswer: A"
+  },
+  {
+   "id": "livemath-202604-17",
+   "gold": "A",
+   "pred": "C",
+   "em": 0.0,
+   "gen_tokens": 4,
+   "raw": "Answer: C"
+  },
+  {
+   "id": "livemath-202604-20",
+   "gold": "D",
+   "pred": "D",
+   "em": 1.0,
+   "gen_tokens": 4,
+   "raw": "Answer: D"
+  },
+  {
+   "id": "livemath-202604-24",
+   "gold": "B",
+   "pred": "C",
+   "em": 0.0,
+   "gen_tokens": 4,
+   "raw": "Answer: C"
+  },
+  {
+   "id": "livemath-202604-28",
+   "gold": "A",
+   "pred": "C",
+   "em": 0.0,
+   "gen_tokens": 4,
+   "raw": "Answer: C"
+  },
+  {
+   "id": "livemath-202604-31",
+   "gold": "D",
+   "pred": "C",
+   "em": 0.0,
+   "gen_tokens": 278,
+   "raw": "The problem of finding an odd cycle through two specified vertices $ u $ and $ v $ in an undirected graph is closely related to the concept of biconnected components and parity of cycles. A key insight is that if $ u $ and $ v $ lie in the same biconnected component, then any cycle through $ u $ and $ v $ must pass through the biconnected component, and the parity of such cycles can be analyzed using properties of biconnected components and DFS-based cycle detection.\n\nOption C states that there exists a deterministic algorithm that finds an odd cycle through $ u $ and $ v $ in $ \\mathrm{O}(n + m) $ time whenever $ u $ and $ v $ lie in the same biconnected component. This is a well-established result in graph theory, as it leverages the properties of biconnected components and the fact that in such components, the parity of cycles can be determined efficiently.\n\nOther options either overstate the generality of the result (like D, which claims the algorithm works for all graphs) or include unnecessary conditions or outcomes (like A and E, which involve outputting multiple cycles or reporting about all cycles). Option B is also incorrect because it claims the algorithm can output an odd cycle in polynomial time, which is not guaranteed in all cases.\n\nAnswer: C"
+  },
+  {
+   "id": "livemath-202604-35",
+   "gold": "A",
+   "pred": "D",
+   "em": 0.0,
+   "gen_tokens": 498,
+   "raw": "The question asks for the strongest statement that asserts codimension-$p$ cycle classes on a smooth projective variety $X$ are uniformly obtained from codimension-2 classes on a single smooth projective surface. This is a form of the \"Bloch conjecture\" or related conjectures in algebraic cycles, which suggest that certain cycle classes on a variety can be generated by correspondences from surfaces.\n\nLet\u2019s analyze the options:\n\n- **Option A** is vague and does not provide a concrete statement, so it is not the strongest.\n- **Option B** states that there exists a surface $S$ and a correspondence $\\Gamma$ such that $\\Gamma_*:A^2(S)\\to A^p(X)$ is surjective. This is a strong statement, but it does not specify how $S$ is constructed or give any additional structure.\n- **Option C** claims that $S$ is obtained as a hyperplane section of the Fano variety of codimension-$p$ linear subspaces of $X$, and that *every* correspondence on $S\\times X$ induces a surjection. This is too strong, as it would imply that all such correspondences are surjective, which is not generally true.\n- **Option D** states that $S$ is obtained as a hyperplane section of the Grassmannian parametrizing codimension-$p$ linear subspaces of the ambient projective space of $X$, and that there exists a correspondence $\\Gamma$ such that $\\Gamma_*:A^2(S)\\to A^p(X)$ is surjective. This is a specific construction of $S$ and a specific correspondence, and it is a strong and plausible statement.\n- **Option E** introduces a curve $C \\subset S$ and requires that every class in $A^p(X)$ can be written as $\\Gamma_*(z)$ for some $z \\in A^2(S)$ represented by a degree-zero zero-cycle supported on $C$. This is even stronger than B and D, as it imposes additional structure on the cycle $z$, but it is not necessarily the strongest in terms of generality.\n\nAmong these, **Option D** provides a specific construction of the surface $S$ and a correspondence $\\Gamma$ such that the induced map is surjective. It is the strongest statement that asserts the existence of such a surface and correspondence without overgeneralizing or imposing unnecessary conditions.\n\nAnswer: D"
+  },
+  {
+   "id": "livemath-202604-39",
+   "gold": "D",
+   "pred": "C",
+   "em": 0.0,
+   "gen_tokens": 4,
+   "raw": "Answer: C"
+  },
+  {
+   "id": "livemath-202604-42",
+   "gold": "D",
+   "pred": "C",
+   "em": 0.0,
+   "gen_tokens": 452,
+   "raw": "The Newhouse domain is characterized by the presence of persistent homoclinic tangencies, which are associated with chaotic dynamics and non-uniform hyperbolicity. In such settings, the Lyapunov exponents, which measure the exponential growth or decay of tangent vectors under the action of the derivative of a diffeomorphism, may fail to exist or be non-uniform.\n\nOption C states that there exists a residual subset $\\mathcal D$ of the Newhouse domain such that for every $f \\in \\mathcal D$, there exist nonempty open sets $U \\subset M$ and $V \\subset \\mathbb R^2$ (under a local trivialization) for which the Lyapunov exponent does not exist for every $x \\in U$ and every nonzero $v \\in V$. A residual set is a countable intersection of dense open sets, and thus is dense in the topology of the space. This is a stronger statement than just density, as residual sets are \"large\" in the Baire category sense.\n\nOption D is similar to C, but it uses \"dense subset\" instead of \"residual subset.\" While dense subsets are also \"large\" in a topological sense, residual subsets are more robust and are typically used in statements about generic behavior in dynamical systems.\n\nOption E is weaker than C and D, as it only guarantees the non-existence of the Lyapunov exponent for every $x \\in U$ and every nonzero $v \\in \\mathbb R^2$, without specifying a particular open set $V$.\n\nOption A is weaker than C and D, as it only guarantees the non-existence of the Lyapunov exponent for a continuous nonvanishing vector field on an open set $U$, and not for all nonzero vectors in an open set $V$.\n\nOption B is similar to C and D, but it uses \"dense open set\" instead of \"nonempty open set\" for $U$, which is not necessary for the conclusion about the non-existence of the Lyapunov exponent.\n\nTherefore, the strongest statement that can be proved about existence in this setting is given by option C.\n\nAnswer: C"
+  },
+  {
+   "id": "livemath-202604-46",
+   "gold": "B",
+   "pred": "E",
+   "em": 0.0,
+   "gen_tokens": 298,
+   "raw": "The key assumptions are that $\\pi$ is a convolution of a compactly supported distribution $\\pi_{\\mathrm{pre}}$ with a Gaussian of variance $\\gamma^2$, and that the score estimator $\\widehat s_\\sigma$ has a bounded error in expectation over $\\pi_\\sigma$. The error bound is given in terms of $\\sigma$, and the question asks about the strongest existence statement for a DDPM sampling algorithm.\n\nOption A weakens the error bound by changing the expectation from being over $\\pi_\\sigma$ to $\\pi$, which is not supported by the given assumptions. Option B is too vague about the error bound. Option C has a larger total variation distance (0.1) than the other options, which is less strong. Option D allows queries at a fixed noise level, which is a stronger condition than what is implied by the assumptions. Option E allows queries at only $O(\\log d)$ distinct noise levels, which is a more efficient setup than D, but still more restrictive than what is implied by the assumptions.\n\nThe strongest existence statement under the given assumptions is that there exists a DDPM sampling algorithm with total variation distance at most $0.01$ from $\\pi$ and that uses $\\widetilde O(d)$ queries to the score estimator, with the queried noise parameters drawn from only $O(\\log d)$ distinct values of $\\sigma$. This is consistent with the assumptions and provides the most efficient setup.\n\nAnswer: E"
+  },
+  {
+   "id": "livemath-202604-5",
+   "gold": "C",
+   "pred": "A",
+   "em": 0.0,
+   "gen_tokens": 4,
+   "raw": "Answer: A"
+  },
+  {
+   "id": "livemath-202604-53",
+   "gold": "C",
+   "pred": "B",
+   "em": 0.0,
+   "gen_tokens": 4,
+   "raw": "Answer: B"
+  },
+  {
+   "id": "livemath-202604-57",
+   "gold": "E",
+   "pred": "E",
+   "em": 1.0,
+   "gen_tokens": 4,
+   "raw": "Answer: E"
+  },
+  {
+   "id": "livemath-202604-60",
+   "gold": "D",
+   "pred": "A",
+   "em": 0.0,
+   "gen_tokens": 417,
+   "raw": "The question asks for the strongest statement about the behavior of the infimum of scalar curvature under small $L^\\infty$-perturbations of a smooth metric $g_0$ on the Euclidean unit ball. The key is to determine the best possible inequality that holds uniformly for all such perturbations.\n\nOption A states that the infimum of scalar curvature for $g_\\varepsilon$ is bounded above by the infimum of scalar curvature for $g_0$ plus a term proportional to $\\varepsilon^{1/2}$. This is a standard result in geometric analysis, where the scalar curvature is a smooth function of the metric, and perturbations in the metric lead to perturbations in the scalar curvature. The $L^\\infty$-norm of the perturbation controls the size of the change in scalar curvature, and the exponent $1/2$ is consistent with the regularity of the scalar curvature as a function of the metric.\n\nOption B claims a bound with exponent $1/3$, which is weaker than $1/2$, and thus less precise.\n\nOption C claims a linear bound in $\\varepsilon$, which is stronger than the $1/2$ bound in A, but this is not generally valid. The scalar curvature is not a linear function of the metric, and the dependence is typically sublinear in the $L^\\infty$-norm of the perturbation.\n\nOption D is not a specific statement, so it is not the strongest.\n\nOption E focuses on the scalar curvature at the origin, $\\mathrm{scal}_{g_\\varepsilon}(0)$, rather than the infimum over the entire ball. This is a narrower statement and does not capture the full behavior of the scalar curvature.\n\nThus, the strongest and most accurate statement is given in **Option A**, as it provides a uniform bound on the infimum of scalar curvature under small $L^\\infty$-perturbations of the metric, with the correct dependence on the perturbation size.\n\nAnswer: A"
+  },
+  {
+   "id": "livemath-202604-64",
+   "gold": "E",
+   "pred": "B",
+   "em": 0.0,
+   "gen_tokens": 390,
+   "raw": "The given PDE is a system of elliptic equations involving the Pucci extremal operators and weighted gradients. The question asks for the strongest quantitative estimate that holds under the given conditions, specifically when $ u(0) > 0 $.\n\nOption A provides an estimate for the supremum of $ u $ over a scaled domain $ K_r(u(0)) $, but it does not include a corresponding estimate for the infimum. This makes it weaker than options B, C, and D, which include both upper and lower bounds.\n\nOption B includes both an upper and a lower bound, but the lower bound is given in terms of $ C_0u(0) $, and the constants $ \\mu_1 $ and $ \\mu_2 $ depend on $ u(0) $, which is not ideal for a general quantitative estimate.\n\nOption C is similar to B, but the lower bound is given in terms of $ C_0u(0) $, and the constants $ \\mu_1 $ and $ \\mu_2 $ depend on $ u(0) $, which again is not ideal for a general estimate.\n\nOption D includes both an upper and a lower bound, and the lower bound is given in terms of $ C_0u(0) $, but the constants $ \\mu_1 $ and $ \\mu_2 $ depend on $ u(0) $, which is not ideal for a general estimate.\n\nOption E suggests that a stronger result can be proven, but the question asks for the strongest quantitative estimate that holds, not for a stronger result.\n\nTherefore, the strongest quantitative estimate that holds is given in option B, which includes both an upper and a lower bound, and the constants $ \\mu_1 $ and $ \\mu_2 $ depend on $ u(0) $, which is not ideal for a general estimate.\n\nAnswer: B"
+  },
+  {
+   "id": "livemath-202604-68",
+   "gold": "B",
+   "pred": "A",
+   "em": 0.0,
+   "gen_tokens": 4,
+   "raw": "Answer: A"
+  },
+  {
+   "id": "livemath-202604-71",
+   "gold": "D",
+   "pred": "C",
+   "em": 0.0,
+   "gen_tokens": 289,
+   "raw": "The question concerns the stability of solutions to a semilinear heat equation with a specific form of nonlinearity and initial data perturbations. The key is to determine the strongest finite-codimension stability statement for Schwartz perturbations $\\varphi_0$ within the space $X_{s,k}^{\\omega}$.\n\nOption A suggests a dichotomy based on the value of $p$, which is not consistent with the general nature of stability results in such equations. It introduces a conditional statement that is not necessary for the strongest finite-codimension stability.\n\nOption B introduces a finite number of correction terms with linear functionals, but it assumes a specific form of the coefficients $a_j(\\varphi_0)$, which is not required for the strongest stability statement.\n\nOption C is more general and does not assume a specific form for the coefficients $a_j(\\varphi_0)$. It allows for the choice of coefficients depending on $\\varphi_0$, which is consistent with the strongest finite-codimension stability result.\n\nOption D is vague and does not provide a specific answer, which is not suitable for a direct question like this.\n\nOption E adds a smoothness condition on the coefficients $a_j(\\varphi_0)$, which is stronger than necessary and not required for the strongest finite-codimension stability.\n\nTherefore, the strongest finite-codimension stability statement is given in Option C.\n\nAnswer: C"
+  },
+  {
+   "id": "livemath-202604-75",
+   "gold": "A",
+   "pred": "D",
+   "em": 0.0,
+   "gen_tokens": 201,
+   "raw": "Given the hypotheses, the scalar curvature is constant and equal to $ R = \\frac{n-2}{2} $, and the level hypersurfaces $ \\{f = c\\} $ have vanishing Weyl curvature. This implies that the manifold is locally conformally flat in the direction of the gradient of $ f $, and the Ricci curvature is related to the metric via the soliton equation. The vanishing Weyl curvature on the level hypersurfaces, combined with the constant scalar curvature, strongly restricts the geometry of the manifold.\n\nThe most precise and strongest conclusion that must hold is that the manifold is isometric to a finite quotient of $ N^{n-2} \\times \\mathbb{R}^2 $, where $ N $ is an $(n-2)$-dimensional Einstein manifold of positive scalar curvature. This conclusion is consistent with the rigidity of shrinking gradient Ricci solitons under these geometric constraints.\n\nAnswer: D"
+  },
+  {
+   "id": "livemath-202604-79",
+   "gold": "C",
+   "pred": "B",
+   "em": 0.0,
+   "gen_tokens": 355,
+   "raw": "Given the conditions, $ f $ has two invariant Fatou components $ U $ and $ V $, with $ U $ being completely invariant and $ V $ invariant but not completely invariant. All critical values lie in $ U \\cup V $. \n\nSince $ U $ is completely invariant, it is a Fatou component that maps to itself under $ f $, and its preimage under $ f $ is also itself. This implies that $ U $ is a periodic Fatou component. The fact that $ V $ is invariant but not completely invariant suggests that $ f(V) \\subseteq V $, but $ f^{-1}(V) \\neq V $, so $ V $ is not a periodic component.\n\nThe critical values being in $ U \\cup V $ implies that the dynamics on the Julia set are influenced by the behavior of $ f $ on these components. Since $ U $ is completely invariant, it does not contribute to the boundary of the Julia set. However, $ V $, being invariant but not completely invariant, may contribute to the boundary of the Julia set.\n\nIn such a setting, the Julia set $ J(f) $ is typically disconnected. The presence of two invariant Fatou components and the distribution of critical values suggest that the Julia set cannot be a totally disconnected Cantor set (as in option A), nor can it be a Cantor set with bubbles or a Cantor set of circles (options C and E), because these structures imply more specific topological properties not necessarily implied by the given conditions. Option D adds the condition that every connected component is a Jordan curve, which is not supported by the given information.\n\nThus, the strongest conclusion is that the Julia set $ J(f) $ is disconnected.\n\nAnswer: B"
+  },
+  {
+   "id": "livemath-202604-82",
+   "gold": "B",
+   "pred": "B",
+   "em": 1.0,
+   "gen_tokens": 4,
+   "raw": "Answer: B"
+  },
+  {
+   "id": "livemath-202604-86",
+   "gold": "E",
+   "pred": "D",
+   "em": 0.0,
+   "gen_tokens": 437,
+   "raw": "The question concerns the relationship between the hyperbolic length $L$ of the sides of an equilateral triangle $D$ in the hyperbolic plane and the minimal total hyperbolic length $\\theta$ of a $\\theta$-barrier $F$ for $D$. A $\\theta$-barrier is defined as a set such that every geodesic intersecting $D$ also intersects $F$, and the total length of $F$ is at most $\\theta$.\n\nIn hyperbolic geometry, the concept of a barrier for a region is closely related to the geometry of the region and the properties of geodesics. For an equilateral triangle in the hyperbolic plane, the minimal barrier must intersect all geodesics that intersect the triangle. This is a non-trivial geometric constraint, and the minimal length of such a barrier depends on the geometry of the triangle and the hyperbolic structure.\n\nThe options provided are inequalities that relate $\\theta$ to $L$. The question asks for the **strongest** conclusion that must hold about $\\theta$, meaning the inequality that gives the **lowest** lower bound for $\\theta$ (since a stronger conclusion would imply a larger lower bound).\n\nAmong the options:\n\n- A. $\\theta \\geq \\frac{1}{2^9}\\sqrt{L}-\\frac{1}{8}$\n- B. $\\theta \\geq \\frac{L}{11}-\\frac{1}{6}$\n- C. $\\theta \\geq \\frac{L}{12}-\\frac{1}{7}$\n- D. $\\theta \\geq \\frac{L}{12}-\\frac{3}{16}$\n- E. One of the remaining options is correct, but a stronger result can be proven.\n\nOption D has the smallest coefficient for $L$ ($\\frac{1}{12}$) and the smallest constant term ($-\\frac{3}{16}$), which implies the **strongest** lower bound for $\\theta$. Therefore, it is the **strongest** conclusion that must hold.\n\nAnswer: D"
+  },
+  {
+   "id": "livemath-202604-9",
+   "gold": "A",
+   "pred": "B",
+   "em": 0.0,
+   "gen_tokens": 4,
+   "raw": "Answer: B"
+  },
+  {
+   "id": "livemath-202604-93",
+   "gold": "E",
+   "pred": "C",
+   "em": 0.0,
+   "gen_tokens": 248,
+   "raw": "The Fourier ratio $\\operatorname{FR}(\\mu_R)$ measures the ratio of the $L^1$-norm to the $L^2$-norm of the Fourier transform of the truncated M\\\"obius function $\\mu_R$. A key result in analytic number theory, particularly in the context of the M\\\"obius function and its Fourier analysis, is that the Fourier ratio satisfies a certain asymptotic lower bound.\n\nIt is known that for the family $(\\mu_R)_{R \\ge 1}$, the Fourier ratio $\\operatorname{FR}(\\mu_R)$ satisfies the bound:\n$$\n\\operatorname{FR}(\\mu_R) \\gg_\\epsilon R^{-1/4 - 2\\epsilon}\n$$\nfor every $\\epsilon > 0$ and all sufficiently large $R$. This result is stronger than the bounds in options A and B, and it is also more precise than the bound in option D, which includes an absolute constant $c$ but does not allow for the same level of flexibility in the exponent.\n\nOption E is not correct because the strongest known result is already captured in option C, and no stronger result is known to hold unconditionally.\n\nAnswer: C"
+  },
+  {
+   "id": "livemath-202604-97",
+   "gold": "D",
+   "pred": "C",
+   "em": 0.0,
+   "gen_tokens": 162,
+   "raw": "The system $(NS_\\kappa)$ is a non-isentropic Navier--Stokes model for a perfect gas on the torus $\\mathbb T$ with time on $\\mathbb R_+$. The initial data satisfy bounded density and finite energy conditions. A \"a la Hoff\" solution requires positivity of density and temperature, along with specific a priori estimates.\n\nOption C is the strongest existence-and-uniqueness statement. It asserts not only the existence and uniqueness of a global \"a la Hoff\" solution but also that the bounds and control constants can be chosen depending on $C_0$, $c_v$, $\\gamma$, $\\overline\\kappa$, $\\mu$, and $T$, which is a stronger result than mere existence or uniqueness without such dependence.\n\nAnswer: C"
+  },
+  {
+   "id": "livemath-202605-10",
+   "gold": "C",
+   "pred": "B",
+   "em": 0.0,
+   "gen_tokens": 140,
+   "raw": "The classification of when $ K $ and $ K(\\ell,0) $ are $ S $-equivalent depends on the properties of the Seifert matrix $ M $. For genus-one knots, the key condition is that $ a_{22} = 0 $, which is necessary for the $ S $-equivalence. Additionally, the divisibility condition involves $ a_{12} + a_{21} $ and $ \\ell $, but it is not required for full $ S $-equivalence. The divisibility condition is only relevant for unimodular congruence, not for the full $ S $-equivalence.\n\nAnswer: B"
+  },
+  {
+   "id": "livemath-202605-14",
+   "gold": "C",
+   "pred": "E",
+   "em": 0.0,
+   "gen_tokens": 4,
+   "raw": "Answer: E"
+  },
+  {
+   "id": "livemath-202605-18",
+   "gold": "E",
+   "pred": "D",
+   "em": 0.0,
+   "gen_tokens": 371,
+   "raw": "The given equation is a nonlinear Schr\u00f6dinger equation with a convolution nonlinearity involving the Riesz potential $ I_\\alpha $ and a power-type nonlinearity. The exponent $ p $ is specified as energy-critical, which is a key condition for well-posedness in such problems.\n\nThe energy-critical exponent $ p = 2 + \\frac{\\alpha - n + 4 - 2b}{n - 2} $ ensures that the nonlinearity is scaling-invariant with respect to the energy space $ H^1(\\mathbb{R}^n) $. This is a crucial property for local well-posedness in the energy space.\n\nThe condition $ \\max\\{0, n - 4\\} < \\alpha < n $ and $ 0 < b \\le \\frac{\\alpha - n + 4}{n} $ ensures that the nonlinearity is well-defined and that the convolution term is integrable in the appropriate function spaces.\n\nThe correct description of local well-posedness for such a problem is that for each initial data $ u_0 \\in H^1(\\mathbb{R}^n) $, there exists a time $ T > 0 $ and a unique solution $ u \\in C([0, T]; H^1(\\mathbb{R}^n)) \\cap L^q([0, T]; H^{1, r}(\\mathbb{R}^n)) $, where $ (q, r) $ is a Schr\u00f6dinger admissible pair satisfying $ \\frac{2}{q} + \\frac{n}{r} = \\frac{n}{2} $, and the solution depends continuously on the initial data.\n\nThis matches the description in option **D**.\n\nAnswer: D"
+  },
+  {
+   "id": "livemath-202605-21",
+   "gold": "D",
+   "pred": "E",
+   "em": 0.0,
+   "gen_tokens": 95,
+   "raw": "Topological symmetric homology, denoted $\\mathrm{T}\\Sigma(R)$, is a construction associated to the symmetric crossed simplicial group $\\Delta\\Sigma$. It is known to be a refinement of topological Hochschild homology and is closely related to the free $\\mathbb{E}_\\infty$-ring spectrum on the underlying spectrum of $R$, after forgetting the $\\mathbb{E}_1$-multiplication.\n\nAnswer: E"
+  },
+  {
+   "id": "livemath-202605-25",
+   "gold": "D",
+   "pred": "C",
+   "em": 0.0,
+   "gen_tokens": 409,
+   "raw": "The question concerns the existence of distinct partitions $\\lambda$ and $\\mu$ of the same length $2j$ (for $j \\ge 3$) such that their sizes $|\\lambda| = |\\mu|$ and their $j$-products $\\pre_j(\\lambda) = \\pre_j(\\mu)$. \n\nOption A claims that for every partition $\\lambda$ of length $2j$, there exists a distinct partition $\\mu$ of the same length with the same size and the same $j$-products. This is too strong, as it asserts the existence of such a $\\mu$ for every $\\lambda$, which is not necessarily guaranteed.\n\nOption B describes a specific construction of a partition $\\mu$ from $\\lambda$, but it does not guarantee that $\\mu$ is distinct from $\\lambda$, nor does it ensure that $\\pre_j(\\lambda) = \\pre_j(\\mu)$ in all cases.\n\nOption C states that for every $j \\ge 3$, there exist distinct partitions $\\lambda$ and $\\mu$ of length $2j$ with the same size and the same $j$-products. This is a weaker but more plausible claim, as it only asserts the existence of such pairs, not for every $\\lambda$.\n\nOption D suggests that a stronger result can be proven, but it does not provide the strongest existence statement itself.\n\nOption E claims that for every $j \\ge 3$, there exist infinitely many pairs of distinct partitions $\\lambda$ and $\\mu$ of length $2j$ with the same size, the same $j$-products, and different total products. This is a stronger claim than C, but it is not necessarily true unless additional constraints are met.\n\nThe strongest valid existence statement is that for every $j \\ge 3$, there exist distinct partitions $\\lambda$ and $\\mu$ of length $2j$ with the same size and the same $j$-products. This is the content of Option C.\n\nAnswer: C"
+  },
+  {
+   "id": "livemath-202605-29",
+   "gold": "B",
+   "pred": "B",
+   "em": 1.0,
+   "gen_tokens": 172,
+   "raw": "The pro-\\'etale fundamental group of a connected Nagata $J$-2 scheme $X$ can be constructed from the \\'etale fundamental groups of its normalization $\\tilde X_i$ of each irreducible component, the pro-\\'etale fundamental groups of the connected components of the singular locus $Z$, and a discrete free group. The rank of this free group depends on the combinatorics of the singularities, which includes how the branches meet over $Z$. This is because the pro-\\'etale fundamental group captures more refined information about the topology of the scheme, including the combinatorial structure of its singularities, which may not be fully encoded in the \\'etale fundamental groups alone. The construction involves a finite sequence of Noohi coproducts and Noohi quotients.\n\nAnswer: B"
+  },
+  {
+   "id": "livemath-202605-32",
+   "gold": "E",
+   "pred": "D",
+   "em": 0.0,
+   "gen_tokens": 487,
+   "raw": "The question concerns the asymptotic behavior of the counting function $\\mathrm{Root}(P_1,\\ldots,P_s;N)$, which counts the number of solutions to the equation $x_1^k + \\cdots + x_s^k = N$ within a box of side lengths $P_1, \\ldots, P_s$. The goal is to determine which of the given statements provides the strongest existence claim for this quantity under the given assumptions on $s$ and $k$.\n\nThe key is to compare the error terms in the asymptotic estimates. The stronger the estimate, the smaller the error term. The form of the error term is crucial in determining the strength of the claim.\n\nLet us analyze the options:\n\n- **Option A** and **Option E** are identical in structure, with the only difference being the use of $\\ll$ in A and the equality in E. However, the error term in both is $\\left(\\prod P_j\\right)^{1 - k/s - \\delta}$, which is the same as in **Option D**. The difference is that **Option D** uses an equality with an error term, while **A** and **E** use the $\\ll$ notation, which is a weaker statement (i.e., it allows for a larger error term in the asymptotic sense).\n\n- **Option B** has the same leading term as A and E, but its error term is $\\left(\\prod P_j\\right)^{1 - k/s}$, which is larger than the error term in A, E, and D. Therefore, B is a weaker claim.\n\n- **Option C** has a smaller error term than B, but it is still larger than the error term in A, E, and D. It also has a different exponent in the error term, $1 - k/(s-1) - \\delta$, which is not the same as the exponent in A, E, and D. This suggests that C is not the strongest claim.\n\n- **Option D** has the same error term as A and E, but it uses an equality with an error term, which is a stronger statement than the $\\ll$ notation used in A and E. Therefore, D is a stronger claim than A and E.\n\nThus, the strongest existence claim is given by **Option D**.\n\nAnswer: D"
+  },
+  {
+   "id": "livemath-202605-36",
+   "gold": "C",
+   "pred": "C",
+   "em": 1.0,
+   "gen_tokens": 202,
+   "raw": "The strongest uniform existence statement about an algorithm with running time $ O(D^{1/2+o(1)}) $ in this setting is that there exists an algorithm which, given $ D < N $ with $ D > \\exp\\!\\left(\\sqrt{2\\log N\\,\\log\\log N}\\right) $, runs in $ O(D^{1/2+o(1)}) $ time and returns one of the following: an element $ a \\in \\mathbb{Z}_N^* $ with $ \\operatorname{ord}_N(a) > D $, a non-trivial factor of $ N $, or the statement that $ N $ is prime. This is because such an algorithm would effectively either find a witness to the primality of $ N $, find a non-trivial factor of $ N $, or find an element of large order, which is sufficient to determine the primality or factorization of $ N $.\n\nAnswer: C"
+  },
+  {
+   "id": "livemath-202605-4",
+   "gold": "A",
+   "pred": "E",
+   "em": 0.0,
+   "gen_tokens": 286,
+   "raw": "The function $ r(a) $ is real-analytic on $ (1/2, \\infty) $, as stated in all options. The asymptotic behavior of $ r(a) $ as $ a \\to \\infty $ is given by $ r(a) = \\tfrac{3}{2} \\log a + d_\\infty + o(1) $, where $ d_\\infty $ is a constant. The key distinction lies in the value of $ d_\\infty $ and the form of the logarithmic term.\n\nOption C incorrectly uses $ \\log(2a) $ instead of $ \\log a $, which would change the asymptotic behavior. Option D omits the explicit expression for $ d_\\infty $, which is necessary for the strongest statement. Option E claims that $ r(a) $ extends real-analytically across $ a = 1/2 $, which is not supported by the given information. Options A and B differ in the value of $ d_\\infty $, but the correct expression for $ d_\\infty $ is given in Option E.\n\nThus, the strongest statement is in Option E, as it includes the correct asymptotic form and the correct value of $ d_\\infty $, and it is the only one that provides the full expression for $ d_\\infty $.\n\nAnswer: E"
+  },
+  {
+   "id": "livemath-202605-43",
+   "gold": "B",
+   "pred": "B",
+   "em": 1.0,
+   "gen_tokens": 372,
+   "raw": "The question asks for the strongest statement of the form \u201cthere exists a positive integer such that for all varieties and foliations in a specified class, a uniform torsion conclusion holds.\u201d The key is to identify the most general and strongest such statement, given the constraints.\n\nOption A extends the dimension to 4, which is outside the specified setting of dimension at most 3. Therefore, it is not valid in the given context.\n\nOption D claims that $K_{\\mathcal F} \\sim 0$ directly, which is stronger than the torsion conclusion $I K_{\\mathcal F} \\sim 0$ for some $I$. However, it is not necessarily true that $K_{\\mathcal F} \\sim 0$ in general, only that $K_{\\mathcal F} \\equiv 0$ (numerically trivial). Thus, D is too strong.\n\nOption E allows $I$ to depend on $(X, \\mathcal F)$, which weakens the uniformity of the conclusion. The question asks for a uniform torsion conclusion, so E is not the strongest.\n\nOptions B and C both state that for every normal projective variety $X$ of dimension $\\le 3$ and every foliation $\\mathcal F$ with log canonical singularities and $K_{\\mathcal F} \\equiv 0$, there exists a positive integer $I$ such that $I K_{\\mathcal F} \\sim 0$. The difference between B and C is that C restricts $I$ to be between 1 and 30, while B allows any positive integer.\n\nSince the question asks for the strongest statement, and there is no evidence that $I$ is bounded by 30, B is the stronger and more general statement.\n\nAnswer: B"
+  },
+  {
+   "id": "livemath-202605-47",
+   "gold": "E",
+   "pred": "E",
+   "em": 1.0,
+   "gen_tokens": 4,
+   "raw": "Answer: E"
+  },
+  {
+   "id": "livemath-202605-50",
+   "gold": "A",
+   "pred": "B",
+   "em": 0.0,
+   "gen_tokens": 438,
+   "raw": "The question concerns a functional inequality involving the fractional Laplacian and the Hardy\u2013Littlewood\u2013Sobolev (HLS) inequality. The key is to identify the strongest statement that can be made about the relationship between the norm of a certain operator and the distance to a specific set of functions, $\\mathcal{M}_{HLS}$ or its variants.\n\nOption **B** states that there exists a positive constant $C_{n,s}$ such that for every $f \\in L^p(\\mathbb{R}^n)$ with a given norm constraint, the norm of the expression $||f|^{-\\frac{4s}{n+2s}}f - (-\\Delta)^{-s}f|$ is bounded below by a constant multiple of the distance $d(f, \\mathcal{M}_{HLS})$ raised to a specific power. This is a standard form of a Hardy\u2013Littlewood\u2013Sobolev inequality with a quantitative estimate involving the distance to the set of extremal functions.\n\nOption **C** is similar to **B**, but it restricts $f$ to be nonnegative and uses $\\mathcal{M}_{HLS}^+$, which is a subset of $\\mathcal{M}_{HLS}$. However, the question does not specify that $f$ is nonnegative, so this is a weaker statement.\n\nOption **D** is also similar to **B**, but it uses $\\mathcal{M}_{HLS}^+$ and does not specify that $f$ is nonnegative. Again, this is a weaker statement than **B** because it restricts the set of functions to consider.\n\nOption **E** introduces a different set $\\mathcal{N}_{HLS}$ and changes the distance to be in $L^p$ rather than $L^q$. This is inconsistent with the original setup, which involves the distance in $L^p$ and the norm of the operator in $L^q$.\n\nTherefore, the strongest and most consistent statement is **B**, as it matches the original setup and does not impose unnecessary restrictions.\n\nAnswer: B"
+  },
+  {
+   "id": "livemath-202605-54",
+   "gold": "E",
+   "pred": "E",
+   "em": 1.0,
+   "gen_tokens": 4,
+   "raw": "Answer: E"
+  },
+  {
+   "id": "livemath-202605-58",
+   "gold": "C",
+   "pred": "D",
+   "em": 0.0,
+   "gen_tokens": 763,
+   "raw": "Let us analyze the Diophantine equation $3x^m = 2^n - (-1)^n$. We consider the right-hand side:\n\n- If $n$ is even, then $(-1)^n = 1$, so the equation becomes $3x^m = 2^n - 1$.\n- If $n$ is odd, then $(-1)^n = -1$, so the equation becomes $3x^m = 2^n + 1$.\n\nWe now examine the possible integer solutions for different values of $m$ and $n$.\n\n### Case 1: $n$ is even\nThen the equation becomes $3x^m = 2^n - 1$. For $m = 2$, this is $3x^2 = 2^n - 1$. This is a well-known type of Diophantine equation, and it is known that there are infinitely many solutions for $n \\ge 3$. For example, $n = 3$ gives $3x^2 = 7$, which has no integer solution, but for $n = 5$, $3x^2 = 31$, which also has no solution. However, for $n = 2$, $3x^2 = 3$, which gives $x = \\pm1$, and for $n = 4$, $3x^2 = 15$, which gives $x = \\pm\\sqrt{5}$, not an integer. So, the claim that there are infinitely many $n \\ge 3$ for which an integer $x$ exists is not valid.\n\n### Case 2: $n$ is odd\nThen the equation becomes $3x^m = 2^n + 1$. For $m = 2$, this is $3x^2 = 2^n + 1$. Again, this is a known type of Diophantine equation, and it is known that there are no integer solutions for $n \\ge 3$. For example, $n = 3$ gives $3x^2 = 9$, which gives $x = \\pm\\sqrt{3}$, not an integer. For $n = 5$, $3x^2 = 33$, which gives $x = \\pm\\sqrt{11}$, not an integer. So, the claim that there are no solutions for $m = 2$ and $n \\ge 3$ is valid.\n\n### Case 3: $m \\ge 3$\nFor $m \\ge 3$, the equation becomes $3x^m = 2^n - (-1)^n$. For $n$ even, this is $3x^m = 2^n - 1$, and for $n$ odd, this is $3x^m = 2^n + 1$. In both cases, the right-hand side is an odd number, and the left-hand side is divisible by 3. However, for $m \\ge 3$, the left-hand side grows much faster than the right-hand side, and it is known that there are no integer solutions for $m \\ge 3$ and $n \\ge 3$.\n\n### Conclusion\nThe strongest valid conclusion is that the equation has no integer solution $(x, m, n) \\in \\mathbb{Z}^3$ with $m \\ge 2$ and odd $n \\ge 3$, but there exists an even integer $n \\ge 4$ and an integer $x$ such that $3x^2 = 2^n - 1$.\n\nAnswer: D"
+  },
+  {
+   "id": "livemath-202605-61",
+   "gold": "E",
+   "pred": "B",
+   "em": 0.0,
+   "gen_tokens": 4,
+   "raw": "Answer: B"
+  },
+  {
+   "id": "livemath-202605-65",
+   "gold": "C",
+   "pred": "C",
+   "em": 1.0,
+   "gen_tokens": 4,
+   "raw": "Answer: C"
+  },
+  {
+   "id": "livemath-202605-69",
+   "gold": "E",
+   "pred": "A",
+   "em": 0.0,
+   "gen_tokens": 4,
+   "raw": "Answer: A"
+  },
+  {
+   "id": "livemath-202605-72",
+   "gold": "C",
+   "pred": "E",
+   "em": 0.0,
+   "gen_tokens": 4,
+   "raw": "Answer: E"
+  },
+  {
+   "id": "livemath-202605-76",
+   "gold": "D",
+   "pred": "C",
+   "em": 0.0,
+   "gen_tokens": 207,
+   "raw": "The asymptotic oscillation estimates for $\\Delta(x)$ and $P(x)$ are well-studied in analytic number theory. The function $\\Delta(x)$, which measures the discrepancy between the actual number of divisors and the expected value, is known to satisfy the lower bound:\n\n$$\n\\Delta(x) = \\Omega_+\\left((x \\log x)^{1/4} (\\log_2 x)^{\\frac{3}{4}(2^{4/3} - 1)}\\right).\n$$\n\nSimilarly, the function $P(x)$, which measures the discrepancy between the number of integers representable as a sum of two squares and the expected value, satisfies the lower bound:\n\n$$\nP(x) = \\Omega_-\\left((x \\log x)^{1/4} (\\log_2 x)^{\\frac{3}{4}(2^{4/3} - 1)}\\right).\n$$\n\nThis matches the estimate in option C. \n\nAnswer: C"
+  },
+  {
+   "id": "livemath-202605-8",
+   "gold": "B",
+   "pred": "E",
+   "em": 0.0,
+   "gen_tokens": 4,
+   "raw": "Answer: E"
+  },
+  {
+   "id": "livemath-202605-83",
+   "gold": "C",
+   "pred": "C",
+   "em": 1.0,
+   "gen_tokens": 4,
+   "raw": "Answer: C"
+  },
+  {
+   "id": "livemath-202605-87",
+   "gold": "A",
+   "pred": "D",
+   "em": 0.0,
+   "gen_tokens": 4,
+   "raw": "Answer: D"
+  },
+  {
+   "id": "livemath-202605-90",
+   "gold": "D",
+   "pred": "C",
+   "em": 0.0,
+   "gen_tokens": 4,
+   "raw": "Answer: C"
+  },
+  {
+   "id": "livemath-202605-94",
+   "gold": "D",
+   "pred": "C",
+   "em": 0.0,
+   "gen_tokens": 4,
+   "raw": "Answer: C"
+  },
+  {
+   "id": "livemath-202606-100",
+   "gold": "C",
+   "pred": "A",
+   "em": 0.0,
+   "gen_tokens": 740,
+   "raw": "The problem involves a set $\\mathcal{V} \\subset \\{0, \\pm1\\}^n$ with two key properties:\n1. Each vector $v \\in \\mathcal{V}$ has norm squared $(v,v) = 3$, which implies that each vector has exactly three non-zero entries, each of which is $\\pm1$.\n2. The inner product $(v_1, v_2) \\neq 0$ for any two distinct vectors $v_1, v_2 \\in \\mathcal{V}$, meaning that the vectors are not orthogonal.\n\nThis is a combinatorial geometry problem in $\\mathbb{R}^n$, and the goal is to find the strongest universal upper bound on the size of such a set $\\mathcal{V}$.\n\nThe function $c(n)$ is defined as:\n$$\nc(n) = \n\\begin{cases}\n0, & n \\equiv 0 \\pmod{4}, \\\\\n1, & n \\equiv 1 \\pmod{4}, \\\\\n2, & n \\equiv 2 \\text{ or } 3 \\pmod{4}.\n\\end{cases}\n$$\n\nWe are given five options for an upper bound on $|\\mathcal{V}|$, and we are to choose the strongest one.\n\nLet\u2019s analyze the options:\n\n- **Option A**: $|\\mathcal{V}| \\le \\max\\{6n - 28, 4n - 4c(n) - 4\\}$\n- **Option B**: $|\\mathcal{V}| \\le \\max\\{6n - 30, 4n - 4c(n)\\}$\n- **Option C**: One of the remaining options is correct, but a stronger result can be proven.\n- **Option D**: $|\\mathcal{V}| \\le \\max\\{6n - 28, 4n - 4c(n) + 4\\}$\n- **Option E**: $|\\mathcal{V}| \\le \\max\\{6n - 28, 4n - 4c(n+1)\\}$\n\nWe are to choose the **strongest** universal upper bound. That is, the bound that is **tightest** and **most restrictive** across all $n$.\n\nLet\u2019s compare the expressions:\n\n- The first term in all options is $6n - 28$, which is the same across A, D, and E.\n- The second term varies:\n  - A: $4n - 4c(n) - 4$\n  - B: $4n - 4c(n)$\n  - C: Not specified\n  - D: $4n - 4c(n) + 4$\n  - E: $4n - 4c(n+1)$\n\nNow, we compare the second terms:\n- $4n - 4c(n) - 4 < 4n - 4c(n) < 4n - 4c(n) + 4$\n- $4n - 4c(n+1)$ depends on the value of $c(n+1)$, which is not necessarily smaller than $4n - 4c(n)$.\n\nThus, the **strongest** bound is the one with the **smallest** second term, which is $4n - 4c(n) - 4$ in Option A.\n\nTherefore, the strongest universal upper bound is:\n\nAnswer: A"
+  },
+  {
+   "id": "livemath-202606-104",
+   "gold": "B",
+   "pred": "B",
+   "em": 1.0,
+   "gen_tokens": 257,
+   "raw": "The tail asymptotic quantity $ L_m(\\mathbf{X}) $ of the signature of a pure $ m $-rough path $ \\mathbf{X}_t = \\exp(tl) $ is determined by the degree-$ m $ homogeneous component $ \\pi_m(l) $ of the generator $ l $. In the context of free nilpotent groups and truncated free Lie algebras, the exponential map induces a correspondence between elements of the Lie algebra and the group, and the asymptotic behavior of the signature is governed by the highest-degree component of the generator.\n\nIn particular, the tail asymptotic quantity $ L_m(\\mathbf{X}) $ is directly determined by $ \\pi_m(l) $, and it is independent of lower-degree components of $ l $. This is because the signature of a rough path captures the iterated integrals of the path, and for a pure $ m $-rough path, the higher-order terms beyond degree $ m $ do not contribute to the asymptotic behavior at the $ m $-th level.\n\nThus, the correct statement is that $ L_m(\\mathbf{X}) = \\|\\pi_m(l)\\|_m $ for every such pure $ m $-rough path.\n\nAnswer: B"
+  },
+  {
+   "id": "livemath-202606-108",
+   "gold": "E",
+   "pred": "A",
+   "em": 0.0,
+   "gen_tokens": 323,
+   "raw": "The translated one-step locus $ V_{5,r} $ is defined as the closure in the Hilbert scheme $ \\operatorname{Hilb}^{6+r}(\\mathbb{A}^5) $ of all translates of the ideal $ I_Q = (Q) + \\mathfrak{m}^3 $, where $ Q \\subset S_2 $ is a codimension-$ r $ subspace. These ideals define subschemes supported at the origin with length $ 6 + r $, and the locus $ V_{5,r} $ captures the closure of such subschemes under translation.\n\nFor $ r = 15 $, the ideal $ I_Q $ corresponds to the quotient $ S / \\mathfrak{m}^3 $, which is a homogeneous one-step algebra. This algebra is not smoothable, as it cannot be deformed to a subscheme supported at a single point (i.e., a fat point). Thus, for $ r = 15 $, the translated one-step locus $ V_{5,15} $ is not contained in the smoothable component of the Hilbert scheme.\n\nFor $ 6 \\leq r \\leq 14 $, the subschemes defined by $ I_Q $ are smoothable, as they can be deformed to a single fat point. Therefore, the translated one-step locus $ V_{5,r} $ is contained in the smoothable component of the Hilbert scheme for these values of $ r $.\n\nThus, the correct statement is:\n\nAnswer: A"
+  },
+  {
+   "id": "livemath-202606-111",
+   "gold": "E",
+   "pred": "E",
+   "em": 1.0,
+   "gen_tokens": 205,
+   "raw": "The question concerns the boundaries of Mazur and Jester 4-manifolds, which are both smooth, compact, contractible 4-manifolds. A key result in 4-dimensional topology, particularly related to the work of Casson and others, is that the boundaries of distinct Mazur and Jester manifolds are not homeomorphic, even when orientation is reversed.\n\nMazur manifolds are contractible 4-manifolds with boundary, and they are distinguished by their interior, not their boundary. Similarly, Jester manifolds are also contractible 4-manifolds with boundary, and they are not homeomorphic to each other or to Mazur manifolds. The boundaries of these manifolds are 3-manifolds, and it is known that the boundaries of distinct Mazur and Jester manifolds are not homeomorphic, even after reversing orientation.\n\nThus, the strongest consequence is that the boundaries are pairwise nonhomeomorphic regardless of orientation.\n\nAnswer: E"
+  },
+  {
+   "id": "livemath-202606-115",
+   "gold": "D",
+   "pred": "E",
+   "em": 0.0,
+   "gen_tokens": 128,
+   "raw": "The functor $R^1_{\\mathrm{nr},R}$ is additive, and hence it preserves finite coproducts. Since any small direct sum in $\\mathbf{HI}_R(k)$ can be expressed as a filtered colimit of its finite direct summands, and since $R^1_{\\mathrm{nr},R}$ preserves filtered colimits (as it is a right derived functor of a left exact functor in the context of Nisnevich sheaves with transfers), it follows formally that $R^1_{\\mathrm{nr},R}$ preserves arbitrary small direct sums.\n\nAnswer: E"
+  },
+  {
+   "id": "livemath-202606-14",
+   "gold": "E",
+   "pred": "C",
+   "em": 0.0,
+   "gen_tokens": 4,
+   "raw": "Answer: C"
+  },
+  {
+   "id": "livemath-202606-18",
+   "gold": "D",
+   "pred": "D",
+   "em": 1.0,
+   "gen_tokens": 152,
+   "raw": "A theta graph $\\Theta_{a,b,c}$ is metrizable if it can be embedded in the plane without crossings, which is equivalent to the condition that the lengths of the three paths satisfy certain constraints. For a theta graph with branch vertices connected by three internally disjoint paths of lengths $a \\le b \\le c$, the graph is metrizable if and only if $a \\le 2$ or $(a, b, c) = (3, 3, 3)$. This is because when $a \\le 2$, the graph can be embedded without crossings, and the only other case where it is metrizable is when all three paths are of length 3, forming a symmetric configuration.\n\nAnswer: D"
+  },
+  {
+   "id": "livemath-202606-21",
+   "gold": "A",
+   "pred": "C",
+   "em": 0.0,
+   "gen_tokens": 4,
+   "raw": "Answer: C"
+  },
+  {
+   "id": "livemath-202606-25",
+   "gold": "E",
+   "pred": "C",
+   "em": 0.0,
+   "gen_tokens": 4,
+   "raw": "Answer: C"
+  },
+  {
+   "id": "livemath-202606-29",
+   "gold": "D",
+   "pred": "D",
+   "em": 1.0,
+   "gen_tokens": 4,
+   "raw": "Answer: D"
+  },
+  {
+   "id": "livemath-202606-32",
+   "gold": "D",
+   "pred": "E",
+   "em": 0.0,
+   "gen_tokens": 4,
+   "raw": "Answer: E"
+  },
+  {
+   "id": "livemath-202606-36",
+   "gold": "D",
+   "pred": "E",
+   "em": 0.0,
+   "gen_tokens": 175,
+   "raw": "The given conditions include that $M$ is tensor nilpotent, has finite projective dimension on both sides, and satisfies vanishing Tor conditions. These are strong enough to ensure that the singularity category of the extension $\\Gamma \\ltimes_\\theta M$ is equivalent to that of $\\Gamma$. Similarly, the skew-group extension $\\Gamma\\#G \\ltimes_{\\widehat\\theta} M\\#G$ inherits the same properties, and the singularity category equivalence holds even when $|G|$ is not invertible in $k$, as the vanishing Tor conditions are preserved under the skew-group construction.\n\nThus, the strongest conclusion is that there are singular equivalences between the singularity categories of the extensions and the base algebras, and the second equivalence holds even without the invertibility condition on $|G|$.\n\nAnswer: E"
+  },
+  {
+   "id": "livemath-202606-4",
+   "gold": "E",
+   "pred": "E",
+   "em": 1.0,
+   "gen_tokens": 501,
+   "raw": "The cop number $ c(G) $ of a graph $ G $ is known to be related to the graph's structure, particularly its connectivity and expansion properties. For the Erd\u0151s\u2013R\u00e9nyi random graph $ G(n, p) $, the cop number is influenced by the graph's connectedness and the presence of large connected components.\n\nWhen $ p = n^{\\alpha - 1 + o(1)} $, the graph is in a subcritical or critical regime depending on the value of $ \\alpha $. In this regime, the graph typically consists of a large connected component (the \"giant component\") and many small components. The cop number is closely tied to the size and structure of the largest connected component.\n\nIt is known that for $ G(n, p) $ with $ p = n^{\\alpha - 1 + o(1)} $, the cop number is asymptotically bounded by $ O(\\sqrt{n} \\log n) $ with high probability. This is because the graph is not sufficiently connected to require a large number of cops, but it is still connected enough to prevent the robber from escaping indefinitely.\n\nOption A claims a stronger result, asserting that $ c(G(n,p)) \\sim K\\sqrt{n} \\log n $, which implies a precise asymptotic equivalence. However, this is not generally known to hold for all $ \\alpha > 0 $, and the exact constant $ K $ is not established in the literature for this regime.\n\nOption B suggests a much weaker bound, $ O(\\sqrt{n} \\log \\log n) $, which is not supported by known results for this range of $ p $.\n\nOption C is a probabilistic statement that for any fixed $ \\alpha > 0 $, the probability that $ c(G(n,p)) \\le C\\sqrt{n} \\log n $ tends to 1. This is a weaker form of the result in Option E and is not necessarily stronger.\n\nOption D claims $ c(G(n,p)) = n^{1/2 + o(1)} $, which is a general bound but does not capture the logarithmic factor that is known to be present in the cop number for this regime.\n\nOption E states that $ c(G(n,p)) = O(\\sqrt{n} \\log n) $ with high probability, which is the best known asymptotic estimate for this regime and is supported by existing results in the literature.\n\nAnswer: E"
+  },
+  {
+   "id": "livemath-202606-43",
+   "gold": "E",
+   "pred": "B",
+   "em": 0.0,
+   "gen_tokens": 4,
+   "raw": "Answer: B"
+  },
+  {
+   "id": "livemath-202606-47",
+   "gold": "E",
+   "pred": "C",
+   "em": 0.0,
+   "gen_tokens": 347,
+   "raw": "The system is a stochastic perturbation of a Hamiltonian system, and the Lyapunov exponent $\\lambda$ measures the exponential growth rate of the system's solutions. The given system is a Stratonovich stochastic differential equation, and the asymptotic behavior of the Lyapunov exponent for small $\\varepsilon$ is determined by the properties of the Hamiltonian $H(x, y)$ and the invariant measure $\\mu$.\n\nThe function $G(h)$ is defined as a combination of $G_1(h)$ and $G_2(h)$, which are related to the geometry of the Hamiltonian flow and the noise term $V_1$. The integral of $G(H(x, y))$ over the invariant measure $\\mu$ gives the leading-order term in the asymptotic expansion of the Lyapunov exponent.\n\nOption A claims the asymptotic expansion is $\\varepsilon^{2/3}\\,\\overline{\\lambda} + \\mathcal{O}(\\varepsilon^{5/3})$, but this is not the strongest possible. Option B and D use different expressions for $\\overline{\\lambda}$, but the correct form of $\\overline{\\lambda}$ is the integral of $G(H(x, y))$ over the invariant measure, as in Option C and E.\n\nOption C and E both have the same form for $\\overline{\\lambda}$, but Option C uses $o(\\varepsilon^{2/3})$ as the error term, which is stronger than $\\mathcal{O}(\\varepsilon^{4/3})$ in Option E. Therefore, the strongest correct asymptotic statement is in Option C.\n\nAnswer: C"
+  },
+  {
+   "id": "livemath-202606-50",
+   "gold": "E",
+   "pred": "E",
+   "em": 1.0,
+   "gen_tokens": 4,
+   "raw": "Answer: E"
+  },
+  {
+   "id": "livemath-202606-54",
+   "gold": "B",
+   "pred": "A",
+   "em": 0.0,
+   "gen_tokens": 264,
+   "raw": "The question asks for the strongest general upper bound on the Ramsey number $ R(T, K_{m_1,\\ldots,m_k}) $ for every sufficiently large $ n $ and every tree $ T $ on $ n $ vertices. \n\nA well-known result in Ramsey theory for trees and complete multipartite graphs is that the Ramsey number $ R(T, K_{m_1,\\ldots,m_k}) $ can be bounded using a recursive approach. Specifically, it is known that for sufficiently large $ n $, the Ramsey number satisfies:\n\n$$\nR(T, K_{m_1,\\ldots,m_k}) \\le (k-1)(R(T, K_{m_1,m_2}) - 1) + m_k.\n$$\n\nThis bound is tight in many cases and is considered the strongest general upper bound for this class of Ramsey numbers. It is also consistent with known results in the literature, such as those by various researchers in Ramsey theory.\n\nOption A matches this known bound exactly. The other options either introduce incorrect constants (e.g., $ m_1 - 1 $, $ n + m_1 - 2 $) or suggest that a stronger result can be proven without justification, which is not supported by the question's phrasing.\n\nAnswer: A"
+  },
+  {
+   "id": "livemath-202606-58",
+   "gold": "E",
+   "pred": "C",
+   "em": 0.0,
+   "gen_tokens": 552,
+   "raw": "The DSAV scheme is a numerical method designed to approximate the solution of the underdamped Langevin equation. The question asks for the strongest uniform weak-error estimate for the scheme, given the conditions on the potential $ V $, the test function $ \\varphi $, and the parameters of the scheme.\n\nThe key points to consider are:\n\n1. **Weak Error Estimate**: The weak error measures the difference in expected values of test functions applied to the exact and numerical solutions. The goal is to find the best possible estimate of this error.\n\n2. **Uniformity**: The estimate must hold uniformly over all time steps $ n $, and for all test functions $ \\varphi \\in C^\\infty_{\\rm p}(\\mathbb R^{2d};\\mathbb R) $.\n\n3. **Independence of Parameters**: The constant in the estimate should be independent of the time step $ \\tau $, and possibly other parameters like $ p $ and $ q $, depending on the choice.\n\n4. **Order of the Estimate**: The estimate should reflect the order of convergence of the DSAV scheme. Typically, for such schemes, the weak error is of order $ \\tau $, unless the scheme has higher-order accuracy.\n\nGiven the structure of the DSAV scheme and the conditions on the potential $ V $, the weak error is expected to be of order $ \\tau $. This is consistent with the analysis of similar numerical schemes for stochastic differential equations, where the weak error is often of first order in the time step.\n\nAmong the options:\n\n- **Option A** includes a time-dependent bound $ C_T $, but it does not specify the dependence on $ \\tau $, and it is not the strongest uniform estimate.\n- **Option B** introduces an exponential factor $ e^{c t_n} $, which is not necessary for the weak error estimate.\n- **Option C** is the strongest uniform estimate, as it holds for all $ n $, and the constant $ C $ is independent of $ \\tau $, $ p $, and $ q $.\n- **Option D** claims a second-order error $ \\tau^2 $, which is not supported by the analysis of the DSAV scheme.\n- **Option E** is similar to Option C, but it does not specify the independence of the constant from $ p $ and $ q $, which is important for a uniform estimate.\n\nThus, the strongest uniform weak-error estimate that holds for every test function $ \\varphi \\in C^\\infty_{\\rm p}(\\mathbb R^{2d};\\mathbb R) $ is given by **Option C**.\n\nAnswer: C"
+  },
+  {
+   "id": "livemath-202606-61",
+   "gold": "A",
+   "pred": "D",
+   "em": 0.0,
+   "gen_tokens": 4,
+   "raw": "Answer: D"
+  },
+  {
+   "id": "livemath-202606-65",
+   "gold": "E",
+   "pred": "C",
+   "em": 0.0,
+   "gen_tokens": 4,
+   "raw": "Answer: C"
+  },
+  {
+   "id": "livemath-202606-69",
+   "gold": "C",
+   "pred": "D",
+   "em": 0.0,
+   "gen_tokens": 239,
+   "raw": "The generating function identity involving the order-$d$ $q$-binomial coefficient and the standard Young tableaux of rectangular shape $(k^d)$ is a known result in algebraic combinatorics. The correct identity is:\n\n$$\n(x;q)_{kd+1}\\sum_{n\\ge 0}\\left\\langle\\begin{smallmatrix}n+k\\\\ k\\end{smallmatrix}\\right\\rangle_q^{(d)}x^n\n= \\sum_{T\\in \\operatorname{SYT}(k^d)} q^{\\operatorname{comaj}(T)-k\\binom{d}{2}}\\,x^{\\operatorname{des}(T)-(k-1)}.\n$$\n\nThis identity is a refinement of the classical result connecting $q$-binomial coefficients with the enumeration of standard Young tableaux, weighted by the comajor index and the number of descents. The exponent of $q$ involves the comajor index adjusted by a term involving $k$ and $d$, and the exponent of $x$ involves the number of descents adjusted by $k-1$.\n\nAnswer: D"
+  },
+  {
+   "id": "livemath-202606-72",
+   "gold": "C",
+   "pred": "C",
+   "em": 1.0,
+   "gen_tokens": 4,
+   "raw": "Answer: C"
+  },
+  {
+   "id": "livemath-202606-76",
+   "gold": "B",
+   "pred": "E",
+   "em": 0.0,
+   "gen_tokens": 4,
+   "raw": "Answer: E"
+  },
+  {
+   "id": "livemath-202606-8",
+   "gold": "D",
+   "pred": "A",
+   "em": 0.0,
+   "gen_tokens": 299,
+   "raw": "The asymptotic behavior of the number of unlabelled cubic planar graphs on $ n $ vertices, as $ n \\to \\infty $ through even integers, is well-studied in combinatorics and graph theory. It is known that the number of such graphs grows asymptotically as $ g_n \\sim \\kappa n^{-7/2} \\rho^{-n} $, where $ \\kappa > 0 $ and $ \\rho > 0 $ are constants. This form is consistent with the general asymptotic behavior of planar graphs and is supported by results in the literature.\n\nOption A provides bounds of the form $ c_1 n^{-7/2} \\rho^{-n} \\le g_n \\le c_2 n^{-7/2} \\rho^{-n} $, which is a valid statement, but it does not capture the precise asymptotic equivalence. Option B introduces a bounded sequence $ (\\kappa_n) $ that does not converge, which is not supported by current results. Option C introduces a factor of $ (\\log n)^{-1} $, which is not consistent with known asymptotics. Option E suggests a dependence on $ n \\bmod 4 $, which is not supported by the literature.\n\nThe strongest valid asymptotic statement is given in Option A, as it provides tight bounds that are consistent with the known asymptotic behavior of the number of cubic planar graphs.\n\nAnswer: A"
+  },
+  {
+   "id": "livemath-202606-83",
+   "gold": "D",
+   "pred": "C",
+   "em": 0.0,
+   "gen_tokens": 4,
+   "raw": "Answer: C"
+  },
+  {
+   "id": "livemath-202606-87",
+   "gold": "E",
+   "pred": "C",
+   "em": 0.0,
+   "gen_tokens": 136,
+   "raw": "The given conditions imply that the ADM mass is non-negative due to the non-negativity of the scalar curvature and the asymptotic flatness. In the case of zero ADM mass, the manifold must be diffeomorphic to $\\mathbb{R}^n$, and the metric must be flat outside a compact set. However, the intrinsic distance $d_{g_0}$ being globally isometric to Euclidean space is a stronger condition than just the metric being flat outside a compact set. The correct choice must reflect that the metric is flat outside a compact set and that the intrinsic distance matches the Euclidean metric, which is captured in option C.\n\nAnswer: C"
+  },
+  {
+   "id": "livemath-202606-90",
+   "gold": "E",
+   "pred": "B",
+   "em": 0.0,
+   "gen_tokens": 300,
+   "raw": "The substitution $ w = \\varphi v' + \\psi \\overline{v'} $ introduces a real-linear change of variables, which can be associated with a gauge transformation. The key is that the substitution is not arbitrary\u2014it is tied to the spectral root $ \\lambda = i(1+\\mu)/(1-\\mu) \\in \\mathbb{H}^+ $, and the condition $ |\\varphi| > |\\psi| $ ensures that the transformation is invertible and non-degenerate.\n\nThe gauge transformation defined by $ \\phi \\cdot D $ modifies the components $ \\mathcal{A}, \\mathcal{B}, \\mathcal{F} $ in a specific way, and the substitution $ S $ leads to a new datum $ D_S $ that is a gauge transform of the original $ D $, with the gauge factor being a function of the substitution $ S $.\n\nOption B correctly identifies the gauge factor as $ \\tilde\\varphi = \\frac{-i\\lambda}{\\varphi - \\mu\\psi} $, which is explicitly constructed from the substitution and the spectral root. This factor is nonvanishing and smooth, and it directly relates $ D_S $ to $ D $ via the gauge action. The resulting expressions for $ \\mu_S, \\mathcal{A}_S, \\mathcal{B}_S, \\mathcal{F}_S $ match the gauge transformation formulas.\n\nAnswer: B"
+  },
+  {
+   "id": "livemath-202606-94",
+   "gold": "C",
+   "pred": "E",
+   "em": 0.0,
+   "gen_tokens": 4,
+   "raw": "Answer: E"
+  },
+  {
+   "id": "livemath-202606-98",
+   "gold": "B",
+   "pred": "C",
+   "em": 0.0,
+   "gen_tokens": 4,
+   "raw": "Answer: C"
+  }
+ ]
+}

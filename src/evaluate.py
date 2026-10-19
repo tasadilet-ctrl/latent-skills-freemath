@@ -27,6 +27,7 @@ import torch
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from src import hooks, qwen  # noqa: E402
+from src.run_oqa_agent import BAD_FILES, grade as grade_officeqa  # noqa: E402
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -36,6 +37,8 @@ HOTPOT_SUFFIX = ("\n\nAnswer using a short span copied from the passages. "
 LIVEMATH_SUFFIX = ("\n\nEnd your reply with a line of the form "
                    "`Answer: <letter>` giving the single best choice.")
 LETTERS = "ABCDE"
+OFFICEQA_SUFFIX = ("\n\nEnd your reply with a line of the form `Answer: <value>`. For numeric "
+                   "answers give a bare number: no units, no thousands separators, no currency symbol.")
 MATH500_SUFFIX = ("\n\nEnd your reply with a line of the form `Answer: $\\boxed{<answer>}$` "
                   "containing the final answer only.")
 
@@ -46,11 +49,17 @@ def load_domain(name: str, limit: int | None):
     path = {"gsm8k": "data/gsm8k_test.jsonl",
             "hotpotqa": "data/hotpotqa_dev.jsonl",
             "livemath": "data/livemath.jsonl",
-            "math500": "data/math500.jsonl"}[name]
+            "math500": "data/math500.jsonl",
+            "officeqa": "data/officeqa_oracle.jsonl"}[name]
     rows = []
     with open(os.path.join(ROOT, path)) as f:
         for line in f:
-            rows.append(json.loads(line))
+            r = json.loads(line)
+            # OfficeQA: drop the questions on bulletins that changed upstream (as the
+            # agent arm does) and the one whose cited page has no parsed text
+            if name == "officeqa" and (BAD_FILES & set(r["source_files"]) or not r["context"]):
+                continue
+            rows.append(r)
             if limit and len(rows) >= limit:
                 break
     return rows
@@ -64,6 +73,9 @@ def render_question(domain: str, row: dict) -> str:
     if domain == "livemath":
         opts = "\n".join(f"{LETTERS[i]}. {t}" for i, t in enumerate(row["options"]))
         return f"{row['question']}\n\n{opts}" + LIVEMATH_SUFFIX
+    if domain == "officeqa":
+        return (f"The following pages are from US Treasury Bulletins.\n\n{row['context']}"
+                f"\n\nQuestion: {row['question']}" + OFFICEQA_SUFFIX)
     passages = "\n\n".join(row["context"])
     return f"{passages}\n\nQuestion: {row['question']}" + HOTPOT_SUFFIX
 
@@ -262,7 +274,7 @@ def parse_layers(spec: str, n_layers: int) -> list[int]:
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--domain", choices=["gsm8k", "hotpotqa", "livemath", "math500"], required=True)
+    ap.add_argument("--domain", choices=["gsm8k", "hotpotqa", "livemath", "math500", "officeqa"], required=True)
     ap.add_argument("--condition", choices=["baseline", "text", "embed"], required=True)
     ap.add_argument("--vectors", default=None, help="path to a .pt from extract_vectors.py")
     ap.add_argument("--layers", default="24-40", help="e.g. '32' or '24-40' or '20,30,40'")
@@ -285,9 +297,13 @@ def main():
     rows = load_domain(args.domain, args.limit)
     i, k = (int(x) for x in args.shard.split("/"))
     rows = rows[i::k]
+    if args.domain == "officeqa":
+        # contexts range from 1k to 20k tokens; batching similar lengths together
+        # cuts padding (and memory) a lot. Records are keyed by id, so order is free.
+        rows.sort(key=lambda r: len(r["context"]))
     max_new = args.max_new_tokens or {"gsm8k": 384, "hotpotqa": 128,
                                       "livemath": 2048,
-                                      "math500": 1024}[args.domain]
+                                      "math500": 1024, "officeqa": 2048}[args.domain]
 
     tok, model, layers = qwen.load(device_map="auto")
     skill_txt = open(args.skill).read() if args.condition == "text" else None
@@ -331,6 +347,8 @@ def main():
             em = score_livemath(p, r["answer"]); f1 = em
         elif args.domain == "math500":
             em = score_math500(p, r["answer"]); f1 = em
+        elif args.domain == "officeqa":
+            em, _ = grade_officeqa(p, r["answer"], r.get("tolerance")); f1 = em
         else:
             em, f1 = score_hotpot(p, r["answer"])
         em_sum += em; f1_sum += f1

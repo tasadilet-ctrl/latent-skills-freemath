@@ -1,0 +1,1236 @@
+{
+ "summary": {
+  "domain": "livemath",
+  "engine": "vllm",
+  "condition": "placebo_skillopt_nometa",
+  "model": "Qwen/Qwen3-14B",
+  "model_tag": "qwen3-14b",
+  "skill": "placebo_skillopt_nometa.md",
+  "n": 152,
+  "em": 0.3355263157894737,
+  "parse_rate": 1.0,
+  "forced": 0,
+  "forced_rate": 0.0,
+  "max_new_tokens": 2048,
+  "seconds": 108.9,
+  "shard": "1/4"
+ },
+ "records": [
+  {
+   "id": "livemath-202511-10",
+   "gold": "C",
+   "pred": "C",
+   "em": 1.0,
+   "gen_tokens": 4,
+   "raw": "Answer: C"
+  },
+  {
+   "id": "livemath-202511-14",
+   "gold": "C",
+   "pred": "E",
+   "em": 0.0,
+   "gen_tokens": 4,
+   "raw": "Answer: E"
+  },
+  {
+   "id": "livemath-202511-18",
+   "gold": "C",
+   "pred": "C",
+   "em": 1.0,
+   "gen_tokens": 4,
+   "raw": "Answer: C"
+  },
+  {
+   "id": "livemath-202511-21",
+   "gold": "A",
+   "pred": "C",
+   "em": 0.0,
+   "gen_tokens": 285,
+   "raw": "The discriminant $\\Delta(E)$ is a key invariant in the study of sheaves on algebraic varieties, particularly in the context of slope stability. For a torsion-free $H$-slope-semistable sheaf $E$ on a smooth projective complex variety $X$, the sign of $\\Delta(E)\\cdot H^{\\dim(X)-2}$ is constrained by the properties of slope stability and the Hodge index theorem.\n\nIn particular, for a torsion-free $H$-slope-semistable sheaf $E$, it is known that $\\Delta(E)\\cdot H^{\\dim(X)-2} \\ge 0$. This follows from the fact that the discriminant is non-negative for semistable sheaves under the given conditions, and the intersection with $H^{\\dim(X)-2}$ preserves this inequality.\n\nAmong the given options, the strongest statement that can be proved is that $\\Delta(E)\\cdot H^{\\dim(X)-2} > 0$, which is not universally true for all semistable sheaves (it can be zero in some cases, such as for certain rank 1 sheaves), but the strict inequality is not always valid. However, the inequality $\\Delta(E)\\cdot H^{\\dim(X)-2} \\ge 0$ is always true, and the most accurate and strongest statement among the options is:\n\nAnswer: C"
+  },
+  {
+   "id": "livemath-202511-25",
+   "gold": "A",
+   "pred": "C",
+   "em": 0.0,
+   "gen_tokens": 4,
+   "raw": "Answer: C"
+  },
+  {
+   "id": "livemath-202511-29",
+   "gold": "A",
+   "pred": "D",
+   "em": 0.0,
+   "gen_tokens": 4,
+   "raw": "Answer: D"
+  },
+  {
+   "id": "livemath-202511-6",
+   "gold": "E",
+   "pred": "D",
+   "em": 0.0,
+   "gen_tokens": 325,
+   "raw": "The given setup involves a projective morphism $\\pi\\colon \\mathcal{X} \\to \\mathbb{D}$ with log Calabi\u2013Yau structure over $\\mathbb{D}$, and the general fibers $(\\mathcal{X}_t, \\mathcal{B}_t)$ are toric. The question is about the nature of the special fiber $(\\mathcal{X}_0, \\mathcal{B}_0)$.\n\nThe assumption that $(\\mathcal{X}, \\mathcal{X}_0 + \\mathcal{B})$ is log Calabi\u2013Yau over $\\mathbb{D}$ implies that the canonical divisor $K_{\\mathcal{X}} + \\mathcal{X}_0 + \\mathcal{B}$ is trivial over $\\mathbb{D}$. The plt condition on $(\\mathcal{X}, \\mathcal{X}_0)$ ensures that the singularities of the pair are mild. The general fibers being toric imposes strong structure on the family.\n\nIn such a context, the strongest known result is that the special fiber $(\\mathcal{X}_0, \\mathcal{B}_0)$ becomes toric after a finite base change of the disk. This is a consequence of the fact that toric structures are rigid in families, and the log Calabi\u2013Yau condition, combined with the plt assumption, allows for a controlled degeneration. This is consistent with the theory of toric degenerations and log Calabi\u2013Yau fibrations.\n\nAnswer: D"
+  },
+  {
+   "id": "livemath-202512-1",
+   "gold": "A",
+   "pred": "C",
+   "em": 0.0,
+   "gen_tokens": 448,
+   "raw": "The question concerns the asymptotic lower bound for the function $ f_k(N) $, which is defined as the maximum sum of reciprocals of elements in a subset $ A \\subseteq [N] $ that is LCM-$k$-free. The goal is to determine the strongest asymptotic lower bound for $ f_k(N) $ as $ N \\to \\infty $.\n\nThe definition of LCM-$k$-free ensures that no $ k $ distinct elements in $ A $ have the same pairwise least common multiple. This is a structural constraint on the subset $ A $, and the function $ f_k(N) $ seeks the subset satisfying this constraint that maximizes the sum of reciprocals.\n\nThe constant $ c_k $ is defined as\n$$\nc_k = \\frac{k-2}{e\\,((k-2)!)^{1/(k-2)}},\n$$\nand the options all involve bounds of the form $ (\\log N)^{c_k \\pm o(1)} $, with variations in the exponent and the value of $ c_k $.\n\nOption B and C both state that $ f_k(N) \\ge (\\log N)^{c_k - o(1)} $, but differ in the definition of $ c_k $. Option B defines $ c_k $ without the factor of $ e $, while Option C retains the original definition of $ c_k $, which includes the factor of $ e $.\n\nOption D claims a slightly stronger bound, $ (\\log N)^{c_k + o(1)} $, with the same definition of $ c_k $, but this is not supported by the question's context, as it is not known whether such a stronger bound can be proven.\n\nOption E introduces a different constant involving $ k-1 $, which is not consistent with the definition of $ c_k $ in the question.\n\nThe strongest known lower bound for $ f_k(N) $, under the given constraints, is of the form $ (\\log N)^{c_k - o(1)} $, with $ c_k $ defined as in the question. This matches the statement in Option C.\n\nAnswer: C"
+  },
+  {
+   "id": "livemath-202512-13",
+   "gold": "C",
+   "pred": "E",
+   "em": 0.0,
+   "gen_tokens": 4,
+   "raw": "Answer: E"
+  },
+  {
+   "id": "livemath-202512-17",
+   "gold": "C",
+   "pred": "A",
+   "em": 0.0,
+   "gen_tokens": 4,
+   "raw": "Answer: A"
+  },
+  {
+   "id": "livemath-202512-20",
+   "gold": "B",
+   "pred": "C",
+   "em": 0.0,
+   "gen_tokens": 4,
+   "raw": "Answer: C"
+  },
+  {
+   "id": "livemath-202512-24",
+   "gold": "C",
+   "pred": "A",
+   "em": 0.0,
+   "gen_tokens": 4,
+   "raw": "Answer: A"
+  },
+  {
+   "id": "livemath-202512-28",
+   "gold": "C",
+   "pred": "C",
+   "em": 1.0,
+   "gen_tokens": 4,
+   "raw": "Answer: C"
+  },
+  {
+   "id": "livemath-202512-31",
+   "gold": "D",
+   "pred": "B",
+   "em": 0.0,
+   "gen_tokens": 4,
+   "raw": "Answer: B"
+  },
+  {
+   "id": "livemath-202512-35",
+   "gold": "C",
+   "pred": "B",
+   "em": 0.0,
+   "gen_tokens": 483,
+   "raw": "The question concerns the stability of the kink profile $\\phi$ under small perturbations in the energy space $\\mathcal{E}$, measured by the metric $\\rho_R$. The goal is to determine the strongest statement that can be proved about the long-time behavior of solutions to the nonlinear Schr\u00f6dinger equation starting from such perturbations.\n\nOption A claims that for every $R > 0$ and every small $\\epsilon > 0$, there exists $\\delta > 0$ such that if $\\rho_R(\\psi_0, \\phi) \\le \\delta^2$, then the solution $\\psi$ remains close to $\\phi$ (up to phase and spatial shifts) for all $t \\in \\mathbb{R}$. However, the dependence on $R$ in the quantifier makes this statement weaker than it could be, as the result should not depend on the choice of $R$ once $\\phi(R)$ is fixed to be sufficiently large.\n\nOption B claims that for every small $\\epsilon > 0$, there exists $\\delta > 0$ such that if $\\rho_R(\\psi_0, \\phi) \\le \\delta^2$, then the solution $\\psi$ remains close to $\\phi$ (up to phase and spatial shifts) for all $t \\in \\mathbb{R}$, with constants $\\alpha, \\beta$ depending on $\\psi_0$ but not on $t$. This is a stronger and more standard form of orbital stability, where the perturbation remains close to the profile for all time, with the phase and spatial shifts depending on the initial data.\n\nOption C suggests that one of the remaining options is correct, but a stronger result can be proven. This is not a specific claim and does not provide a definitive answer.\n\nOption D is similar to B, but it omits the phase shift $e^{i\\alpha}$, which is essential for accounting for the gauge invariance of the nonlinear Schr\u00f6dinger equation. Without the phase shift, the statement is weaker.\n\nOption E is similar to B, but it restricts the time interval to $t \\ge 0$, rather than all $t \\in \\mathbb{R}$. This makes it a weaker statement than B.\n\nThus, the strongest statement that can be proved is given in Option B.\n\nAnswer: B"
+  },
+  {
+   "id": "livemath-202512-39",
+   "gold": "A",
+   "pred": "D",
+   "em": 0.0,
+   "gen_tokens": 371,
+   "raw": "The question concerns the preservation of log-supermodularity under convolution with the standard Gaussian density $ g $. The key is to determine whether the convolution $ f * g $ inherits the log-supermodularity of $ f $, given that $ f $ is log-supermodular and integrable.\n\nLog-supermodularity is a property that generalizes supermodularity to functions on $ \\mathbb{R}^d $, and it is closely related to the behavior of the function under coordinate-wise maxima and minima. Convolution with a Gaussian kernel introduces a smoothing effect, and the Gaussian itself is log-concave. However, the question is whether this smoothing preserves log-supermodularity.\n\nIt is known that log-supermodularity is not preserved under arbitrary convolutions. In particular, convolving a log-supermodular function with a log-concave function (such as the Gaussian) does not necessarily yield a log-supermodular result. This is because the convolution operation can mix the behavior of the function in ways that disrupt the supermodular property.\n\nMoreover, there are known counterexamples where a log-supermodular function $ f $ convolved with a Gaussian (or another log-concave product density) fails to be log-supermodular. These counterexamples show that the Gaussian kernel is not universally preserving log-supermodularity under convolution, even when $ f $ is log-supermodular and integrable.\n\nThus, the strongest statement that can be proved is that the convolution $ f * g $ is not guaranteed to be log-supermodular for arbitrary log-supermodular $ f \\in L_1(\\mathbb{R}^d) $, and that the Gaussian kernel is not sufficient to preserve this property in general.\n\nAnswer: D"
+  },
+  {
+   "id": "livemath-202512-42",
+   "gold": "A",
+   "pred": "A",
+   "em": 1.0,
+   "gen_tokens": 4,
+   "raw": "Answer: A"
+  },
+  {
+   "id": "livemath-202512-46",
+   "gold": "B",
+   "pred": "E",
+   "em": 0.0,
+   "gen_tokens": 4,
+   "raw": "Answer: E"
+  },
+  {
+   "id": "livemath-202512-5",
+   "gold": "E",
+   "pred": "B",
+   "em": 0.0,
+   "gen_tokens": 4,
+   "raw": "Answer: B"
+  },
+  {
+   "id": "livemath-202512-6",
+   "gold": "E",
+   "pred": "E",
+   "em": 1.0,
+   "gen_tokens": 4,
+   "raw": "Answer: E"
+  },
+  {
+   "id": "livemath-202601-1",
+   "gold": "A",
+   "pred": "A",
+   "em": 1.0,
+   "gen_tokens": 765,
+   "raw": "The question concerns the asymptotic behavior of the laws of rescaled random functions defined by fully connected feedforward neural networks with LeCun initialization, as the width $n$ of the network tends to infinity. The focus is on whether these laws satisfy a large deviation principle (LDP) on the space $C(X, \\mathbb{R}^{d_{\\mathrm{out}}})$, equipped with the topology of uniform convergence, and what the corresponding rate function might be.\n\nIt is given that for each finite subset $X_0 \\subset X$, the projected process $\\pi_{X_0}((1/\\sqrt{n})f_{(n)}^{(L)})$ satisfies an LDP on $(\\mathbb{R}^{d_{\\mathrm{out}}})^{X_0}$ with rate function $I_{X_0,\\mathrm{out}}^{(L)}$. The question is about whether this implies an LDP for the full process on $C(X, \\mathbb{R}^{d_{\\mathrm{out}}})$, and what the rate function would be.\n\nOption A suggests that the full process satisfies an LDP with rate function defined as the supremum of the finite-dimensional rate functions over all finite subsets $X_0 \\subset X$. This is a standard approach in the theory of large deviations for processes indexed by a space, where the rate function is defined as the supremum over all finite-dimensional projections. However, this requires an additional argument for exponential tightness, which is not mentioned in the option.\n\nOption B restricts the supremum to subsets $X_0$ of size at most 2. This is too restrictive and does not reflect the general theory of LDPs for processes, where the rate function is defined as a supremum over all finite subsets.\n\nOption C claims that once the projected processes satisfy LDPs for all finite $X_0$, the full process automatically satisfies an LDP on $C(X, \\mathbb{R}^{d_{\\mathrm{out}}})$ with the rate function defined as the supremum over all finite subsets, without any separate exponential tightness argument. This is not generally true. In the theory of large deviations, the existence of an LDP for a process indexed by a space typically requires both the LDP for finite-dimensional projections and exponential tightness. Exponential tightness is a crucial condition that ensures that the mass of the measures does not escape to infinity in some sense. Therefore, this option is incorrect.\n\nOption D defines the rate function as the maximum over all finite subsets $X_0 \\subset X$ of the finite-dimensional rate functions. This is not the correct definition of the rate function for a process. The rate function is defined as the supremum, not the maximum, over all finite subsets.\n\nOption E states that the laws are exponentially tight on $C(X, \\mathbb{R}^{d_{\\mathrm{out}}})$ with speed $n$. While exponential tightness is a necessary condition for an LDP, it is not sufficient on its own. The question is about the existence of an LDP, not just exponential tightness.\n\nThe correct approach is to recognize that the existence of an LDP for the full process on $C(X, \\mathbb{R}^{d_{\\mathrm{out}}})$ requires both the LDP for all finite-dimensional projections and exponential tightness. Option A is the only one that correctly identifies the rate function as the supremum over all finite-dimensional projections, although it does not explicitly mention the need for exponential tightness. However, among the given options, it is the most accurate in terms of the form of the rate function.\n\nAnswer: A"
+  },
+  {
+   "id": "livemath-202601-13",
+   "gold": "C",
+   "pred": "A",
+   "em": 0.0,
+   "gen_tokens": 4,
+   "raw": "Answer: A"
+  },
+  {
+   "id": "livemath-202601-17",
+   "gold": "E",
+   "pred": "C",
+   "em": 0.0,
+   "gen_tokens": 4,
+   "raw": "Answer: C"
+  },
+  {
+   "id": "livemath-202601-20",
+   "gold": "C",
+   "pred": "D",
+   "em": 0.0,
+   "gen_tokens": 4,
+   "raw": "Answer: D"
+  },
+  {
+   "id": "livemath-202601-24",
+   "gold": "E",
+   "pred": "E",
+   "em": 1.0,
+   "gen_tokens": 4,
+   "raw": "Answer: E"
+  },
+  {
+   "id": "livemath-202601-28",
+   "gold": "A",
+   "pred": "A",
+   "em": 1.0,
+   "gen_tokens": 4,
+   "raw": "Answer: A"
+  },
+  {
+   "id": "livemath-202601-31",
+   "gold": "D",
+   "pred": "D",
+   "em": 1.0,
+   "gen_tokens": 4,
+   "raw": "Answer: D"
+  },
+  {
+   "id": "livemath-202601-35",
+   "gold": "A",
+   "pred": "A",
+   "em": 1.0,
+   "gen_tokens": 4,
+   "raw": "Answer: A"
+  },
+  {
+   "id": "livemath-202601-39",
+   "gold": "B",
+   "pred": "E",
+   "em": 0.0,
+   "gen_tokens": 481,
+   "raw": "The question concerns a quantitative estimate involving the relative perimeter of sets in a specific region. The set $E$ is defined as the half-space $\\{(x,t)\\in \\mathbb R^{n+1}:x_1>0\\}$, and the goal is to compare the relative perimeter of $E$ with that of another set $F$ that is close to $E$ in the sense that their symmetric difference is compactly contained in a ball $B_R$.\n\nThe key idea is that $E$ is a minimal surface in the sense of perimeter minimization. If $F$ is close to $E$, then the perimeter of $F$ should be at least as large as that of $E$, with a possible correction term accounting for the boundary of $\\Omega_\\lambda$ where $F$ and $E$ differ.\n\nOption A claims the inequality $P(E;\\Omega_{\\lambda}\\cap B_R)\\le P(F;\\Omega_{\\lambda}\\cap B_R)$ for all $\\lambda>0$, but this is too strong. It does not account for the boundary effects and is not valid for all $\\lambda$.\n\nOption B suggests that one of the other options is correct, but a stronger result can be proven. However, no stronger result is indicated in the options, so this is not helpful.\n\nOption C introduces a correction term involving the intersection of the symmetric difference with the boundary of $\\Omega_\\lambda$, but the inequality is reversed compared to what is expected.\n\nOption D restricts $\\lambda$ to be strictly less than $\\bar\\lambda(n)$, which is consistent with the assumption $0<\\lambda\\le \\bar\\lambda(n)$, and claims the same inequality as in A but with a restricted range of $\\lambda$. This is plausible but not the strongest possible statement.\n\nOption E provides the inequality $P(E;\\Omega_{\\lambda}\\cap B_R)\\le P(F;\\Omega_{\\lambda}\\cap B_R)+\\mathcal H^n\\big((E\\Delta F)\\cap \\partial\\Omega_{\\lambda}\\big)$, which includes a correction term for the boundary of $\\Omega_\\lambda$. This is the most general and accurate statement, as it accounts for the boundary effects and holds for all $F$ with $E\\Delta F\\subset\\subset B_R$.\n\nAnswer: E"
+  },
+  {
+   "id": "livemath-202601-42",
+   "gold": "A",
+   "pred": "C",
+   "em": 0.0,
+   "gen_tokens": 4,
+   "raw": "Answer: C"
+  },
+  {
+   "id": "livemath-202601-46",
+   "gold": "D",
+   "pred": "B",
+   "em": 0.0,
+   "gen_tokens": 4,
+   "raw": "Answer: B"
+  },
+  {
+   "id": "livemath-202601-8",
+   "gold": "E",
+   "pred": "B",
+   "em": 0.0,
+   "gen_tokens": 4,
+   "raw": "Answer: B"
+  },
+  {
+   "id": "livemath-202602-11",
+   "gold": "A",
+   "pred": "A",
+   "em": 1.0,
+   "gen_tokens": 4,
+   "raw": "Answer: A"
+  },
+  {
+   "id": "livemath-202602-15",
+   "gold": "E",
+   "pred": "E",
+   "em": 1.0,
+   "gen_tokens": 4,
+   "raw": "Answer: E"
+  },
+  {
+   "id": "livemath-202602-19",
+   "gold": "C",
+   "pred": "D",
+   "em": 0.0,
+   "gen_tokens": 4,
+   "raw": "Answer: D"
+  },
+  {
+   "id": "livemath-202602-22",
+   "gold": "E",
+   "pred": "E",
+   "em": 1.0,
+   "gen_tokens": 4,
+   "raw": "Answer: E"
+  },
+  {
+   "id": "livemath-202602-26",
+   "gold": "B",
+   "pred": "E",
+   "em": 0.0,
+   "gen_tokens": 4,
+   "raw": "Answer: E"
+  },
+  {
+   "id": "livemath-202602-3",
+   "gold": "B",
+   "pred": "C",
+   "em": 0.0,
+   "gen_tokens": 4,
+   "raw": "Answer: C"
+  },
+  {
+   "id": "livemath-202602-33",
+   "gold": "E",
+   "pred": "B",
+   "em": 0.0,
+   "gen_tokens": 4,
+   "raw": "Answer: B"
+  },
+  {
+   "id": "livemath-202602-37",
+   "gold": "C",
+   "pred": "A",
+   "em": 0.0,
+   "gen_tokens": 4,
+   "raw": "Answer: A"
+  },
+  {
+   "id": "livemath-202602-40",
+   "gold": "C",
+   "pred": "C",
+   "em": 1.0,
+   "gen_tokens": 4,
+   "raw": "Answer: C"
+  },
+  {
+   "id": "livemath-202602-44",
+   "gold": "C",
+   "pred": "A",
+   "em": 0.0,
+   "gen_tokens": 4,
+   "raw": "Answer: A"
+  },
+  {
+   "id": "livemath-202602-48",
+   "gold": "C",
+   "pred": "E",
+   "em": 0.0,
+   "gen_tokens": 4,
+   "raw": "Answer: E"
+  },
+  {
+   "id": "livemath-202602-6",
+   "gold": "D",
+   "pred": "C",
+   "em": 0.0,
+   "gen_tokens": 4,
+   "raw": "Answer: C"
+  },
+  {
+   "id": "livemath-202603-1",
+   "gold": "C",
+   "pred": "C",
+   "em": 1.0,
+   "gen_tokens": 545,
+   "raw": "The question concerns the asymptotic running-time guarantee for computing an optimal stable matching in a stable roommates (SR) instance, parameterized by the minimum crossing distance $ k $. The goal is to identify the strongest asymptotic running-time guarantee among the given options.\n\nOption A states that the problem is polynomial-time solvable for each fixed $ k $, but only in a non-uniform sense, without a single bound of the form $ f(k) n^{O(1)} $ that works uniformly for all $ k $. This implies that for each fixed $ k $, there exists a polynomial-time algorithm, but the degree of the polynomial or the function $ f(k) $ may vary with $ k $, which is not as strong as a uniform bound.\n\nOption B claims that for every fixed $ k $, an optimal stable matching can be computed in polynomial time in $ n $. This is a stronger statement than A, as it asserts a uniform polynomial-time bound for each fixed $ k $, but it does not specify the form of the bound or its dependence on $ k $.\n\nOption C states that an optimal stable matching can be found in time $ 2^{O(k)} n^{O(1)} $, which implies that the problem is fixed-parameter tractable (FPT) when parameterized by $ k $. This is a stronger guarantee than B, as it provides a concrete running time that is exponential in $ k $ but polynomial in $ n $, and it directly implies FPT.\n\nOption D claims that the problem can be solved in time $ n^{O(k)} $, which is equivalent to $ 2^{O(k \\log n)} $, and argues that this shows fixed-parameter tractability. However, this is not FPT, as the exponent of $ n $ depends on $ k $, and FPT requires the running time to be of the form $ f(k) n^{O(1)} $, not $ n^{f(k)} $. This is a weaker guarantee than C.\n\nOption E states that the problem can be solved in time $ 2^{O(k \\log n)} n^{O(1)} $, which is equivalent to $ n^{O(k)} $, and concludes that this gives only an XP guarantee, not an FPT one. This is consistent with D and is weaker than C.\n\nAmong the options, C provides the strongest asymptotic running-time guarantee, as it gives a concrete FPT running time of $ 2^{O(k)} n^{O(1)} $, which is stronger than the XP guarantees in D and E, and more specific than the general claims in A and B.\n\nAnswer: C"
+  },
+  {
+   "id": "livemath-202603-102",
+   "gold": "A",
+   "pred": "C",
+   "em": 0.0,
+   "gen_tokens": 4,
+   "raw": "Answer: C"
+  },
+  {
+   "id": "livemath-202603-106",
+   "gold": "E",
+   "pred": "B",
+   "em": 0.0,
+   "gen_tokens": 4,
+   "raw": "Answer: B"
+  },
+  {
+   "id": "livemath-202603-11",
+   "gold": "A",
+   "pred": "B",
+   "em": 0.0,
+   "gen_tokens": 4,
+   "raw": "Answer: B"
+  },
+  {
+   "id": "livemath-202603-12",
+   "gold": "B",
+   "pred": "C",
+   "em": 0.0,
+   "gen_tokens": 4,
+   "raw": "Answer: C"
+  },
+  {
+   "id": "livemath-202603-16",
+   "gold": "A",
+   "pred": "B",
+   "em": 0.0,
+   "gen_tokens": 4,
+   "raw": "Answer: B"
+  },
+  {
+   "id": "livemath-202603-2",
+   "gold": "A",
+   "pred": "C",
+   "em": 0.0,
+   "gen_tokens": 4,
+   "raw": "Answer: C"
+  },
+  {
+   "id": "livemath-202603-23",
+   "gold": "C",
+   "pred": "C",
+   "em": 1.0,
+   "gen_tokens": 806,
+   "raw": "To determine the intersection $\\left\\{\\frac{1}{n!} : n \\in \\mathbb{N}\\right\\} \\cap C$, we need to consider which of the reciprocal factorials belong to the middle-third Cantor set $C$.\n\nThe middle-third Cantor set $C$ is constructed by iteratively removing the open middle third of each interval in the unit interval $[0,1]$. The resulting set contains numbers that can be expressed in base 3 without the digit 1.\n\nNow consider the reciprocal factorials:\n\n- $1/1! = 1$\n- $1/2! = 1/2$\n- $1/3! = 1/6$\n- $1/4! = 1/24$\n- $1/5! = 1/120$\n- $1/6! = 1/720$\n- $1/7! = 1/5040$\n- and so on.\n\nWe now check which of these numbers belong to the Cantor set $C$.\n\n- $1 = 1.0_3$ in base 3, which contains only the digit 0 and 1, so it is in $C$.\n- $1/2 = 0.111\\ldots_3$, which contains only the digit 1, so it is in $C$.\n- $1/6 = 0.012101210\\ldots_3$, which contains the digit 2, so it is not in $C$.\n- $1/24 = 0.0011210212\\ldots_3$, which contains the digit 2, so it is not in $C$.\n- $1/120 = 0.00011210212\\ldots_3$, which contains the digit 2, so it is not in $C$.\n- $1/720 = 0.000011210212\\ldots_3$, which contains the digit 2, so it is not in $C$.\n- $1/5040 = 0.0000011210212\\ldots_3$, which contains the digit 2, so it is not in $C$.\n\nFrom this, we see that only $1$ and $1/2$ are in the Cantor set $C$. However, $1/2$ is not in the set $\\{1/n! : n \\in \\mathbb{N}\\}$, because $1/2 = 1/2!$, and $2! = 2$, so $1/2$ is in the set of reciprocal factorials.\n\nThus, the only elements of $\\{1/n! : n \\in \\mathbb{N}\\}$ that are in $C$ are $1$ and $1/2$.\n\nNone of the given options include $1/2$, so we must conclude that the correct answer is not among the options provided.\n\nHowever, since the question asks for the best choice among the given options, and the only elements of $\\{1/n! : n \\in \\mathbb{N}\\}$ that are in $C$ are $1$ and $1/2$, and $1/2$ is not in any of the options, the only option that includes $1$ is:\n\nC. $\\left\\{\\frac{1}{n!}:n\\in\\mathbb N\\right\\}\\cap C=\\left\\{1,\\frac{1}{5!}\\right\\}.$\n\nThis is incorrect, but it is the only one that includes $1$.\n\nAnswer: C"
+  },
+  {
+   "id": "livemath-202603-27",
+   "gold": "C",
+   "pred": "C",
+   "em": 1.0,
+   "gen_tokens": 4,
+   "raw": "Answer: C"
+  },
+  {
+   "id": "livemath-202603-30",
+   "gold": "E",
+   "pred": "E",
+   "em": 1.0,
+   "gen_tokens": 4,
+   "raw": "Answer: E"
+  },
+  {
+   "id": "livemath-202603-34",
+   "gold": "B",
+   "pred": "E",
+   "em": 0.0,
+   "gen_tokens": 4,
+   "raw": "Answer: E"
+  },
+  {
+   "id": "livemath-202603-38",
+   "gold": "E",
+   "pred": "B",
+   "em": 0.0,
+   "gen_tokens": 628,
+   "raw": "The question concerns the existence of a semigroup of operators associated with the Hamilton--Jacobi equation $(HJ)$, where the initial data $u_0$ belongs to the intersection of Lipschitz and bounded uniformly continuous functions on $\\mathbb{R}^n$. The semigroup is defined in terms of an implicit action function $h_{y,a}(x,t)$, indexed by $y \\in \\mathbb{R}^n$ and $a \\in \\mathbb{R}$, and the goal is to identify the strongest existence statement for such an operator family.\n\nOption A claims the existence of a semigroup $\\{S_H(t)\\}_{t \\ge 0}$ such that for every $u_0 \\in \\operatorname{Lip}(\\mathbb{R}^n) \\cap BUC(\\mathbb{R}^n)$, the function $(x,t) \\mapsto (S_H(t)u_0)(x)$ is the unique viscosity solution of $(HJ)$, and it is given by the minimum over $y \\in \\mathbb{R}^n$ of $h_{y,u_0(y)}(x,t)$. This is a strong statement, but the use of $\\min$ is problematic in this context, as the infimum is typically the correct formulation when dealing with viscosity solutions and Hamilton--Jacobi equations.\n\nOption B is similar to A, but it uses $\\inf$ instead of $\\min$, which is more appropriate in this setting. It also claims the existence of a semigroup with the same domain for $u_0$, and it identifies the operator family as the Lax--Oleinik semigroup. This is a standard result in the theory of Hamilton--Jacobi equations, where the Lax--Oleinik semigroup is defined using the infimum over initial points of the action function.\n\nOption C extends the domain of $u_0$ to all of $C(\\mathbb{R}^n, \\mathbb{R})$, which is a stronger statement than B. However, the Lax--Oleinik semigroup is typically defined for initial data in $\\operatorname{Lip}(\\mathbb{R}^n) \\cap BUC(\\mathbb{R}^n)$, and extending it to all continuous functions is not generally valid without additional assumptions.\n\nOption D introduces a different expression for the solution, involving $u_0(y) + h_{y,0}(x,t)$, which is not consistent with the standard formulation of the Lax--Oleinik semigroup. This suggests that the expression in D is not the correct one for the solution in terms of the action function.\n\nOption E claims that one of the other options is correct, but a stronger result can be proven. However, the strongest known result in this context is the one described in Option B, which is consistent with the standard theory of the Lax--Oleinik semigroup for Hamilton--Jacobi equations.\n\nAnswer: B"
+  },
+  {
+   "id": "livemath-202603-41",
+   "gold": "C",
+   "pred": "A",
+   "em": 0.0,
+   "gen_tokens": 4,
+   "raw": "Answer: A"
+  },
+  {
+   "id": "livemath-202603-45",
+   "gold": "B",
+   "pred": "A",
+   "em": 0.0,
+   "gen_tokens": 4,
+   "raw": "Answer: A"
+  },
+  {
+   "id": "livemath-202603-49",
+   "gold": "A",
+   "pred": "A",
+   "em": 1.0,
+   "gen_tokens": 4,
+   "raw": "Answer: A"
+  },
+  {
+   "id": "livemath-202603-52",
+   "gold": "C",
+   "pred": "C",
+   "em": 1.0,
+   "gen_tokens": 4,
+   "raw": "Answer: C"
+  },
+  {
+   "id": "livemath-202603-56",
+   "gold": "E",
+   "pred": "D",
+   "em": 0.0,
+   "gen_tokens": 4,
+   "raw": "Answer: D"
+  },
+  {
+   "id": "livemath-202603-6",
+   "gold": "E",
+   "pred": "E",
+   "em": 1.0,
+   "gen_tokens": 4,
+   "raw": "Answer: E"
+  },
+  {
+   "id": "livemath-202603-63",
+   "gold": "A",
+   "pred": "E",
+   "em": 0.0,
+   "gen_tokens": 417,
+   "raw": "The given evolution equation is a first-order system in time, involving operators $\\alpha$, $\\beta$, $\\gamma$, and $C$, with the coupling between the components of $U = (u, v)$ through the operator $C$ and its adjoint $C^*$. The initial data is chosen such that $v_0 \\in \\beta^{-1}\\operatorname{ran}(C)$, which ensures that the coupling term is well-defined in the context of mild solutions.\n\nThe question asks for the strongest statement of the form \u201cthere exists $\\delta > 0$ such that for all mild solutions\u201d regarding the behavior of the solution $U$ over time.\n\nOption B claims that the norm of the solution is bounded by the norm of the initial data for all $t \\ge 0$. This is a form of stability, but it does not assert exponential decay.\n\nOption C claims exponential decay with a uniform rate $\\delta > 0$ for all initial data in $H_0 \\times H_1$. This is a stronger statement than B, but it applies to all initial data, not just the fixed initial data $(u_0, v_0)$ specified in the question.\n\nOption D claims exponential decay for all $\\delta > 0$, which is too strong and not generally true for such systems unless the generator is dissipative with a uniform bound on the decay rate.\n\nOption E is similar to B and C, but it specifies the decay of the individual components $u$ and $v$, rather than the full norm of $U$. It also claims exponential decay with a uniform rate $\\delta > 0$, but only for the fixed initial data $(u_0, v_0)$.\n\nThe strongest statement that is consistent with the given initial data and the structure of the equation is that there exists $\\delta > 0$ such that the norm of the solution decays exponentially in time, with the decay rate $\\delta$ depending on the system and the initial data. This is captured by option E.\n\nAnswer: E"
+  },
+  {
+   "id": "livemath-202603-67",
+   "gold": "D",
+   "pred": "B",
+   "em": 0.0,
+   "gen_tokens": 4,
+   "raw": "Answer: B"
+  },
+  {
+   "id": "livemath-202603-70",
+   "gold": "A",
+   "pred": "B",
+   "em": 0.0,
+   "gen_tokens": 4,
+   "raw": "Answer: B"
+  },
+  {
+   "id": "livemath-202603-74",
+   "gold": "C",
+   "pred": "D",
+   "em": 0.0,
+   "gen_tokens": 4,
+   "raw": "Answer: D"
+  },
+  {
+   "id": "livemath-202603-78",
+   "gold": "E",
+   "pred": "C",
+   "em": 0.0,
+   "gen_tokens": 4,
+   "raw": "Answer: C"
+  },
+  {
+   "id": "livemath-202603-81",
+   "gold": "B",
+   "pred": "B",
+   "em": 1.0,
+   "gen_tokens": 4,
+   "raw": "Answer: B"
+  },
+  {
+   "id": "livemath-202603-85",
+   "gold": "D",
+   "pred": "D",
+   "em": 1.0,
+   "gen_tokens": 4,
+   "raw": "Answer: D"
+  },
+  {
+   "id": "livemath-202603-89",
+   "gold": "C",
+   "pred": "B",
+   "em": 0.0,
+   "gen_tokens": 4,
+   "raw": "Answer: B"
+  },
+  {
+   "id": "livemath-202603-92",
+   "gold": "C",
+   "pred": "C",
+   "em": 1.0,
+   "gen_tokens": 4,
+   "raw": "Answer: C"
+  },
+  {
+   "id": "livemath-202603-96",
+   "gold": "D",
+   "pred": "C",
+   "em": 0.0,
+   "gen_tokens": 4,
+   "raw": "Answer: C"
+  },
+  {
+   "id": "livemath-202604-1",
+   "gold": "B",
+   "pred": "B",
+   "em": 1.0,
+   "gen_tokens": 4,
+   "raw": "Answer: B"
+  },
+  {
+   "id": "livemath-202604-102",
+   "gold": "E",
+   "pred": "C",
+   "em": 0.0,
+   "gen_tokens": 4,
+   "raw": "Answer: C"
+  },
+  {
+   "id": "livemath-202604-106",
+   "gold": "B",
+   "pred": "D",
+   "em": 0.0,
+   "gen_tokens": 4,
+   "raw": "Answer: D"
+  },
+  {
+   "id": "livemath-202604-12",
+   "gold": "B",
+   "pred": "A",
+   "em": 0.0,
+   "gen_tokens": 4,
+   "raw": "Answer: A"
+  },
+  {
+   "id": "livemath-202604-16",
+   "gold": "C",
+   "pred": "A",
+   "em": 0.0,
+   "gen_tokens": 4,
+   "raw": "Answer: A"
+  },
+  {
+   "id": "livemath-202604-2",
+   "gold": "D",
+   "pred": "C",
+   "em": 0.0,
+   "gen_tokens": 366,
+   "raw": "The function $ T(x) $ is defined as\n$$\nT(x) = \\sum_{1 \\le n \\le x} \\tau\\left(\\left\\lfloor \\frac{x}{n} \\right\\rfloor\\right) \\tau(n),\n$$\nwhere $ \\tau(n) $ is the number of positive divisors of $ n $, and $ \\lfloor y \\rfloor $ is the floor function.\n\nThis sum involves the divisor function $ \\tau $ evaluated at $ \\lfloor x/n \\rfloor $, multiplied by $ \\tau(n) $, and summed over $ n \\le x $. The behavior of $ T(x) $ as $ x \\to \\infty $ is a question of asymptotic analysis.\n\nIt is known that the divisor function $ \\tau(n) $ has average order $ \\log n $, and the sum $ \\sum_{n \\le x} \\tau(n) $ is asymptotically $ x \\log x + (2\\gamma - 1)x + O(\\sqrt{x}) $, where $ \\gamma $ is the Euler\u2013Mascheroni constant.\n\nThe structure of $ T(x) $ is more complex due to the nested divisor function and the floor function. However, the asymptotic behavior of such sums has been studied in analytic number theory. In particular, it is known that the leading terms of $ T(x) $ are of the form $ C_1 x (\\log x)^2 + C_2 x \\log x $, and the error term is known to be $ O(x^{17/30 + \\varepsilon}) $ for any $ \\varepsilon > 0 $.\n\nThis matches the asymptotic form given in option C.\n\nAnswer: C"
+  },
+  {
+   "id": "livemath-202604-23",
+   "gold": "A",
+   "pred": "C",
+   "em": 0.0,
+   "gen_tokens": 4,
+   "raw": "Answer: C"
+  },
+  {
+   "id": "livemath-202604-27",
+   "gold": "D",
+   "pred": "A",
+   "em": 0.0,
+   "gen_tokens": 4,
+   "raw": "Answer: A"
+  },
+  {
+   "id": "livemath-202604-30",
+   "gold": "B",
+   "pred": "D",
+   "em": 0.0,
+   "gen_tokens": 331,
+   "raw": "The question asks for the strongest universal quantitative estimate for the stability of the inner product on the unit ball of a Hilbert space. The inner product $\\langle \\cdot, \\cdot \\rangle$ on $\\mathsf{U} \\times \\mathsf{U}$ is $(k, \\varepsilon)$-stable if there do not exist $k$ points in $\\mathsf{U}$ such that the pairwise differences in the inner product exceed $\\varepsilon$ in a specific way.\n\nThis is closely related to the concept of avoiding configurations that violate a certain stability condition, and such problems often have connections to geometry in Hilbert spaces, particularly to the study of configurations of vectors and their inner products.\n\nThe threshold for $(k, \\varepsilon)$-stability is typically exponential in $1/\\varepsilon$, as such problems often involve covering or packing arguments in high-dimensional spaces. Among the options, the strongest universal estimate is the one that provides the best bound without assuming a specific constant or sharpness, and that applies universally to all Hilbert spaces.\n\nOption D provides the strongest universal estimate, as it states that for any Hilbert space and any $\\varepsilon \\in (0,1)$, the inner product is $(k, \\varepsilon)$-stable for $k \\ge \\exp(C/\\varepsilon)$, where $C$ is a universal constant. This is the most general and robust statement among the choices, as it does not assume a specific value for $C$ or claim sharpness, which may not be universally true across all Hilbert spaces.\n\nAnswer: D"
+  },
+  {
+   "id": "livemath-202604-34",
+   "gold": "E",
+   "pred": "E",
+   "em": 1.0,
+   "gen_tokens": 4,
+   "raw": "Answer: E"
+  },
+  {
+   "id": "livemath-202604-38",
+   "gold": "A",
+   "pred": "E",
+   "em": 0.0,
+   "gen_tokens": 4,
+   "raw": "Answer: E"
+  },
+  {
+   "id": "livemath-202604-41",
+   "gold": "A",
+   "pred": "B",
+   "em": 0.0,
+   "gen_tokens": 4,
+   "raw": "Answer: B"
+  },
+  {
+   "id": "livemath-202604-45",
+   "gold": "B",
+   "pred": "A",
+   "em": 0.0,
+   "gen_tokens": 4,
+   "raw": "Answer: A"
+  },
+  {
+   "id": "livemath-202604-49",
+   "gold": "C",
+   "pred": "D",
+   "em": 0.0,
+   "gen_tokens": 509,
+   "raw": "The question concerns the behavior of entropy production $ D(f(t)) $ in the context of the space-homogeneous Boltzmann equation with a separated collision kernel. The entropy production is defined as the time derivative of the entropy $ H(f(t)) $, and the question asks which statement provides the strongest existence conclusion regarding the behavior of $ D(f(t)) $.\n\nOption A claims the existence of a function $ f $ and a collision kernel such that the entropy production increases in time and is positive for some time $ t $. This is a specific existence claim, but it does not rule out the possibility that the entropy production could be non-monotonic or even decreasing at other times.\n\nOption B strengthens the claim by specifying that the collision kernel comes from a physically relevant model, such as hard spheres or inverse-power-law. This adds a level of physical relevance, but it still asserts the existence of a function $ f $ and a physically relevant kernel such that the entropy production increases in time. It does not claim that the entropy production is always increasing or that it is not decreasing at any point.\n\nOption C suggests that one of the other options is correct, but a stronger result can be proven. This is a meta-statement and does not directly provide a conclusion about the behavior of $ D(f(t)) $.\n\nOption D asserts the existence of a function $ f $ and a collision kernel such that the entropy production is not monotone decreasing in time. This is a stronger statement than A or B, as it implies that the entropy production can increase at some times, which is consistent with the idea of entropy production being non-monotonic. This is a more general and stronger existence result than A or B.\n\nOption E claims that for every nonnegative compactly supported function $ f $, there exists a collision kernel such that the entropy production increases in time. This is a universal statement and is much stronger than the existence claims in A, B, or D. However, it is not known to be true in general for the space-homogeneous Boltzmann equation, and such a universal result would be highly non-trivial.\n\nAmong the options, D provides the strongest existence conclusion that is currently known to be valid. It asserts the existence of a function $ f $ and a collision kernel such that the entropy production is not monotone decreasing in time, which implies that it can increase at some times. This is a stronger statement than A or B, and it does not make the universal claim of E.\n\nAnswer: D"
+  },
+  {
+   "id": "livemath-202604-52",
+   "gold": "D",
+   "pred": "D",
+   "em": 1.0,
+   "gen_tokens": 4,
+   "raw": "Answer: D"
+  },
+  {
+   "id": "livemath-202604-56",
+   "gold": "B",
+   "pred": "E",
+   "em": 0.0,
+   "gen_tokens": 4,
+   "raw": "Answer: E"
+  },
+  {
+   "id": "livemath-202604-6",
+   "gold": "D",
+   "pred": "D",
+   "em": 1.0,
+   "gen_tokens": 4,
+   "raw": "Answer: D"
+  },
+  {
+   "id": "livemath-202604-63",
+   "gold": "B",
+   "pred": "C",
+   "em": 0.0,
+   "gen_tokens": 4,
+   "raw": "Answer: C"
+  },
+  {
+   "id": "livemath-202604-67",
+   "gold": "A",
+   "pred": "C",
+   "em": 0.0,
+   "gen_tokens": 569,
+   "raw": "The question concerns a compact Hausdorff topological Clifford semigroup $ S $, with a metrizable perfect semilattice of idempotents $ E(S) $, and compact metrizable maximal subgroups $ G_e $ for each $ e \\in E(S) $. It also assumes that the functor $ e \\mapsto G_e $ preserves inverse limits. The focus is on the Bowman topology on $ S $, and the question asks which is the strongest conclusion that can be drawn about $ S $ with this topology.\n\nGiven the assumptions, the key point is that the Bowman topology is defined in terms of the structure of $ E(S) $ and the family $ (G_e)_{e \\in E(S)} $. Since $ E(S) $ is metrizable and each $ G_e $ is compact and metrizable, the structure of $ S $ under the Bowman topology is sufficiently well-behaved to ensure that the topology is metrizable. However, the question asks for the strongest conclusion, particularly regarding the possibility of constructing an explicit metric on $ S $ that induces the Bowman topology.\n\nOption C states that the Bowman topology on $ S $ is metrizable. This is a valid conclusion, but it is not the strongest possible. The stronger conclusions involve the possibility of explicitly constructing a metric that induces the Bowman topology.\n\nOption A states that it is possible to construct an explicit metric on $ S $ whose induced topology is exactly the Bowman topology. This is a stronger conclusion than C, as it goes beyond mere metrizability to the existence of an explicit metric.\n\nOption D strengthens A further by specifying that the metric can be constructed from a metric on $ E(S) $ and finitely many weighted projection terms from lower groups. This is more specific and restrictive, but it may not be the strongest possible conclusion.\n\nOption E claims that an explicit metric can be constructed using only a compatible metric on $ E(S) $, without any auxiliary metrics from the maximal subgroups. This is a stronger claim than D, as it eliminates the need for any additional metrics from the subgroups.\n\nOption B claims that the original compact Hausdorff topology on $ S $ must coincide with the Bowman topology, which would imply that the original topology is metrizable and that an explicit metric exists. However, this is not necessarily true unless the Bowman topology is shown to be the same as the original topology, which is not established in the question.\n\nAmong the options, the strongest conclusion that can be drawn is that the Bowman topology on $ S $ is metrizable. While stronger claims about explicit constructions of metrics are possible, they are not necessarily guaranteed by the given assumptions. Therefore, the strongest conclusion that is guaranteed is that the topology is metrizable.\n\nAnswer: C"
+  },
+  {
+   "id": "livemath-202604-70",
+   "gold": "B",
+   "pred": "D",
+   "em": 0.0,
+   "gen_tokens": 4,
+   "raw": "Answer: D"
+  },
+  {
+   "id": "livemath-202604-74",
+   "gold": "B",
+   "pred": "D",
+   "em": 0.0,
+   "gen_tokens": 4,
+   "raw": "Answer: D"
+  },
+  {
+   "id": "livemath-202604-78",
+   "gold": "B",
+   "pred": "B",
+   "em": 1.0,
+   "gen_tokens": 4,
+   "raw": "Answer: B"
+  },
+  {
+   "id": "livemath-202604-81",
+   "gold": "B",
+   "pred": "C",
+   "em": 0.0,
+   "gen_tokens": 4,
+   "raw": "Answer: C"
+  },
+  {
+   "id": "livemath-202604-85",
+   "gold": "D",
+   "pred": "D",
+   "em": 1.0,
+   "gen_tokens": 4,
+   "raw": "Answer: D"
+  },
+  {
+   "id": "livemath-202604-89",
+   "gold": "C",
+   "pred": "C",
+   "em": 1.0,
+   "gen_tokens": 233,
+   "raw": "The given condition on $ n $, namely\n$$\nn > \\frac{\\sqrt{d}}{(\\sqrt{1+c} - 1)^2},\n$$\nis sufficient to ensure that the Minkowski sum $ E_1 + \\cdots + E_n $ has non-empty interior. This follows from known results in geometric measure theory and convex geometry, which state that if the number of sets in the Minkowski sum exceeds a certain threshold depending on their thickness and the ambient dimension, then the sum becomes non-convex and has a non-empty interior.\n\nOption C directly states this conclusion. Option E is also plausible, as a set with non-empty interior contains a ball of some radius, but it is not the strongest conclusion because it introduces an additional constant $ \\rho $, which is not necessary to state the result. Option B is weaker than C, as a set with non-empty interior necessarily has positive Lebesgue measure, but the converse is not true. Option D is not necessarily true, and Option A is about the converse of the given condition and is not directly supported by the information provided.\n\nAnswer: C"
+  },
+  {
+   "id": "livemath-202604-92",
+   "gold": "E",
+   "pred": "E",
+   "em": 1.0,
+   "gen_tokens": 4,
+   "raw": "Answer: E"
+  },
+  {
+   "id": "livemath-202604-96",
+   "gold": "D",
+   "pred": "E",
+   "em": 0.0,
+   "gen_tokens": 941,
+   "raw": "We are given a system of partial differential equations involving the functions $ g(t,r) $, $ \\tilde{g}(t,r) $, $ u(t,r) $, $ \\tilde{u}(t,r) $, and $ \\nu(t,r) $, defined for $ 0 < r \\le b $, with the normalization condition $ g(t,b) = 1 $ for all $ t $. The goal is to determine which inequality among the given options is guaranteed to hold for all $ r \\in (0,b] $, for every fixed $ t $.\n\nWe analyze the equations:\n\n1. $ \\nu_t - \\left( \\tfrac{1}{2} \\tilde{g} u \\right)_r = -\\tfrac{1}{2} \\tilde{g}_r \\tilde{u} $\n2. $ g_r = \\tfrac{1}{r} g (u - \\tilde{u})^2 $\n3. $ \\tilde{g}_r = \\tfrac{1}{r} (g - \\tilde{g}) $\n\nFrom equation (2), since $ g > 0 $ and $ (u - \\tilde{u})^2 \\ge 0 $, it follows that $ g_r \\ge 0 $. This means $ g $ is non-decreasing in $ r $, and since $ g(t,b) = 1 $, we conclude that $ g(t,r) \\le 1 $ for all $ r \\in (0,b] $.\n\nFrom equation (3), we can rearrange to get:\n$$\n\\tilde{g}_r = \\tfrac{1}{r} (g - \\tilde{g})\n$$\nThis implies that $ \\tilde{g}_r $ is proportional to $ g - \\tilde{g} $. If $ g > \\tilde{g} $, then $ \\tilde{g}_r > 0 $, so $ \\tilde{g} $ increases with $ r $. If $ g < \\tilde{g} $, then $ \\tilde{g}_r < 0 $, so $ \\tilde{g} $ decreases with $ r $. If $ g = \\tilde{g} $, then $ \\tilde{g}_r = 0 $, so $ \\tilde{g} $ is constant in $ r $.\n\nNow consider the boundary condition $ g(t,b) = 1 $. Since $ g $ is non-decreasing in $ r $, and $ g(t,b) = 1 $, it follows that $ g(t,r) \\le 1 $ for all $ r \\in (0,b] $, and $ g(t,r) < 1 $ for $ r < b $.\n\nFrom equation (3), we can also derive a relation between $ g $ and $ \\tilde{g} $. Let us define $ h = g - \\tilde{g} $. Then:\n$$\n\\tilde{g}_r = \\tfrac{1}{r} h\n$$\nDifferentiating $ h $ with respect to $ r $, we get:\n$$\nh_r = g_r - \\tilde{g}_r = \\tfrac{1}{r} g (u - \\tilde{u})^2 - \\tfrac{1}{r} h\n$$\nThis is a first-order differential equation for $ h $, and its behavior depends on the values of $ g $, $ h $, and $ (u - \\tilde{u})^2 $. However, we can observe that if $ h > 0 $, then $ \\tilde{g}_r > 0 $, and if $ h < 0 $, then $ \\tilde{g}_r < 0 $. This suggests that $ \\tilde{g} $ is influenced by the difference $ g - \\tilde{g} $, and the system may tend to balance $ g $ and $ \\tilde{g} $.\n\nFrom the above, we can conclude that $ \\tilde{g}(t,r) \\le g(t,r) $ for all $ r \\in (0,b] $, and $ g(t,r) \\le 1 $, with $ g(t,r) < 1 $ for $ r < b $.\n\nThus, the correct statement is:\n\nAnswer: E"
+  },
+  {
+   "id": "livemath-202605-1",
+   "gold": "E",
+   "pred": "B",
+   "em": 0.0,
+   "gen_tokens": 4,
+   "raw": "Answer: B"
+  },
+  {
+   "id": "livemath-202605-13",
+   "gold": "E",
+   "pred": "E",
+   "em": 1.0,
+   "gen_tokens": 4,
+   "raw": "Answer: E"
+  },
+  {
+   "id": "livemath-202605-17",
+   "gold": "A",
+   "pred": "B",
+   "em": 0.0,
+   "gen_tokens": 4,
+   "raw": "Answer: B"
+  },
+  {
+   "id": "livemath-202605-20",
+   "gold": "B",
+   "pred": "A",
+   "em": 0.0,
+   "gen_tokens": 4,
+   "raw": "Answer: A"
+  },
+  {
+   "id": "livemath-202605-24",
+   "gold": "A",
+   "pred": "A",
+   "em": 1.0,
+   "gen_tokens": 4,
+   "raw": "Answer: A"
+  },
+  {
+   "id": "livemath-202605-28",
+   "gold": "E",
+   "pred": "D",
+   "em": 0.0,
+   "gen_tokens": 4,
+   "raw": "Answer: D"
+  },
+  {
+   "id": "livemath-202605-31",
+   "gold": "C",
+   "pred": "C",
+   "em": 1.0,
+   "gen_tokens": 513,
+   "raw": "The given condition on the first Betti numbers, $ b_1(M) - b_1(N) = \\dim M - \\dim N $, implies that the fiber $ T^{m-k} $ contributes maximally to the first Betti number of $ M $. This is consistent with $ M $ being a principal $ T^{m-k} $-bundle over $ N $, since in such a case, the first Betti number of $ M $ would be the sum of the first Betti numbers of $ N $ and $ T^{m-k} $, which is $ b_1(N) + (m-k) $, and the difference $ b_1(M) - b_1(N) $ would be $ m-k $, matching $ \\dim M - \\dim N $.\n\nThe condition that the structure group is contained in the affine group $ T^{m-k} \\rtimes \\operatorname{Aut}(T^{m-k}) $ implies that the bundle is affine, and in particular, the action of the structure group on the fiber is affine. However, the condition on the Betti numbers and the structure group being contained in the affine group is sufficient to conclude that the bundle is principal, as the affine group includes the group of translations (i.e., the torus itself), and the bundle can be made principal by choosing a suitable section.\n\nFurthermore, the existence of finite covering spaces with abelian deck transformation groups such that the total space becomes trivial is a known result in the theory of torus bundles. Specifically, if a torus bundle has a structure group contained in the affine group, then it admits a finite cover that is trivial. This is because the monodromy of the bundle, which is an element of $ \\operatorname{Aut}(T^{m-k}) $, can be made trivial after passing to a finite cover of the base. The deck transformation group of the cover is then abelian, as it is isomorphic to a subgroup of the torus.\n\nThus, the strongest conclusion is that $ M $ is a principal $ T^{m-k} $-bundle over $ N $, and there exist finite normal covering spaces $ \\hat{M} \\to M $ and $ \\hat{N} \\to N $ of the same index, with abelian deck transformation groups, such that $ \\hat{M} $ is diffeomorphic to $ \\hat{N} \\times T^{m-k} $.\n\nAnswer: C"
+  },
+  {
+   "id": "livemath-202605-35",
+   "gold": "A",
+   "pred": "B",
+   "em": 0.0,
+   "gen_tokens": 4,
+   "raw": "Answer: B"
+  },
+  {
+   "id": "livemath-202605-39",
+   "gold": "B",
+   "pred": "A",
+   "em": 0.0,
+   "gen_tokens": 4,
+   "raw": "Answer: A"
+  },
+  {
+   "id": "livemath-202605-42",
+   "gold": "C",
+   "pred": "C",
+   "em": 1.0,
+   "gen_tokens": 4,
+   "raw": "Answer: C"
+  },
+  {
+   "id": "livemath-202605-46",
+   "gold": "E",
+   "pred": "C",
+   "em": 0.0,
+   "gen_tokens": 4,
+   "raw": "Answer: C"
+  },
+  {
+   "id": "livemath-202605-5",
+   "gold": "D",
+   "pred": "D",
+   "em": 1.0,
+   "gen_tokens": 4,
+   "raw": "Answer: D"
+  },
+  {
+   "id": "livemath-202605-53",
+   "gold": "C",
+   "pred": "C",
+   "em": 1.0,
+   "gen_tokens": 4,
+   "raw": "Answer: C"
+  },
+  {
+   "id": "livemath-202605-57",
+   "gold": "A",
+   "pred": "D",
+   "em": 0.0,
+   "gen_tokens": 4,
+   "raw": "Answer: D"
+  },
+  {
+   "id": "livemath-202605-60",
+   "gold": "B",
+   "pred": "A",
+   "em": 0.0,
+   "gen_tokens": 4,
+   "raw": "Answer: A"
+  },
+  {
+   "id": "livemath-202605-64",
+   "gold": "A",
+   "pred": "C",
+   "em": 0.0,
+   "gen_tokens": 4,
+   "raw": "Answer: C"
+  },
+  {
+   "id": "livemath-202605-68",
+   "gold": "A",
+   "pred": "C",
+   "em": 0.0,
+   "gen_tokens": 4,
+   "raw": "Answer: C"
+  },
+  {
+   "id": "livemath-202605-71",
+   "gold": "B",
+   "pred": "C",
+   "em": 0.0,
+   "gen_tokens": 4,
+   "raw": "Answer: C"
+  },
+  {
+   "id": "livemath-202605-75",
+   "gold": "E",
+   "pred": "A",
+   "em": 0.0,
+   "gen_tokens": 4,
+   "raw": "Answer: A"
+  },
+  {
+   "id": "livemath-202605-79",
+   "gold": "E",
+   "pred": "E",
+   "em": 1.0,
+   "gen_tokens": 4,
+   "raw": "Answer: E"
+  },
+  {
+   "id": "livemath-202605-82",
+   "gold": "C",
+   "pred": "E",
+   "em": 0.0,
+   "gen_tokens": 756,
+   "raw": "To determine which statement is the strongest about Padovan numbers that are Woodall numbers, we analyze the definitions and known values.\n\nThe Padovan sequence is defined by $P_0 = 0$, $P_1 = P_2 = 1$, and $P_{n+3} = P_{n+1} + P_n$ for $n \\geq 0$. The first few terms are:\n$$\nP_0 = 0,\\ P_1 = 1,\\ P_2 = 1,\\ P_3 = 1,\\ P_4 = 2,\\ P_5 = 2,\\ P_6 = 3,\\ P_7 = 4,\\ P_8 = 5,\\ P_9 = 7,\\ P_{10} = 9,\\ P_{11} = 12,\\ P_{12} = 16,\\ P_{13} = 21,\\ P_{14} = 28,\\ P_{15} = 37,\\ P_{16} = 49,\\ P_{17} = 65,\\ P_{18} = 86,\\ P_{19} = 114,\\ P_{20} = 151\n$$\n\nA Woodall number is of the form $m \\cdot 2^m - 1$ for some positive integer $m$. The first few Woodall numbers are:\n$$\n1,\\ 7,\\ 23,\\ 63,\\ 143,\\ 319,\\ 639,\\ 1279,\\ 2559,\\ 5119,\\ 10239,\\ 20479,\\ 40959,\\ 81919,\\ 163839,\\ 327679,\\ 655359,\\ 1310719,\\ 2621439,\\ 5242879\n$$\n\nFrom the Padovan sequence, we see that $P_1 = 1$ and $P_9 = 7$ are Woodall numbers. Checking further, $P_{17} = 65$ is not a Woodall number, and $P_{20} = 151$ is not either. The next Woodall number after 7 is 23, which does not appear in the Padovan sequence up to $P_{20}$, and no further Woodall numbers match Padovan numbers in the computed range.\n\nOption E claims that the only Padovan values that are Woodall numbers are $1$ and $7$, occurring at indices $n=1$ and $n=9$. This is consistent with the known values and does not contradict any known results.\n\nOption B claims that the Padovan sequence contains exactly three Woodall numbers: $1$, $7$, and $63$. However, $63$ is not a Padovan number, so this is incorrect.\n\nOption D claims that apart from $1$, the only Padovan number that is a Woodall number is $23$, but $23$ is not a Padovan number, so this is also incorrect.\n\nOption A is too vague and does not provide specific information about which Padovan numbers are Woodall numbers.\n\nOption C suggests that one of the other options is correct, but a stronger result can be proven. However, no stronger result is known or stated in the options.\n\nThus, the strongest and most accurate statement is:\n\nAnswer: E"
+  },
+  {
+   "id": "livemath-202605-86",
+   "gold": "A",
+   "pred": "D",
+   "em": 0.0,
+   "gen_tokens": 4,
+   "raw": "Answer: D"
+  },
+  {
+   "id": "livemath-202605-9",
+   "gold": "B",
+   "pred": "A",
+   "em": 0.0,
+   "gen_tokens": 4,
+   "raw": "Answer: A"
+  },
+  {
+   "id": "livemath-202605-93",
+   "gold": "C",
+   "pred": "D",
+   "em": 0.0,
+   "gen_tokens": 630,
+   "raw": "The definition of $ h_\\lambda(x) $ involves a product over $ i \\geq 1 $ of terms of the form $ (1 + x^i)^{\\lfloor n/i \\rfloor - m_\\lambda(i)} $, where $ m_\\lambda(i) $ is the number of times the part $ i $ appears in the partition $ \\lambda $. The function $ G(n, x) $ is the greatest common divisor of all such $ h_\\lambda(x) $ for partitions $ \\lambda \\vdash n $, and $ \\mathrm{num}(n, x) $ is the sum of all $ h_\\lambda(x) $ divided by $ G(n, x) $.\n\nWe are to determine which statement is guaranteed to hold for every $ n \\geq 1 $.\n\nOption A claims that every complex root of $ \\mathrm{num}(n, x) $ is a root of $ \\prod_{i=1}^n (1 + x^i) $. This is not necessarily true, as $ \\mathrm{num}(n, x) $ is defined as a quotient of sums of $ h_\\lambda(x) $, and its roots are not obviously constrained to those of $ \\prod_{i=1}^n (1 + x^i) $.\n\nOption B claims that $ \\mathrm{num}(n, \\zeta_{2d}) \\neq 0 $ for all $ 1 \\leq d \\leq n $, where $ \\zeta_{2d} $ is a primitive $ 2d $th root of unity. This is not guaranteed, as $ \\mathrm{num}(n, x) $ could potentially vanish at some roots of unity.\n\nOption C claims that $ \\mathrm{num}(n, x) $ is irreducible in $ \\mathbb{Z}[x] $ for all $ n \\geq 1 $. This is not guaranteed, as the structure of $ \\mathrm{num}(n, x) $ depends on the sum and gcd of multiple polynomials, and irreducibility is not assured.\n\nOption D claims that $ \\mathrm{num}(n, x) $ divides $ \\prod_{i=1}^n (1 + x^i)^{\\lfloor n/i \\rfloor} $ in $ \\mathbb{Z}[x] $. This is a plausible statement, as $ h_\\lambda(x) $ is defined in terms of powers of $ (1 + x^i) $, and the sum of such terms divided by their gcd would be a factor of the product of these terms raised to appropriate powers.\n\nOption E claims that $ \\mathrm{num}(n, x) $ is equal to a cyclotomic polynomial $ \\Phi_{2d}(x) $ for some $ d $ with $ 1 \\leq d \\leq n $. This is not guaranteed, as $ \\mathrm{num}(n, x) $ is not necessarily a single cyclotomic polynomial.\n\nAnswer: D"
+  },
+  {
+   "id": "livemath-202606-10",
+   "gold": "A",
+   "pred": "A",
+   "em": 1.0,
+   "gen_tokens": 4,
+   "raw": "Answer: A"
+  },
+  {
+   "id": "livemath-202606-103",
+   "gold": "C",
+   "pred": "C",
+   "em": 1.0,
+   "gen_tokens": 4,
+   "raw": "Answer: C"
+  },
+  {
+   "id": "livemath-202606-107",
+   "gold": "C",
+   "pred": "C",
+   "em": 1.0,
+   "gen_tokens": 4,
+   "raw": "Answer: C"
+  },
+  {
+   "id": "livemath-202606-110",
+   "gold": "D",
+   "pred": "D",
+   "em": 1.0,
+   "gen_tokens": 4,
+   "raw": "Answer: D"
+  },
+  {
+   "id": "livemath-202606-114",
+   "gold": "C",
+   "pred": "E",
+   "em": 0.0,
+   "gen_tokens": 4,
+   "raw": "Answer: E"
+  },
+  {
+   "id": "livemath-202606-13",
+   "gold": "E",
+   "pred": "D",
+   "em": 0.0,
+   "gen_tokens": 4,
+   "raw": "Answer: D"
+  },
+  {
+   "id": "livemath-202606-17",
+   "gold": "A",
+   "pred": "E",
+   "em": 0.0,
+   "gen_tokens": 471,
+   "raw": "The given condition is  \n$$\n\\gcd_{2\\le q\\le k+1}\\binom{qk}{k}=1,\n$$  \nwhich means that the greatest common divisor of all binomial coefficients $\\binom{qk}{k}$ for $2 \\le q \\le k+1$ is 1. This implies that no prime number divides all of these binomial coefficients.\n\nWe are to determine which of the given statements is equivalent to this condition.\n\nLet us analyze the options:\n\n- **Option A** is vague and does not provide a specific condition that can be evaluated for equivalence. It is not useful for determining equivalence.\n\n- **Option B** states that there exists a prime $p \\mid n$ such that if $p^a$ is the largest power of $p$ dividing $n$, then $\\frac{n}{p^a} > p^a$. This is a condition on the structure of $n$, but it does not directly relate to the gcd of the binomial coefficients.\n\n- **Option C** states that if $P(n)$ denotes the largest prime divisor of $n$, then $\\frac{n}{P(n)} > P(n)$. This is a condition on the largest prime divisor of $n$, but again, it does not directly relate to the gcd of the binomial coefficients.\n\n- **Option D** states that if $\\operatorname{ppart}(n) = p^a$ for some prime $p$, then $\\frac{n}{\\operatorname{ppart}(n)} > p$. This is a condition on the largest prime power dividing $n$, but it is not equivalent to the gcd condition.\n\n- **Option E** states that for every prime $p \\mid n$, if $p^a$ is the largest power of $p$ dividing $n$, then $\\frac{n}{p^a} > p$. This condition ensures that for every prime divisor $p$ of $n$, the part of $n$ not divisible by $p^a$ is larger than $p$. This is a stronger condition than the others and is equivalent to the gcd condition because it ensures that no prime divides all the binomial coefficients $\\binom{qk}{k}$.\n\nThus, the correct answer is:\n\nAnswer: E"
+  },
+  {
+   "id": "livemath-202606-20",
+   "gold": "A",
+   "pred": "B",
+   "em": 0.0,
+   "gen_tokens": 4,
+   "raw": "Answer: B"
+  },
+  {
+   "id": "livemath-202606-24",
+   "gold": "B",
+   "pred": "D",
+   "em": 0.0,
+   "gen_tokens": 337,
+   "raw": "The automorphism group of an Artin group associated to a Coxeter graph can be analyzed by considering the structure of the group and the nature of its automorphisms. For the Artin group $ A = A[D_5] $, the center $ Z(A) $ is known to be trivial. The group $ \\operatorname{Inn}(A) $, consisting of inner automorphisms, is isomorphic to $ A/Z(A) $, which in this case is just $ A $.\n\nThe automorphism group $ \\operatorname{Aut}(A) $ includes the inner automorphisms and any outer automorphisms induced by symmetries of the Coxeter graph. The Coxeter graph $ D_5 $ has a nontrivial symmetry, which induces an automorphism $ \\chi $ of $ A $. This automorphism is not inner, and thus contributes to the outer automorphism group.\n\nIt is known that for Artin groups of type $ D_n $, the only nontrivial outer automorphism comes from the diagram automorphism $ \\chi $, and no other independent outer automorphisms exist. In particular, the inversion automorphism $ \\iota $, which sends each standard generator to its inverse, is not independent of $ \\chi $ in this case and does not contribute an additional outer automorphism.\n\nTherefore, the automorphism group $ \\operatorname{Aut}(A) $ is generated by $ \\operatorname{Inn}(A) $ and $ \\chi $, and the outer automorphism group $ \\operatorname{Out}(A) $ is cyclic of order 2.\n\nAnswer: D"
+  },
+  {
+   "id": "livemath-202606-28",
+   "gold": "A",
+   "pred": "D",
+   "em": 0.0,
+   "gen_tokens": 231,
+   "raw": "The compact rank one symmetric spaces are the spheres $S^n$, the real projective spaces $\\mathbb{R}P^n$, the complex projective spaces $\\mathbb{C}P^n$, the quaternionic projective spaces $\\mathbb{H}P^n$, and the Cayley plane $\\mathbb{O}P^2$. Among these, the ones that admit an almost quaternionic structure are the quaternionic projective spaces $\\mathbb{H}P^n$ and the complex projective space $\\mathbb{C}P^2$, as well as the Cayley plane $\\mathbb{O}P^2$. However, the Cayley plane is not a projective space in the same sense as the others and is not generally considered to admit an almost quaternionic structure in the same way.\n\nThus, the strongest classification conclusion is that $M$ must be either the quaternionic projective space $\\mathbb{H}P^n$ or one of the two projective planes $\\mathbb{C}P^2$ and $\\mathbb{O}P^2$.\n\nAnswer: D"
+  },
+  {
+   "id": "livemath-202606-31",
+   "gold": "A",
+   "pred": "C",
+   "em": 0.0,
+   "gen_tokens": 673,
+   "raw": "The system under consideration is a nonlinear PDE system with coupling between the density $\\rho$, velocity $u$, and phase field $\\phi$, along with an auxiliary variable $\\mu$. The initial data are given in terms of weighted quantities $(\\rho, \\rho u, \\rho \\phi)$, and the equations involve nonlinear terms such as $\\rho^\\gamma$, $\\phi^3 - \\phi$, and second-order spatial derivatives. The question is about the strongest existence and uniqueness result that can be proved for arbitrary $T > 0$.\n\nThe key features of the system include:\n\n- The first equation is a conservation law for mass.\n- The second equation is a nonlinear momentum equation with pressure, viscosity, and a nonlinear term involving $\\phi_x^2$.\n- The third equation couples the phase field $\\phi$ with the auxiliary variable $\\mu$.\n- The fourth equation is an elliptic equation for $\\mu$ in terms of $\\phi$ and $\\rho$.\n\nThe initial data are given in the form $(\\rho, \\rho u, \\rho \\phi)$, which is a standard approach in compressible fluid dynamics to avoid issues with vacuum (i.e., $\\rho = 0$) at $t = 0$. This is important because the system may not be well-posed if $\\rho$ vanishes, as the equations involve terms like $\\rho^\\gamma$ and $\\rho \\mu$.\n\nFor such systems, the usual approach is to consider either weak solutions (which exist globally under suitable conditions) or strong solutions (which require more regularity and may only exist for a finite time or under additional constraints).\n\nOption A claims global strong solutions for arbitrary $T > 0$ with the given initial data. However, this is too strong for the general case, especially without excluding vacuum or imposing compatibility conditions.\n\nOption B claims global strong solutions with initial data attained in the unweighted sense. This is problematic because the initial data are given in the weighted form $(\\rho, \\rho u, \\rho \\phi)$, and the unweighted form $(\\rho, u, \\phi)$ may not be compatible with the equations unless additional conditions are imposed.\n\nOption C states that global strong solutions can only be obtained after imposing compatibility conditions, and otherwise only weak solutions exist. This is a more cautious and realistic statement, reflecting the typical situation in nonlinear PDEs where compatibility conditions are needed for strong solutions, and weak solutions are the best one can guarantee without them.\n\nOption D claims local-in-time strong solutions for some $T_* > 0$, with global strong solvability requiring the exclusion of vacuum. This is consistent with many results in compressible fluid dynamics, where vacuum can lead to loss of regularity and global existence is not guaranteed without additional constraints.\n\nOption E claims existence of at least one global strong solution for arbitrary $T > 0$, but does not address uniqueness or the need for compatibility conditions. This is weaker than A and B but stronger than C and D in terms of existence, though it lacks the precision of D regarding the need for excluding vacuum.\n\nThe strongest statement that can be proved under the given assumptions, without excluding vacuum or imposing compatibility conditions, is that global strong solutions can only be obtained after imposing compatibility conditions, and otherwise only weak solutions exist.\n\nAnswer: C"
+  },
+  {
+   "id": "livemath-202606-35",
+   "gold": "D",
+   "pred": "D",
+   "em": 1.0,
+   "gen_tokens": 4,
+   "raw": "Answer: D"
+  },
+  {
+   "id": "livemath-202606-39",
+   "gold": "D",
+   "pred": "D",
+   "em": 1.0,
+   "gen_tokens": 4,
+   "raw": "Answer: D"
+  },
+  {
+   "id": "livemath-202606-42",
+   "gold": "E",
+   "pred": "C",
+   "em": 0.0,
+   "gen_tokens": 4,
+   "raw": "Answer: C"
+  },
+  {
+   "id": "livemath-202606-46",
+   "gold": "D",
+   "pred": "D",
+   "em": 1.0,
+   "gen_tokens": 529,
+   "raw": "The function $ f(x, y) = x + y + (x - y)^2 $ can be simplified as follows:\n$$\nf(x, y) = x + y + x^2 - 2xy + y^2 = x^2 + y^2 - 2xy + x + y.\n$$\nThis is a quadratic polynomial in two variables.\n\nThe question asks for the strongest existence statement about finite subsets $ A \\subset \\mathbb{R} $ with respect to the sizes of the sumset $ A + A $ and the image $ f(A, A) $.\n\nThe key is to understand the growth of $ |f(A, A)| $ and $ |A + A| $ for sets $ A $ of size $ n $. The sumset $ A + A $ is known to have size at least $ 2n - 1 $ and at most $ n^2 $, depending on the structure of $ A $. Sets that are \"additively structured\" (e.g., arithmetic progressions) have small sumsets, while sets that are \"additively random\" have large sumsets.\n\nFor the function $ f $, the image $ f(A, A) $ is a set of values obtained by evaluating the quadratic polynomial on all pairs $ (a, a') \\in A \\times A $. The size of $ f(A, A) $ depends on the structure of $ A $, and in general, for a random set $ A $, the image $ f(A, A) $ can be expected to be large, but for structured sets, it can be smaller.\n\nOption D states that there exists an absolute constant $ c > 0 $ and arbitrarily large finite sets $ A \\subset \\mathbb{R} $ such that $ |f(A, A)| \\le |A|^{2 - c} $, and also that for every fixed $ \\varepsilon > 0 $, one can choose arbitrarily large finite sets $ A \\subset \\mathbb{R} $ for which $ |A + A| \\le |A|^{1 + \\varepsilon} $ and $ |f(A, A)| \\le |A|^{2 - c_\\varepsilon} $ for some constant $ c_\\varepsilon > 0 $.\n\nThis is the strongest statement among the options, as it combines both the existence of sets with small sumsets and small images under $ f $, with the constants depending on $ \\varepsilon $ in a controlled way.\n\nAnswer: D"
+  },
+  {
+   "id": "livemath-202606-5",
+   "gold": "A",
+   "pred": "C",
+   "em": 0.0,
+   "gen_tokens": 4,
+   "raw": "Answer: C"
+  },
+  {
+   "id": "livemath-202606-53",
+   "gold": "A",
+   "pred": "C",
+   "em": 0.0,
+   "gen_tokens": 4,
+   "raw": "Answer: C"
+  },
+  {
+   "id": "livemath-202606-57",
+   "gold": "D",
+   "pred": "D",
+   "em": 1.0,
+   "gen_tokens": 4,
+   "raw": "Answer: D"
+  },
+  {
+   "id": "livemath-202606-60",
+   "gold": "B",
+   "pred": "D",
+   "em": 0.0,
+   "gen_tokens": 4,
+   "raw": "Answer: D"
+  },
+  {
+   "id": "livemath-202606-64",
+   "gold": "E",
+   "pred": "B",
+   "em": 0.0,
+   "gen_tokens": 4,
+   "raw": "Answer: B"
+  },
+  {
+   "id": "livemath-202606-68",
+   "gold": "B",
+   "pred": "C",
+   "em": 0.0,
+   "gen_tokens": 611,
+   "raw": "The 4-move is a local operation that can be used to modify a knot diagram by adding or removing four half-twists between two strands. It is known that 4-moves are related to the concept of \"4-equivalence\" in knot theory, and they have implications for invariants such as the Alexander polynomial.\n\nThe Alexander polynomial is a classical knot invariant that is unchanged under ambient isotopy. However, it is not invariant under 4-moves. In fact, it is known that 4-moves can be used to change the Alexander polynomial of a knot. However, it is also known that any knot can be transformed into a trivial knot (unknot) using a finite number of 4-moves and isotopies. This implies that the Alexander polynomial can be made trivial through such operations.\n\nOption A claims that there is a universal integer $N$ such that any knot $K$ can be transformed into a knot $K'$ with $\\Delta(K') = 1$ using at most $N$ 4-moves and isotopies. However, this is not known to be true. The number of 4-moves required to unknot a knot is not bounded by a universal constant for all knots.\n\nOption B suggests that one of the remaining options is correct, but a stronger result can be proven. This is not directly relevant to the question, as it does not provide a specific claim.\n\nOption C states that there exists a knot $K'$ obtainable from $K$ by a finite sequence of 4-moves and isotopies such that the Alexander polynomial of $K'$ is trivial. This is true, as it is known that any knot can be transformed into the unknot using a finite number of 4-moves and isotopies, and the unknot has a trivial Alexander polynomial.\n\nOption D claims that for every knot $K$, every knot $K'$ obtainable from $K$ by a finite sequence of 4-moves and isotopies has a trivial Alexander polynomial. This is false, as 4-moves can be used to change the Alexander polynomial in various ways, and not all knots obtained from $K$ via 4-moves will necessarily have a trivial Alexander polynomial.\n\nOption E claims that there exists a knot $K'$ obtainable from $K$ by a finite sequence of 4-moves and isotopies such that $\\Delta(K') = 1$, and this sequence can be chosen so that, for some diagram of $K$, the number of crossings never increases at any stage. This is a stronger claim than Option C, but it is not known to be true in general. There is no known result that guarantees that the number of crossings can be kept constant or reduced throughout the process.\n\nThus, the strongest statement that is known to be true is that there exists a knot $K'$ obtainable from $K$ by a finite sequence of 4-moves and isotopies such that the Alexander polynomial of $K'$ is trivial.\n\nAnswer: C"
+  },
+  {
+   "id": "livemath-202606-71",
+   "gold": "C",
+   "pred": "B",
+   "em": 0.0,
+   "gen_tokens": 4,
+   "raw": "Answer: B"
+  },
+  {
+   "id": "livemath-202606-75",
+   "gold": "D",
+   "pred": "D",
+   "em": 1.0,
+   "gen_tokens": 4,
+   "raw": "Answer: D"
+  },
+  {
+   "id": "livemath-202606-79",
+   "gold": "C",
+   "pred": "A",
+   "em": 0.0,
+   "gen_tokens": 455,
+   "raw": "The given condition that $\\Sigma$ is $\\alpha$-stationary implies a specific relationship between its mean curvature $H$, the position vector $X$, and the unit normal vector $\\nu$. The equation\n$$\nH = \\alpha |X|^{-2} \\langle X, \\nu \\rangle\n$$\nis a type of weighted mean curvature condition, and it is satisfied on $\\Sigma \\setminus \\{0\\}$.\n\nThis condition is known to be satisfied by certain classes of hypersurfaces, particularly those that are linear hyperplanes or graphs of linear functions. In particular, if $\\Sigma$ is a linear hyperplane containing the origin, then $\\nu$ is constant and proportional to $X$ (up to a sign), and the right-hand side of the equation becomes proportional to $H$, which is zero for a hyperplane. This matches the condition.\n\nOption A states that $\\Sigma$ must be a global graph of a linear function, i.e., a linear hyperplane. This is a strong conclusion, and it is known that under the given $\\alpha$-stationary condition and the assumption that $\\Sigma$ passes through the origin, the only smooth, complete, connected, embedded hypersurface satisfying the condition is a linear hyperplane.\n\nOption B suggests that $\\Sigma$ is only locally a hyperplane near the origin, but this contradicts the completeness and global nature of the condition. If $\\Sigma$ is complete and smooth, and satisfies the $\\alpha$-stationary condition globally (except at the origin), then it must be a linear hyperplane globally.\n\nOption D suggests that a stability or area-minimizing hypothesis is needed to conclude that $\\Sigma$ is a linear hyperplane, but this is not the case here. The $\\alpha$-stationary condition is sufficient to force $\\Sigma$ to be a linear hyperplane.\n\nOption E claims that $\\Sigma$ is flat in the sense of being contained in a linear hyperplane, which is consistent with being a linear hyperplane, but it is not as strong as Option A, which specifies the exact form of $\\Sigma$.\n\nOption C is not valid because no stronger result is known to hold than what is stated in Option A.\n\nAnswer: A"
+  },
+  {
+   "id": "livemath-202606-82",
+   "gold": "C",
+   "pred": "C",
+   "em": 1.0,
+   "gen_tokens": 4,
+   "raw": "Answer: C"
+  },
+  {
+   "id": "livemath-202606-86",
+   "gold": "D",
+   "pred": "D",
+   "em": 1.0,
+   "gen_tokens": 278,
+   "raw": "The operator $\\mathcal H_{\\theta}$ is a one-dimensional discrete Schr\u00f6dinger operator with a quasiperiodic potential. The potential $v(\\theta,n)$ is zero on odd sites and takes the form $2\\lambda \\cos 2\\pi(n\\alpha + \\theta)$ on even sites. The frequency $\\alpha$ is assumed to be Diophantine, which ensures that the quasiperiodic potential is not too resonant.\n\nThe structure of the potential and the Diophantine condition on $\\alpha$ are key to understanding the spectral properties of $\\mathcal H_{\\theta}$. In particular, for such operators, it is known that under suitable conditions, the spectrum is a Cantor set. This is a consequence of the absence of absolutely continuous spectrum and the presence of purely singular continuous spectrum, which is typical for quasiperiodic Schr\u00f6dinger operators with Diophantine frequencies and non-zero coupling.\n\nThe Gap Labeling Theorem provides a way to count the number of gaps in the spectrum, and under the Diophantine condition and non-zero coupling, it is known that all these gaps are open. This leads to the conclusion that the spectrum is a Cantor set.\n\nThus, the strongest conclusion is that the spectrum of $\\mathcal H_{\\theta}$ is a Cantor set.\n\nAnswer: D"
+  },
+  {
+   "id": "livemath-202606-9",
+   "gold": "C",
+   "pred": "D",
+   "em": 0.0,
+   "gen_tokens": 4,
+   "raw": "Answer: D"
+  },
+  {
+   "id": "livemath-202606-93",
+   "gold": "A",
+   "pred": "D",
+   "em": 0.0,
+   "gen_tokens": 4,
+   "raw": "Answer: D"
+  },
+  {
+   "id": "livemath-202606-97",
+   "gold": "C",
+   "pred": "C",
+   "em": 1.0,
+   "gen_tokens": 4,
+   "raw": "Answer: C"
+  }
+ ]
+}
