@@ -211,15 +211,29 @@ def _decode(tok, model, prompts, max_new_tokens, batch_size):
     outs = []
     dev = qwen.first_param_device(model)
     for i in range(0, len(prompts), batch_size):
-        chunk = prompts[i:i + batch_size]
+        outs.extend(_decode_chunk(tok, model, prompts[i:i + batch_size], max_new_tokens, dev))
+    return outs
+
+
+def _decode_chunk(tok, model, chunk, max_new_tokens, dev):
+    # long OfficeQA pages (up to ~20k tokens) can OOM a batch; halve it and retry
+    try:
         enc = tok(chunk, return_tensors="pt", padding=True,
                   padding_side="left").to(dev)
         gen = model.generate(**enc, max_new_tokens=max_new_tokens,
                              do_sample=False, temperature=None, top_p=None,
                              top_k=None, pad_token_id=tok.pad_token_id or tok.eos_token_id)
-        new = gen[:, enc["input_ids"].shape[1]:]
-        outs.extend(tok.batch_decode(new, skip_special_tokens=True))
-    return outs
+    except torch.OutOfMemoryError:
+        if len(chunk) == 1:
+            raise
+        enc = gen = None
+        torch.cuda.empty_cache()
+        h = len(chunk) // 2
+        print(f"[oom] batch {len(chunk)} -> {h}", flush=True)
+        return (_decode_chunk(tok, model, chunk[:h], max_new_tokens, dev)
+                + _decode_chunk(tok, model, chunk[h:], max_new_tokens, dev))
+    new = gen[:, enc["input_ids"].shape[1]:]
+    return tok.batch_decode(new, skip_special_tokens=True)
 
 
 ANSWER_CUE = "\n\nAnswer:"

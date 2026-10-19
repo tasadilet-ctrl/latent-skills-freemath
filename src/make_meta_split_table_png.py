@@ -59,20 +59,21 @@ def render(rows, cols, pretty, title, notes, scale, out):
     cw = 1.6
     x0 = 3.5
     fig_w = x0 + 0.1 + cw * nc
-    fig_h = 2.5 + 0.62 * nr
+    lines = ["cell = accuracy % (n, change vs baseline).  tint = change vs that "
+             "row's own baseline.  * = p<0.05 (McNemar, paired, uncorrected)."] + list(notes)
+    head = 0.42 + 0.19 * len(lines)          # title + note lines, in inches
+    fig_h = 1.75 + head + 0.62 * nr
     fig, ax = plt.subplots(figsize=(fig_w, fig_h), dpi=210)
     ax.set_xlim(0, fig_w); ax.set_ylim(0, fig_h)
     ax.axis("off")
     fig.patch.set_facecolor(SURF)
 
-    y_top = fig_h - 1.05
+    y_top = fig_h - head - 0.75
     rh = 0.62
 
-    fig.text(0.012, 0.975, title, fontsize=13.5, color=INK, fontweight="bold", va="top")
-    for k, line in enumerate(["cell = accuracy % (n, change vs baseline).  tint = change vs that "
-                              "row's own baseline.  * = p<0.05 (McNemar, paired, uncorrected)."]
-                             + list(notes)):
-        fig.text(0.012, 0.950 - 0.018 * k, line, fontsize=8.2, color=INK2, va="top")
+    fig.text(0.012, 1 - 0.10 / fig_h, title, fontsize=13.5, color=INK, fontweight="bold", va="top")
+    for k, line in enumerate(lines):
+        fig.text(0.012, 1 - (0.42 + 0.19 * k) / fig_h, line, fontsize=8.2, color=INK2, va="top")
 
     for j, c in enumerate(cols):
         ax.text(x0 + cw * j + cw / 2, y_top + 0.30, pretty[c],
