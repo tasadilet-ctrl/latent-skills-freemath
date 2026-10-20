@@ -284,16 +284,55 @@ def parse_layers(spec: str, n_layers: int) -> list[int]:
     return out
 
 
+class StepTrigger:
+    """Rakhat's step vector (rakhat/step-vector-pilot, pilot/yesno_step/yesno_step.py):
+    add strength * v[layer] at the last position, only on the forward pass whose
+    input token is the `:` of `Answer:`. The rest of the reply is untouched."""
+
+    def __init__(self, tok, model, layers, vecs, strength):
+        self.ANS = torch.tensor([i for i in range(len(tok)) if tok.decode([i]).strip() == "Answer"])
+        self.COLON = torch.tensor([i for i in range(len(tok)) if tok.decode([i]).strip() == ":"])
+        self.v, self.m = vecs, strength
+        self.prev = self.mask = None
+        self.fired = 0
+        self.handles = [model.get_input_embeddings().register_forward_pre_hook(self._watch)]
+        self.handles += [layers[l].register_forward_hook(self._make(l)) for l in vecs]
+
+    def _watch(self, module, args):
+        ids = args[0]
+        cur = ids[:, -1]
+        prev = ids[:, -2] if ids.shape[1] > 1 else self.prev
+        self.mask = torch.isin(prev, self.ANS.to(cur.device)) & torch.isin(cur, self.COLON.to(cur.device))
+        self.prev = cur
+        self.fired += int(self.mask.sum())
+
+    def _make(self, l):
+        def fn(module, a, out):
+            h = out[0] if isinstance(out, tuple) else out
+            if self.mask is not None and self.mask.any():
+                h[self.mask, -1, :] += (self.m * self.v[l]).to(h.device, h.dtype)
+            return out
+        return fn
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *exc):
+        for h in self.handles:
+            h.remove()
+
+
 # --------------------------------------------------------------- main ------
 
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--domain", choices=["gsm8k", "hotpotqa", "livemath", "math500", "officeqa"], required=True)
-    ap.add_argument("--condition", choices=["baseline", "text", "embed"], required=True)
+    ap.add_argument("--condition", choices=["baseline", "text", "embed", "step"], required=True)
     ap.add_argument("--vectors", default=None, help="path to a .pt from extract_vectors.py")
     ap.add_argument("--layers", default="24-40", help="e.g. '32' or '24-40' or '20,30,40'")
     ap.add_argument("--gamma", type=float, default=0.1)
     ap.add_argument("--mode", default="relative", choices=["relative", "raw"])
+    ap.add_argument("--strength", type=float, default=1.5, help="--condition step: raw multiplier")
     ap.add_argument("--skill", default=os.path.join(ROOT, "skills", "decompose_verify.md"))
     ap.add_argument("--skill-position", default="system", choices=["system", "user"],
                     help="see extract_vectors.py -- 'user' keeps every arm free "
@@ -305,8 +344,8 @@ def main():
     ap.add_argument("--tag", default="")
     args = ap.parse_args()
 
-    if args.condition == "embed" and not args.vectors:
-        ap.error("--condition embed requires --vectors")
+    if args.condition in ("embed", "step") and not args.vectors:
+        ap.error(f"--condition {args.condition} requires --vectors")
 
     rows = load_domain(args.domain, args.limit)
     i, k = (int(x) for x in args.shard.split("/"))
@@ -339,6 +378,12 @@ def main():
         vec_meta = {"file": os.path.basename(args.vectors), "pool": blob["meta"]["pool"],
                     "layers": chosen, "gamma": args.gamma, "mode": args.mode}
         ctx = hooks.inject(layers, vecs, gamma=args.gamma, mode=args.mode)
+    if args.condition == "step":
+        blob = torch.load(args.vectors, map_location="cpu")
+        chosen = parse_layers(args.layers, blob["meta"]["n_layers"])
+        vec_meta = {"file": os.path.basename(args.vectors), "pool": blob["meta"]["pool"],
+                    "layers": chosen, "strength": args.strength, "trigger": "Answer:"}
+        ctx = StepTrigger(tok, model, layers, {l: blob["vectors"][l] for l in chosen}, args.strength)
 
     t0 = time.time()
     ha = has_answer(args.domain)
@@ -352,6 +397,8 @@ def main():
         preds, forced = generate(tok, model, prompts, max_new,
                                  args.batch_size, has_answer=ha)
     dt = time.time() - t0
+    if args.condition == "step":
+        vec_meta["fired"] = ctx.fired
 
     records, em_sum, f1_sum = [], 0.0, 0.0
     for r, p in zip(rows, preds):
@@ -393,6 +440,9 @@ def main():
     if args.condition == "embed":
         name += ("_" + os.path.basename(args.vectors).replace(".pt", "")
                  + f"_L{args.layers}_g{args.gamma}")
+    if args.condition == "step":
+        name += ("_" + os.path.basename(args.vectors).replace(".pt", "")
+                 + f"_L{args.layers}_m{args.strength}")
     name += f"_s{i}of{k}"
     out = os.path.join(ROOT, "results", f"{name}.json")
     with open(out, "w") as f:

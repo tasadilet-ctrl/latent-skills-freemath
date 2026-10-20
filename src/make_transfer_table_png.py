@@ -21,7 +21,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, ROOT)
 from src.make_meta_split_table_png import render  # noqa: E402
 
-MODELS = ["qwen3-8b", "qwen3-14b", "qwen3.6-27b"]
+MODELS = ["qwen3-4b", "qwen3-8b", "qwen3-14b", "qwen3.6-27b"]
 BENCH = {"officeqa": ("OfficeQA", "text-only: question + cited pages"),
          "spreadsheet": ("SpreadsheetBench", "single-turn")}
 N_EXPECT = {"officeqa": 238, "spreadsheet": 398}
@@ -88,7 +88,7 @@ def main():
             render(rows, cols, pretty, f"Math skill {stem} off LiveMath: OfficeQA and SpreadsheetBench",
                    ["OfficeQA: 238 questions, cited bulletin pages in the prompt, numeric answer within the "
                     "manifest tolerance. SpreadsheetBench: 398 tasks, one turn, graded on the output file.",
-                    "vectors: neutral prompt pool, n=50; 8B layer 34, 14B 37, 27B 62; gamma 0.3 relative. "
+                    "vectors: neutral prompt pool, n=50; 4B and 8B layer 34, 14B 37, 27B 62; gamma 0.3 relative. "
                     "Greedy, thinking off."],
                    15, os.path.join(ROOT, f"results_table_transfer_{stem}.png"))
         print("\n".join(md))

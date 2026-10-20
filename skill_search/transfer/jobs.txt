@@ -7,3 +7,10 @@ skillopt_full extract=32017 noembed=32018 embed=32019 (16+32 tasks)
 skillopt_nometa extract=32020 noembed=32021 embed=32022 (16+32 tasks)
 strength_audit/_nometa: extract arrays 32011/32014 cancelled, existing identical-recipe vectors reused
 livemath_ts OOM retries: noembed 32151 (tasks 6-9,12-17,19), embed 32152 (8,9) after OOM-halving fix
+# requeue 2026-10-19: 4B/14B/27B, finished shards skipped (../skip_done.py); nice so LiveMath/Rakhat runs go first
+livemath_ts: extract=- noembed=32161 (19) embed=32162 (30)
+livemath_ts_meta: extract=32163 noembed=32164 (16) embed=32165 (32)
+strength_audit: extract=32166 noembed=32167 (16) embed=32168 (32)
+strength_audit_nometa: extract=32169 noembed=32170 (16) embed=32171 (32)
+skillopt_full: extract=32172 noembed=32173 (16) embed=32174 (32)
+skillopt_nometa: extract=32175 noembed=32176 (16) embed=32177 (32)

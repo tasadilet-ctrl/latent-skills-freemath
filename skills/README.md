@@ -106,6 +106,13 @@ scored on. Cell = accuracy % (change vs no skill; \* = p<0.05, paired McNemar, u
   dev split; on held-out OTHER it gave +2.6 on average (8B +2.7, 14B +5.9, 27B −0.9),
   not significant and not better than a placebo.
 
+## Making a new skill with SkillOpt
+
+To make a text skill for another benchmark with SkillOpt on local models, follow
+[`skill_search/skillopt_local/README.md`](../skill_search/skillopt_local/README.md):
+install, data split, SLURM launch, reading the output, and adding a new benchmark.
+Read its section 9 first: on LiveMath, the optimizer learned the meta-option shortcut.
+
 ## Reproduce
 
 ```bash
