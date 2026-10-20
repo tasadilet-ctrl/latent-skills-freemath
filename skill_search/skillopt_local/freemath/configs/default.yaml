@@ -1,0 +1,19 @@
+_base_: ../_base_/default.yaml
+
+train:
+  train_size: 0
+  batch_size: 40
+  accumulation: 1
+
+env:
+  name: freemath
+  skill_init: skillopt/envs/freemath/skills/initial.md
+  split_mode: split_dir
+  split_dir: ""
+  data_path: ""
+  split_output_dir: ""
+  max_completion_tokens: 4096
+  exec_timeout: 600
+  workers: 64
+  limit: 0
+  force_answer: false
