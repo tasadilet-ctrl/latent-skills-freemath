@@ -1,0 +1,24 @@
+
+== mmlupro_math_tq_sb (qwen3-8b)  test n=365  centroid-right 36
+  none            no-label   0 | all  72.9 | centroid-wrong  72.0 | centroid-right  80.6
+  placebo         no-label   0 | all  70.7 (+29/-37 p=0.39) | centroid-wrong  70.5 (+27/-32 p=0.6) | centroid-right  72.2 (+2/-5 p=0.45)
+  strength_audit  no-label   0 | all  68.2 (+28/-45 p=0.06) | centroid-wrong  68.1 (+28/-41 p=0.15) | centroid-right  69.4 (+0/-4 p=0.12)
+  placebo_ts      no-label   0 | all  67.9*(+23/-41 p=0.033) | centroid-wrong  66.9*(+20/-37 p=0.033) | centroid-right  77.8 (+3/-4 p=1)
+  livemath_ts     no-label   0 | all  68.5 (+23/-39 p=0.056) | centroid-wrong  67.5 (+21/-36 p=0.063) | centroid-right  77.8 (+2/-3 p=1)
+  skillopt        no-label   0 | all  74.0 (+27/-23 p=0.67) | centroid-wrong  72.9 (+25/-22 p=0.77) | centroid-right  83.3 (+2/-1 p=1)
+  strength_audit vs placebo: +32/-41 p=0.35
+  livemath_ts vs placebo_ts: +44/-42 p=0.91
+  skillopt vs placebo: +36/-24 p=0.16
+  SkillOpt summary: {'baseline_selection_hard': None, 'best_selection_hard': 0.72, 'total_accepts': 1, 'total_rejects': 3, 'total_wall_time_s': 3512.9}
+
+== supergpqa_math_hard (qwen3-8b)  test n=360  centroid-right 82
+  none            no-label   0 | all  39.7 | centroid-wrong  36.0 | centroid-right  52.4
+  placebo         no-label   0 | all  29.2*(+30/-68 p=0.00016) | centroid-wrong  27.0*(+25/-50 p=0.0052) | centroid-right  36.6*(+5/-18 p=0.011)
+  strength_audit  no-label   0 | all  30.0*(+35/-70 p=0.00082) | centroid-wrong  26.6*(+25/-51 p=0.0038) | centroid-right  41.5 (+10/-19 p=0.14)
+  placebo_ts      no-label   0 | all  29.4*(+36/-73 p=0.00051) | centroid-wrong  26.3*(+29/-56 p=0.0045) | centroid-right  40.2 (+7/-17 p=0.064)
+  livemath_ts     no-label   0 | all  31.7*(+43/-72 p=0.0087) | centroid-wrong  29.1 (+35/-54 p=0.056) | centroid-right  40.2 (+8/-18 p=0.076)
+  skillopt        no-label   0 | all  32.5*(+27/-53 p=0.0049) | centroid-wrong  29.9*(+19/-36 p=0.03) | centroid-right  41.5 (+8/-17 p=0.11)
+  strength_audit vs placebo: +46/-43 p=0.83
+  livemath_ts vs placebo_ts: +51/-43 p=0.47
+  skillopt vs placebo: +51/-39 p=0.25
+  SkillOpt summary: {'baseline_selection_hard': 0.25, 'best_selection_hard': 0.29, 'total_accepts': 1, 'total_rejects': 3, 'total_wall_time_s': 6295.2}

@@ -42,14 +42,16 @@ def load(path: str) -> dict:
     return out
 
 
-for bench in ("beyondaime", "hardmath2", "realmath", "arxivmath"):
+for bench in ("beyondaime", "hardmath2", "realmath", "arxivmath", "imoanswer"):
     run = os.path.join(W, "outputs", f"fm_{bench}_{TAG}")
     if not os.path.isdir(run):
         continue
     def _res(c):
         d = os.path.join(run, EVAL_DIR, c)
-        rescored = os.path.join(d, "results_rescored.jsonl")   # rescore_freemath.py
-        return load(rescored if os.path.exists(rescored) else os.path.join(d, "results.jsonl"))
+        orig = load(os.path.join(d, "results.jsonl"))
+        resc = load(os.path.join(d, "results_rescored.jsonl"))   # rescore_freemath.py
+        # a rescore cut off mid-file (a reboot did this once) must not replace the full run
+        return resc if resc and len(resc) == len(orig) else orig
     res = {c: _res(c) for c in CONDS}
     base = {i: r["hard"] for i, r in res["none"].items()}
     print(f"\n== {bench}  ({TAG}, {EVAL_DIR})  test n={len(base)}")

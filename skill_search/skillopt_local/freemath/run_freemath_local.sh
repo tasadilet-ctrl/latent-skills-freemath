@@ -34,7 +34,8 @@ mkdir -p "$W/logs"
 used1=$(nvidia-smi --query-gpu=memory.used --format=csv,noheader,nounits -i 1 2>/dev/null || echo 99999)
 GPUS=${GPUS:-$([ "${used1:-99999}" -le 2000 ] && echo 0,1 || echo 0)}
 if [ "$GPUS" = 0,1 ]; then GT=0 GO=1 UT=0.90 UO=0.92 NSEQ=32
-else                     GT=0 GO=0 UT=0.28 UO=0.68 NSEQ=8; fi
+else  G=${GPUS%%,*};      GT=$G GO=$G UT=0.28 UO=0.68 NSEQ=8; fi   # shared card: GPUS=0 or GPUS=1
+# GPU 0 produced garbage after the 2026-10-22 reboot (see freemath/README Pitfalls); GPUS=1 pins both servers to GPU 1
 PT=18100 PO=18101
 echo "[fm] target=$TARGET optimizer=$OPT gpus=$GPUS benches=$BENCHES"
 
@@ -67,7 +68,10 @@ cd "$W/SkillOpt"
 
 for b in $BENCHES; do
   OUT=$W/outputs/fm_${b}_${TAG}${SFX}; SPLIT=$W/fm_split/$b
-  if [ ! -f "$OUT/best_skill.md" ]; then
+  # summary.json is written only when training finishes; best_skill.md exists from the first
+  # accepted step. A run cut off mid-way (reboot) has no summary, and SkillOpt resumes it
+  # from runtime_state.json when train.py is re-run into the same out_root.
+  if [ ! -f "$OUT/summary.json" ]; then
     echo "[fm] train $b"
     .venv/bin/python scripts/train.py --config configs/freemath/default.yaml "${COMMON[@]}" \
       --cfg-options env.split_mode=split_dir env.split_dir=$SPLIT env.out_root=$OUT env.exec_timeout=900 "${THINK[@]}" "${EXTRA[@]}" \

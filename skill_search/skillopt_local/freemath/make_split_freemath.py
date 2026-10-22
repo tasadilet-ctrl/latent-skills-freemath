@@ -14,6 +14,8 @@ Filters (applied before splitting, decided before any model was run):
              reliably (the RealMath paper uses an LLM judge instead).
   HARDMath2  all items; graded numerically (see env/evaluator.py).
   BeyondAIME all items (integer answers).
+  IMO-AnswerBench  single-expression answers only: drop answers listing several
+             solutions (commas, \\cup, \\ldots), which the checker cannot score as sets.
   ArxivMath  all items. Split but not in the default run: Qwen3-8B (thinking
              off) scored 0/16 on its val split in the smoke run, so the gate
              had nothing to compare. Use it with a stronger target.
@@ -27,7 +29,9 @@ import re
 import sys
 import urllib.request
 
-SIZES = {"beyondaime": (30, 30), "hardmath2": (40, 50), "realmath": (40, 60), "arxivmath": (30, 30)}   # (train, val); rest = test
+SIZES = {"beyondaime": (30, 30), "hardmath2": (40, 50), "realmath": (40, 60), "arxivmath": (30, 30),
+         "imoanswer": (40, 100)}   # (train, val); rest = test
+IMO_MULTI = re.compile(r",|\\cup|\\ldots|\\cdots|\\text")
 MULTI = re.compile(r"\(a\)|\(b\)|\\begin\{cases\}|\\text\{\s*if|otherwise|\\\\", re.I)
 
 
@@ -66,7 +70,10 @@ def load() -> dict[str, list[dict]]:
     bey = [{"id": f"beyondaime-{i}", "question": x["problem"], "answer": str(x["answer"]),
             "task_type": "beyondaime", "benchmark": "beyondaime"}
            for i, x in enumerate(rows("ByteDance-Seed/BeyondAIME", "test"))]
-    return {"beyondaime": bey, "hardmath2": hm, "realmath": rm, "arxivmath": arx}
+    imo = [{"id": x["Problem ID"], "question": x["Problem"], "answer": x["Short Answer"].strip(),
+            "task_type": x["Category"], "benchmark": "imoanswer"}
+           for x in rows("Hwilner/imo-answerbench", "train") if not IMO_MULTI.search(x["Short Answer"])]
+    return {"beyondaime": bey, "hardmath2": hm, "realmath": rm, "arxivmath": arx, "imoanswer": imo}
 
 
 def split(items: list[dict], n_train: int, n_val: int) -> dict[str, list[dict]]:

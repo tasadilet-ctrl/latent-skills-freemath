@@ -1,0 +1,36 @@
+
+== beyondaime  (qwen3-8b, final_eval_forced)  test n=40
+  none              7.5   n=40
+  placebo           2.5   n=40  +1/-3  McNemar p=0.625
+  strength_audit    5.0   n=40  +2/-3  McNemar p=1
+  skillopt         15.0   n=40  +4/-1  McNemar p=0.375
+  skillopt correct by check: {'string': 5, 'symbolic': 1};  replies without a final answer: 2
+  truncated (no final answer / forced) per condition: {'none': '3/8', 'placebo': '3/5', 'strength_audit': '1/6', 'skillopt': '2/7'}
+  SkillOpt summary: {'baseline_test_hard': 0.025, 'test_hard': 0.075, 'baseline_selection_hard': 0.13333333333333333, 'best_selection_hard': 0.13333333333333333, 'total_accepts': 0, 'total_rejects': 4, 'total_wall_time_s': 4196.7}
+
+== hardmath2  (qwen3-8b, final_eval_forced)  test n=121
+  none              5.8   n=121
+  placebo           8.3   n=121  +6/-3  McNemar p=0.508
+  strength_audit   10.7   n=121  +8/-2  McNemar p=0.109
+  skillopt          8.3   n=121  +5/-2  McNemar p=0.453
+  skillopt correct by check: {'symbolic': 7, 'rhs_string': 2, 'numeric': 1};  replies without a final answer: 0
+  truncated (no final answer / forced) per condition: {'none': '5/8', 'placebo': '1/3', 'strength_audit': '0/5', 'skillopt': '0/2'}
+    asympytotic_series     n=  1  none   0.0  skillopt   0.0
+    boundary_layers        n= 51  none   3.9  skillopt   3.9
+    integrals              n=  9  none  55.6  skillopt  55.6
+    nonlinear_ode          n=  5  none   0.0  skillopt  40.0
+    nonlinear_pde          n= 33  none   0.0  skillopt   3.0
+    other                  n=  4  none   0.0  skillopt   0.0
+    wkb                    n= 18  none   0.0  skillopt   0.0
+
+== realmath  (qwen3-8b, final_eval_forced)  test n=287
+  none             17.1   n=287
+  placebo          17.8   n=287  +14/-12  McNemar p=0.845
+  strength_audit   15.7   n=287  +11/-15  McNemar p=0.557
+  skillopt         17.1   n=287  +12/-12  McNemar p=1
+  skillopt correct by check: {'string': 33, 'symbolic': 12, 'rhs_string': 3, 'rhs_symbolic': 1};  replies without a final answer: 0
+  truncated (no final answer / forced) per condition: {'none': '3/12', 'placebo': '0/5', 'strength_audit': '1/9', 'skillopt': '0/7'}
+    2022                   n=132  none  13.6  skillopt  13.6
+    2024                   n=153  none  20.3  skillopt  20.3
+    2025                   n=  2  none   0.0  skillopt   0.0
+  SkillOpt summary: {'baseline_test_hard': 0.1602787456445993, 'test_hard': 0.16376306620209058, 'baseline_selection_hard': 0.18333333333333332, 'best_selection_hard': 0.25, 'total_accepts': 1, 'total_rejects': 3, 'total_wall_time_s': 5383.4}

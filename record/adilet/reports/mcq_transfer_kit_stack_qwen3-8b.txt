@@ -1,0 +1,14 @@
+
+== mmlupro_math_tq_sb  (qwen3-8b)  n=505  (centroid-right 52)
+  baseline             parse 0.978 forced  53 | all  72.7 | centroid-wrong  72.2 | centroid-right  76.9
+  placebo_matched      parse 1.000 forced   1 | all  64.0* (+29/-73 p=1.6e-05) | centroid-wrong  63.4* (+26/-66 p=3.7e-05) | centroid-right  69.2  (+3/-7 p=0.34)
+  strength_audit       parse 1.000 forced  34 | all  65.7* (+31/-66 p=0.00049) | centroid-wrong  65.3* (+28/-59 p=0.0012) | centroid-right  69.2  (+3/-7 p=0.34)
+  placebo_livemath_ts  parse 1.000 forced  10 | all  66.3* (+38/-70 p=0.0027) | centroid-wrong  65.8* (+35/-64 p=0.0046) | centroid-right  71.2  (+3/-6 p=0.51)
+  livemath_ts          parse 0.992 forced  37 | all  70.3  (+38/-50 p=0.24) | centroid-wrong  70.4  (+37/-45 p=0.44) | centroid-right  69.2  (+1/-5 p=0.22)
+
+== supergpqa_math_hard  (qwen3-8b)  n=500  (centroid-right 101)
+  baseline             parse 0.906 forced 198 | all  34.8 | centroid-wrong  33.1 | centroid-right  41.6
+  placebo_matched      parse 0.998 forced  44 | all  28.0* (+55/-89 p=0.0058) | centroid-wrong  26.8* (+44/-69 p=0.024) | centroid-right  32.7  (+11/-20 p=0.15)
+  strength_audit       parse 0.994 forced 118 | all  33.8  (+63/-68 p=0.73) | centroid-wrong  33.8  (+54/-51 p=0.85) | centroid-right  33.7  (+9/-17 p=0.17)
+  placebo_livemath_ts  parse 0.998 forced  34 | all  23.8* (+47/-102 p=7.7e-06) | centroid-wrong  21.6* (+33/-79 p=1.6e-05) | centroid-right  32.7  (+14/-23 p=0.19)
+  livemath_ts          parse 0.984 forced 137 | all  32.0  (+73/-87 p=0.3) | centroid-wrong  30.6  (+59/-69 p=0.43) | centroid-right  37.6  (+14/-18 p=0.6)

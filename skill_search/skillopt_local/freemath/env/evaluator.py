@@ -12,35 +12,81 @@ price is that equivalence has to be decided. Two checks, in order:
 Only the final \\boxed{} answer (or <answer> tag) is scored, never the whole
 reply, so an expression that merely appears in the working cannot score.
 
-THREADS. SkillOpt's rollout scores replies in a thread pool. math-verify's own
-timeouts use signal.alarm(), which only works in the main thread: in a worker
-it raises, and before this was fixed every symbolic and numeric check silently
-returned "wrong", so only exact string matches counted. Its timeouts are now
-off (parsing_timeout=None, timeout_seconds=None) and each comparison runs under
-our own deadline (_with_deadline), which works in any thread.
+THREADS AND CRASHES. SkillOpt's rollout scores replies in a thread pool.
+math-verify's own timeouts use signal.alarm(), which only works in the main
+thread; in a worker it raises, and before this was fixed every symbolic and
+numeric check silently returned "wrong" (only exact string matches counted).
+Running sympy in many threads instead then segfaulted a training run. So the
+symbolic and numeric checks now run in a separate process pool: a crash or hang
+there costs one worker, the pool is rebuilt, and the check counts as "wrong".
+In the main thread (offline rescoring) they run directly under signal.alarm.
 """
 from __future__ import annotations
 
+import multiprocessing as mp
 import random
 import re
-from concurrent.futures import ThreadPoolExecutor
+import signal
+import threading
+from concurrent.futures import ProcessPoolExecutor
 from concurrent.futures import TimeoutError as _Timeout
-
-_POOL = ThreadPoolExecutor(max_workers=32)
-_DEADLINE_S = 20
-
-
-def _with_deadline(fn, *args) -> bool:
-    """fn(*args), or False if it raises or runs past the deadline (the thread is abandoned)."""
-    try:
-        return bool(_POOL.submit(fn, *args).result(timeout=_DEADLINE_S))
-    except _Timeout:
-        return False
-    except Exception:
-        return False
 
 _SYMBOL_ALIASES = [(r"\varepsilon", r"\epsilon"), (r"\dfrac", r"\frac"), (r"\tfrac", r"\frac"),
                    (r"\left", ""), (r"\right", ""), (r"\displaystyle", "")]
+_DEADLINE_S = 20
+_POOL: ProcessPoolExecutor | None = None
+_POOL_LOCK = threading.Lock()
+
+
+def _pool() -> ProcessPoolExecutor:
+    global _POOL
+    with _POOL_LOCK:
+        if _POOL is None:
+            _POOL = ProcessPoolExecutor(max_workers=8, mp_context=mp.get_context("forkserver"))
+        return _POOL
+
+
+def _reset_pool(bad: ProcessPoolExecutor) -> None:
+    """Drop a pool that crashed or holds a hung worker; the next call builds a fresh one."""
+    global _POOL
+    with _POOL_LOCK:
+        if _POOL is not bad:
+            return
+        _POOL = None
+    for proc in list(getattr(bad, "_processes", {}).values()):
+        try:
+            proc.kill()
+        except Exception:
+            pass
+    bad.shutdown(wait=False, cancel_futures=True)
+
+
+def _alarm(signum, frame):
+    raise TimeoutError
+
+
+def _with_deadline(fn, *args) -> bool:
+    """fn(*args) under a deadline; False if it raises, crashes or overruns."""
+    if threading.current_thread() is threading.main_thread():
+        old = signal.signal(signal.SIGALRM, _alarm)
+        signal.alarm(_DEADLINE_S)
+        try:
+            return bool(fn(*args))
+        except BaseException:
+            return False
+        finally:
+            signal.alarm(0)
+            signal.signal(signal.SIGALRM, old)
+    pool = _pool()
+    try:
+        return bool(pool.submit(fn, *args).result(timeout=_DEADLINE_S))
+    except _Timeout:
+        _reset_pool(pool)
+        return False
+    except Exception:        # BrokenProcessPool after a worker crash, or fn raising
+        if getattr(pool, "_broken", False):
+            _reset_pool(pool)
+        return False
 
 
 def _last_boxed(text: str) -> str | None:

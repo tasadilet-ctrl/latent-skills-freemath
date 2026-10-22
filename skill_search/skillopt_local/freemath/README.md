@@ -85,12 +85,10 @@ not deterministic.
 
 ## Results
 
-Qwen3-8B target, thinking off. **The corrected run is in progress.** These are
-interim numbers on the unforced test split, re-scored with the final scorer:
-
-| benchmark | none | placebo | strength_audit | skillopt | SkillOpt kept |
-|---|---|---|---|---|---|
-| BeyondAIME (n=40) | 2.5 | 5.0 | 10.0 | 5.0 | seed skill (0 of 4 edits accepted) |
-
-HARDMath2 and RealMath are being re-run with the thread-safe scorer. The numbers
-will land here.
+Final tables, with caveats, are in `record/adilet/README.md` (forced final eval,
+re-scored with the thread-safe scorer). In short: on BeyondAIME, HARDMath2 and RealMath
+no condition (SkillOpt skill, strength_audit, placebo) is significantly different from
+no skill for Qwen3-8B. IMO-AnswerBench (`imoanswer`, 345 single-answer items, split
+40/100/205) and ArxivMath with a Qwen3-14B target are queued, followed by the
+PROTOCOL.md stage (`run_protocol_fm.sh`: 3-model dev selection, then test once with
+`evaluate_vllm_freemath.py`, the kit's free-form prompt and forcing).
