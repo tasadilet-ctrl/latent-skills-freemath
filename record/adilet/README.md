@@ -1,72 +1,87 @@
 # Adilet's runs: text skills on math benchmarks without answer-format shortcuts
 
-Status 2026-10-23. Box: 2 × RTX PRO 6000 Blackwell, vLLM 0.32, greedy, thinking off.
-Some stages are still running; this file says which numbers are final and which are not.
+Status 2026-10-24: **all stages finished.** Box: 2 × RTX PRO 6000 Blackwell, vLLM 0.32,
+greedy, thinking off. The summary table is `math_skills_table.png`
+(`make_math_skills_table.py`, cells in `math_skills_cells.json`, computed from the saved
+per-question results).
 
-## The question
+![summary](math_skills_table.png)
 
-On LiveMath every skill gain came from an answer-format shortcut: the meta-option
-"One of the remaining options is correct, but a stronger result can be proven" is
-correct 263/263 times (`../../skill_search/PROTOCOL.md`). Does any skill help when
-there is no such shortcut? Two families were tried:
+## Main conclusion
 
-* **free-form** (no options at all): BeyondAIME, HARDMath2, RealMath. Still queued:
-  IMO-AnswerBench, and ArxivMath with a Qwen3-14B target.
+**No text skill beats giving the model no system prompt**, on 7 math benchmarks that
+have no answer-format shortcut, for Qwen3-8B, Qwen3-14B and Qwen3.6-27B, with
+PROTOCOL.md's selection rule. 10 of the table's 96 comparisons are significant
+(p<0.05, uncorrected; ~5 are expected by chance): **9 are losses**, and the one gain
+(MMLU-Pro 14B, +5.5) reverses on the 27B (−2.5, also significant) with the same text and
+did not show on dev. What notes change is mostly **how long the model reasons**: the
+length-matched placebos halve reply length and are the most common significant losses.
+
+The LiveMath result this started from was a loophole: there, every skill gain came from
+the meta-option "One of the remaining options is correct, but a stronger result can be
+proven", correct 263/263 times (`../../skill_search/PROTOCOL.md`).
+
+Not covered: other model families, thinking mode, optimizers stronger than
+Qwen3.6-27B (the SkillOpt paper used GPT-5.5), and **vector/embedding skills**: none were
+run on these benchmarks (the vector results in `../` are Adil's LiveMath runs).
+
+## The benchmarks
+
 * **MCQ without a meta-option**, audited with no model first (`../../skill_search/mcq_math/audit_mcq.py`):
-  MMLU-Pro math (TheoremQA + SciBench; centroid shortcut 11.6% against 10% chance)
-  and SuperGPQA hard math (centroid 18.0%, so it is reported split by centroid).
+  MMLU-Pro math (TheoremQA + SciBench; centroid shortcut 11.6% against 10% chance) and
+  SuperGPQA hard math (centroid 18.0%, so reported split by centroid).
+* **Free-form** (no options): BeyondAIME, HARDMath2, RealMath, IMO-AnswerBench,
+  ArxivMath (SkillOpt target Qwen3-14B; 8B was at the floor).
 
-Pipelines: `../../skill_search/skillopt_local/freemath/`, `../../skill_search/skillopt_local/mcqmath/`
-(SkillOpt envs + launchers), `../../skill_search/mcq_math/` (kit-prompt runner, PROTOCOL.md selection).
+Pipelines: `../../skill_search/skillopt_local/freemath/` and `.../mcqmath/` (SkillOpt envs
+and launchers), `../../skill_search/mcq_math/` (kit-prompt runners, PROTOCOL.md selection).
 
-## Results so far
+## Results, in the order they were produced
 
-**1. Transfer of the LiveMath skills to clean MCQ (Qwen3-8B, kit prompt + forcing, 2048 tokens; final).**
+**1. LiveMath skills transferred to clean MCQ** (8B, kit prompt + forcing, 2048 tokens).
 `reports/mcq_transfer_kit_stack_qwen3-8b.txt`. No skill beats no-system-prompt; the
-length-matched placebos *hurt* (MMLU-Pro 72.7 → 64.0, SuperGPQA 34.8 → 28.0): they halve
-reply length. "livemath_ts beats its placebo" holds only because that placebo is harmful.
+placebos hurt (MMLU-Pro 72.7 → 64.0, SuperGPQA 34.8 → 28.0) by halving reply length.
+"livemath_ts beats its placebo" holds only because that placebo is harmful.
 
-**2. SkillOpt on free-form math (Qwen3-8B target, forced final eval; final).**
-`reports/freemath_forced_qwen3-8b.txt`. Nothing significant anywhere.
+**2. SkillOpt, 8B target, SkillOpt's own stack.** `reports/freemath_forced_qwen3-8b.txt`,
+`reports/mcqmath_skillopt_stack_qwen3-8b.txt`. Val gains did not reach test. SkillOpt
+measures progress against its *seed*, never against no skill: on SuperGPQA the seed
+itself costs ~10 points, so "+2 over the seed" was still −7 against nothing.
 
-| test | none | placebo | strength_audit | SkillOpt skill | SkillOpt kept |
-|---|---|---|---|---|---|
-| BeyondAIME (40) | 7.5 | 2.5 | 5.0 | 15.0 (p=0.38) | seed (0 of 4 accepted) |
-| HARDMath2 (121) | 5.8 | 8.3 | 10.7 (p=0.11) | 8.3 | step 2 |
-| RealMath (287) | 17.1 | 17.8 | 15.7 | 17.1 (+12/−12) | step 1 |
+**3. PROTOCOL.md stage (the table).** SkillOpt is only the draft generator. Drafts are
+chosen on dev by the mean gain over the three models (centroid disqualification for MCQ;
+ties to the shorter skill), then the test split is evaluated once, with the kit's prompt
+and forcing (2048 tokens, 4096 for the 27B).
+`protocol/<mcq bench>/report_rescored.txt`, `protocol_fm/<bench>/report.txt`, and the
+selections next to them. **On all 7 benchmarks the chosen draft is SkillOpt's 4-line
+seed, or the seed plus empty tags**: every longer, optimized draft lost on dev.
 
-**3. SkillOpt on clean MCQ, SkillOpt's own stack (Qwen3-8B, 4096 tokens; final).**
-`reports/mcqmath_skillopt_stack_qwen3-8b.txt`.
-MMLU-Pro: learned skill 74.0 vs none 72.9 (p=0.67). SuperGPQA: **every** system prompt
-is significantly worse than none (39.7), the learned skill too (32.5, p=0.005).
-SkillOpt measures progress against its *seed*, never against no skill; on SuperGPQA the
-seed itself costs ~10 points, so "+2 over the seed" was still −7 against nothing.
+## Skill audit: do any skills exploit the benchmark format?
 
-**4. PROTOCOL.md stage on the MCQ runs.** SkillOpt is only the draft generator; drafts
-are chosen on dev by the mean gain over Qwen3-8B / 14B / 3.6-27B, with the centroid
-disqualification rule and ties to the shorter skill (`protocol/*/selection*.txt`).
-
-* MMLU-Pro (final, `protocol/mmlupro_math_tq_sb/report_rescored.txt`): no draft beats
-  no skill on dev; the protocol picks the seed (+ empty tags, −1.0). On test that
-  4-line seed is 73.4 vs 72.9 (8B, n.s.), **81.1 vs 75.6 (14B, p=0.006)**, **91.0 vs 93.4
-  (27B, p=0.012)**: opposite signs on two models, and the 14B lost 2 points on dev with
-  the same draft. Read as model-specific and unreplicated, not as a skill effect (~60
-  comparisons in the table).
-* SuperGPQA: dev selection done, chosen = the seed itself (+0.33); **test still running**.
+| skill | format-exploiting content | effect |
+|---|---|---|
+| strength_audit | **yes**: step 5, the meta-option rule | its whole LiveMath gain; nothing elsewhere |
+| strength_audit_nometa | no | flat |
+| livemath_ts | partly: says "the wrong ones usually differ from the right one in a single detail" (the basis of the centroid shortcut), never says to use it | none: on LiveMath its gain was larger where the centroid is *wrong* (+8.0 vs +6.3), and its placebo matched it |
+| placebos | no procedure; "don't pad" shortens replies | they hurt; a length effect |
+| SkillOpt MCQ skills | mostly method; two **memorized training items** (the ∛130 answer key `5.06577778`, Fermat primes for a polygon question, both in the train split) and one guessing rule ("pick the option with the same structure as your result") | no gain on centroid-right items; neither memorizing version was chosen |
+| SkillOpt free-form skills | method plus **benchmark-construction priors** (HARDMath2 "reject constant answers", "amplitude is ALWAYS Q^(−1/4)"; RealMath "never answer 'cannot be determined'"), anti-loop rules | none significant |
+| SkillOpt LiveMath skill (Adil) | **yes**: "Meta-Option Absolute Priority" | the LiveMath gain |
 
 ## Things that went wrong, and are fixed
 
 * **math-verify in threads**: its timeouts use `signal.alarm()`, so inside SkillOpt's
   rollout threads every symbolic/numeric check failed silently. Fixed with a process
   pool; runs scored before the fix were redone.
-* **Format clash in the protocol stage**: SkillOpt skills say "answer as `<answer>X</answer>`",
-  the kit prompt says "`Answer: <letter>`", and the model writes hybrids
-  (`Answer: <answer>G</answer>`). The strict parser read none of them and cost drafts up
-  to ~13 dev points. The parser (`mcq_math/evaluate_vllm_mcq.py`) now reads every committed
-  form; all protocol results were re-scored from saved replies (`results_rescored`).
-* **GPU 0 produced garbage silently after a reboot** (64/64 `locklocklock…`, no error).
-  Two SkillOpt steps were rolled back and redone on GPU 1; the user reset the card.
+* **Format clash**: SkillOpt skills say "answer as `<answer>X</answer>`", the kit prompt
+  says "`Answer: <letter>`", and the model writes hybrids (`Answer: <answer>G</answer>`).
+  The strict parser read none of them. `mcq_math/evaluate_vllm_mcq.py` now reads every
+  committed form; all protocol results were re-scored from saved replies.
+* **GPU 0 produced garbage silently after a reboot** (64/64 `locklocklock…`, no error):
+  two SkillOpt steps were rolled back and redone; the card was reset.
   `orchestration/gpu_garbage_probe.py` is the 2-minute check.
+* **Another user's training grew into our card mid-cell** and OOM-killed an 8B cell; the
+  protocol stage now waits for an idle GPU (the kit's < 2 GB rule).
 * **A cut-off rescore** (reboot) replaced a full result file with 162 of 287 rows;
   `analyze_freemath.py` now uses a rescored file only when it is complete.
 * Reboots kill tmux: launchers skip training only when `summary.json` exists, and
@@ -76,11 +91,9 @@ disqualification rule and ties to the shorter skill (`protocol/*/selection*.txt`
 
 | path | contents |
 |---|---|
-| `reports/` | the final tables quoted above |
+| `math_skills_table.png` + script + cells | the summary table above |
+| `reports/` | results 1 and 2 |
+| `protocol/<mcq bench>/`, `protocol_fm/<bench>/` | PROTOCOL.md selection (dev), chosen draft, test report |
 | `skills_learned/<run>/` | every SkillOpt skill version, `best_skill.md`, `summary.json`, `history.json` (no transcripts: they contain benchmark text) |
-| `protocol/<bench>/` | PROTOCOL.md drafts' selection (original and re-scored), chosen skill, test report |
 | `orchestration/` | the box scripts that chained the runs, and the GPU garbage probe |
-| `make_table.py`, `latent_skills_table_updated.png` | the LiveMath table from earlier |
-
-Still to come: SuperGPQA protocol test; SkillOpt on IMO-AnswerBench (8B) and ArxivMath
-(14B target); the PROTOCOL.md stage on all five free-form benchmarks.
+| `make_table.py`, `latent_skills_table_updated.png` | the earlier LiveMath table |

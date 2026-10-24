@@ -1,0 +1,29 @@
+
+== realmath: TEST (touched once), paired exact McNemar vs baseline
+  -- qwen3-8b  n=287  (centroid-right 0)
+    baseline               all  16.0 | centroid-wrong  16.0
+    placebo_matched        all  17.1 (+8/-5 p=0.58) | centroid-wrong  17.1 (+8/-5 p=0.58)
+    strength_audit         all  13.9 (+6/-12 p=0.24) | centroid-wrong  13.9 (+6/-12 p=0.24)
+    strength_audit_nometa  all  15.0 (+8/-11 p=0.65) | centroid-wrong  15.0 (+8/-11 p=0.65)
+    chosen                 all  14.6 (+4/-8 p=0.39) | centroid-wrong  14.6 (+4/-8 p=0.39)
+    strength_audit vs placebo_matched: +4/-13 p=0.049
+    strength_audit_nometa vs placebo_matched: +6/-12 p=0.24
+    chosen vs placebo_matched: +3/-10 p=0.092
+  -- qwen3-14b  n=287  (centroid-right 0)
+    baseline               all  16.7 | centroid-wrong  16.7
+    placebo_matched        all  17.1 (+7/-6 p=1) | centroid-wrong  17.1 (+7/-6 p=1)
+    strength_audit         all  18.5 (+9/-4 p=0.27) | centroid-wrong  18.5 (+9/-4 p=0.27)
+    strength_audit_nometa  all  17.4 (+5/-3 p=0.73) | centroid-wrong  17.4 (+5/-3 p=0.73)
+    chosen                 all  17.4 (+6/-4 p=0.75) | centroid-wrong  17.4 (+6/-4 p=0.75)
+    strength_audit vs placebo_matched: +9/-5 p=0.42
+    strength_audit_nometa vs placebo_matched: +5/-4 p=1
+    chosen vs placebo_matched: +6/-5 p=1
+  -- qwen3.6-27b  n=287  (centroid-right 0)
+    baseline               all  19.2 | centroid-wrong  19.2
+    placebo_matched        all  19.2 (+10/-10 p=1) | centroid-wrong  19.2 (+10/-10 p=1)
+    strength_audit         all  20.2 (+10/-7 p=0.63) | centroid-wrong  20.2 (+10/-7 p=0.63)
+    strength_audit_nometa  all  20.9 (+11/-6 p=0.33) | centroid-wrong  20.9 (+11/-6 p=0.33)
+    chosen                 all  19.2 (+8/-8 p=1) | centroid-wrong  19.2 (+8/-8 p=1)
+    strength_audit vs placebo_matched: +8/-5 p=0.58
+    strength_audit_nometa vs placebo_matched: +10/-5 p=0.3
+    chosen vs placebo_matched: +7/-7 p=1
