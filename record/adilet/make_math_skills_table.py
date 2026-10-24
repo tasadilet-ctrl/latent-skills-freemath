@@ -18,14 +18,14 @@ out = sys.argv[2]
 COLS = [("baseline", "baseline\n(no skill)"), ("placebo", "placebo\n(length-matched)"),
         ("strength_audit", "strength_audit"), ("strength_audit_nometa", "strength_audit\nminus meta rule"),
         ("placebo_ts", "placebo for\nlivemath_ts"), ("livemath_ts", "livemath_ts"),
-        ("skill", "SkillOpt draft\nchosen by\nPROTOCOL.md")]
+        ("livemath_ts_meta", "livemath_ts\n+ meta rule"), ("skill", "SkillOpt draft\nchosen by\nPROTOCOL.md")]
 cmap = LinearSegmentedColormap.from_list("d", ["#c0612b", "#e3c9b6", "#efebe6", "#c9d8e3", "#2f7fb8"])
 norm = Normalize(-10, 10)
 INK, MUTED, RULE = "#1a1a1a", "#7a8088", "#8a949e"
 
-H = 260 + 68 * len(rows) + 330
-fig = plt.figure(figsize=(15.6, H / 100), dpi=110)
-ax = fig.add_axes([0, 0, 1, 1]); ax.set_xlim(0, 1560); ax.set_ylim(H, 0); ax.axis("off")
+H = 260 + 68 * len(rows) + 345
+fig = plt.figure(figsize=(17.1, H / 100), dpi=110)
+ax = fig.add_axes([0, 0, 1, 1]); ax.set_xlim(0, 1710); ax.set_ylim(H, 0); ax.axis("off")
 ax.text(14, 30, "Text skills on math benchmarks without answer-format shortcuts", fontsize=19,
         fontweight="bold", color=INK, va="center")
 ax.text(14, 62, "cell = accuracy % (n).  tint = change vs that row's own baseline.  * = p<0.05 "
@@ -62,7 +62,8 @@ for r in rows:
         ax.add_patch(Rectangle((x, y), cw, 54, facecolor=face,
                                edgecolor="#d0d5da" if c == "baseline" else "#d8dcdf", lw=1))
         dark = c != "baseline" and abs(cell["d"]) >= 7          # light text on the darkest tints
-        ax.text(x + cw / 2, y + 19, f"{cell['acc']:.1f}" + ("*" if sig else ""), ha="center", va="center",
+        bad = cell.get("letters", 0) >= 0.2 * cell["n"]          # mostly invented option letters
+        ax.text(x + cw / 2, y + 19, f"{cell['acc']:.1f}" + ("*" if sig else "") + ("†" if bad else ""), ha="center", va="center",
                 fontsize=13, color="white" if dark else INK, fontweight="bold" if sig else "normal")
         sub = f"n={cell['n']}" if c == "baseline" else f"n={cell['n']}  {cell['d']:+.1f}"
         ax.text(x + cw / 2, y + 40, sub, ha="center", va="center", fontsize=9, color="#f4f4f4" if dark else MUTED)
@@ -70,8 +71,11 @@ for r in rows:
 
 notes = [
     "Reading it:",
-    "• No skill beats no system prompt. 10 of 96 cells are significant: 9 are losses; the one gain (MMLU-Pro 14B +5.5) reverses on the 27B",
-    "   (−2.5*) with the same text and did not show on dev.  ~5 significant cells are expected by chance alone.",
+    "• No skill beats no system prompt. 16 of 147 cells are significant: 15 are losses; the one gain (MMLU-Pro 14B +5.5) reverses on the 27B",
+    "   (−2.5*) with the same text and did not show on dev.  ~7 significant cells are expected by chance alone.",
+    "• livemath_ts with and without the meta rule (\"a stronger result can be proven\") behave the same off LiveMath (no pair differs, p>0.05): the rule's",
+    "   LiveMath gain needed LiveMath's meta-option.  † = ≥20% of replies answer a free-form question with an option letter that does not exist:",
+    "   livemath_ts says to compare the options, so the 8B (and the 14B on RealMath) invents A–E. Those drops are format failures, not worse reasoning.",
     "• PROTOCOL.md picked SkillOpt's 4-line seed (or seed + empty tags) on all 7 benchmarks: every longer, optimized draft lost on dev.",
     "• Length-matched placebos hurt most often (MMLU-Pro, SuperGPQA and IMO on 8B): they halve reply length, and these problems need room.",
     "• HARDMath2 and ArxivMath sit near the floor for all three models with thinking off, so they cannot show small effects.",

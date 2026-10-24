@@ -27,9 +27,10 @@ import sys
 
 MODELS = ["qwen3-8b", "qwen3-14b", "qwen3.6-27b"]
 TEST_CONDS = ["placebo_matched", "strength_audit", "strength_audit_nometa",
-              "placebo_livemath_ts", "livemath_ts", "chosen"]
+              "placebo_livemath_ts", "livemath_ts", "livemath_ts_meta", "chosen"]
 PAIRS = [("strength_audit", "placebo_matched"), ("strength_audit_nometa", "placebo_matched"),
-         ("livemath_ts", "placebo_livemath_ts"), ("chosen", "placebo_matched")]
+         ("livemath_ts", "placebo_livemath_ts"), ("livemath_ts_meta", "placebo_livemath_ts"),
+         ("livemath_ts_meta", "livemath_ts"), ("chosen", "placebo_matched")]
 
 
 def load(d, bench, model, name, split):

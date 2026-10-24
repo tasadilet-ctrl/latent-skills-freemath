@@ -1,6 +1,6 @@
 # Adilet's runs: text skills on math benchmarks without answer-format shortcuts
 
-Status 2026-10-24: **all stages finished.** Box: 2 × RTX PRO 6000 Blackwell, vLLM 0.32,
+Status 2026-10-25: **all stages finished**, including the livemath_ts variants on every benchmark. Box: 2 × RTX PRO 6000 Blackwell, vLLM 0.32,
 greedy, thinking off. The summary table is `math_skills_table.png`
 (`make_math_skills_table.py`, cells in `math_skills_cells.json`, computed from the saved
 per-question results).
@@ -11,15 +11,17 @@ per-question results).
 
 **No text skill beats giving the model no system prompt**, on 7 math benchmarks that
 have no answer-format shortcut, for Qwen3-8B, Qwen3-14B and Qwen3.6-27B, with
-PROTOCOL.md's selection rule. 10 of the table's 96 comparisons are significant
-(p<0.05, uncorrected; ~5 are expected by chance): **9 are losses**, and the one gain
+PROTOCOL.md's selection rule. 16 of the table's 147 comparisons are significant
+(p<0.05, uncorrected; ~7 are expected by chance): **15 are losses**, and the one gain
 (MMLU-Pro 14B, +5.5) reverses on the 27B (−2.5, also significant) with the same text and
 did not show on dev. What notes change is mostly **how long the model reasons**: the
 length-matched placebos halve reply length and are the most common significant losses.
 
 The LiveMath result this started from was a loophole: there, every skill gain came from
 the meta-option "One of the remaining options is correct, but a stronger result can be
-proven", correct 263/263 times (`../../skill_search/PROTOCOL.md`).
+proven", correct 263/263 times (`../../skill_search/PROTOCOL.md`). Off LiveMath, the
+meta rule does nothing: livemath_ts with and without it never differ significantly
+(21 paired comparisons, smallest p = 0.07).
 
 Not covered: other model families, thinking mode, optimizers stronger than
 Qwen3.6-27B (the SkillOpt paper used GPT-5.5), and **vector/embedding skills**: none were
@@ -56,13 +58,35 @@ and forcing (2048 tokens, 4096 for the 27B).
 selections next to them. **On all 7 benchmarks the chosen draft is SkillOpt's 4-line
 seed, or the seed plus empty tags**: every longer, optimized draft lost on dev.
 
+**4. livemath_ts, its placebo, and livemath_ts + meta rule on every benchmark** (test
+splits, same stack as 3; `../../skill_search/mcq_math/run_ts_meta.sh`,
+`../../skill_search/skillopt_local/freemath/run_ts_fm.sh`). Columns 5–7 of the table.
+* **The meta rule is inert without a meta-option.** livemath_ts_meta vs livemath_ts:
+  0 of 21 pairs significant. On LiveMath the same rule took the 14B from 3.4% to 26.3% on
+  meta-option questions; here there is nothing for it to act on.
+* **livemath_ts is an MCQ skill, and on free-form questions the small models make up
+  options.** It says to compare the options; with no options the 8B often derives the
+  right value, then writes "Among the options, Option A …" and answers `\boxed{A}`. Share
+  of free-form replies that are a bare letter, livemath_ts / with meta rule:
+  RealMath 8B 186/287 and 193/287, 14B 64/287 and 46/287; IMO 8B 59/205 and 67/205;
+  ArxivMath 8B 26/43 and 28/43; HARDMath2 8B 26/121 and 37/121; never more than 6 for
+  the 27B. Those cells are marked † (≥ 20%). Their significant losses (RealMath 8B
+  −12.5/−14.3, 14B −5.9; IMO 8B −9.8/−10.2) are format failures, not worse reasoning.
+* **"livemath_ts beats its placebo" is not a skill effect.** It holds on MMLU-Pro 8B
+  (+54/−24) only because that placebo is harmful (−7.1*); nowhere does livemath_ts beat
+  no skill.
+* The placebo for livemath_ts shortens replies everywhere (RealMath 8B: 2586 → 531
+  characters) and significantly hurts on MMLU-Pro 8B and 14B, SuperGPQA 8B and IMO 14B,
+  where the problems need the room.
+
 ## Skill audit: do any skills exploit the benchmark format?
 
 | skill | format-exploiting content | effect |
 |---|---|---|
 | strength_audit | **yes**: step 5, the meta-option rule | its whole LiveMath gain; nothing elsewhere |
 | strength_audit_nometa | no | flat |
-| livemath_ts | partly: says "the wrong ones usually differ from the right one in a single detail" (the basis of the centroid shortcut), never says to use it | none: on LiveMath its gain was larger where the centroid is *wrong* (+8.0 vs +6.3), and its placebo matched it |
+| livemath_ts | partly: says "the wrong ones usually differ from the right one in a single detail" (the basis of the centroid shortcut), never says to use it | none: on LiveMath its gain was larger where the centroid is *wrong* (+8.0 vs +6.3), and its placebo matched it. Off MCQ it makes small models invent options (result 4) |
+| livemath_ts_meta | **yes**: livemath_ts plus the meta-option rule | the LiveMath META gain; elsewhere identical to livemath_ts |
 | placebos | no procedure; "don't pad" shortens replies | they hurt; a length effect |
 | SkillOpt MCQ skills | mostly method; two **memorized training items** (the ∛130 answer key `5.06577778`, Fermat primes for a polygon question, both in the train split) and one guessing rule ("pick the option with the same structure as your result") | no gain on centroid-right items; neither memorizing version was chosen |
 | SkillOpt free-form skills | method plus **benchmark-construction priors** (HARDMath2 "reject constant answers", "amplitude is ALWAYS Q^(−1/4)"; RealMath "never answer 'cannot be determined'"), anti-loop rules | none significant |
@@ -91,8 +115,9 @@ seed, or the seed plus empty tags**: every longer, optimized draft lost on dev.
 
 | path | contents |
 |---|---|
-| `math_skills_table.png` + script + cells | the summary table above |
-| `reports/` | results 1 and 2 |
+| `math_skills_table.png`, `make_math_skills_table.py`, `math_skills_cells.json` | the summary table above |
+| `compute_math_skills_cells.py` | builds the cells from the saved per-question results (run on the box) |
+| `reports/` | results 1 and 2 (results 3 and 4 are in `protocol*/`) |
 | `protocol/<mcq bench>/`, `protocol_fm/<bench>/` | PROTOCOL.md selection (dev), chosen draft, test report |
 | `skills_learned/<run>/` | every SkillOpt skill version, `best_skill.md`, `summary.json`, `history.json` (no transcripts: they contain benchmark text) |
 | `orchestration/` | the box scripts that chained the runs, and the GPU garbage probe |

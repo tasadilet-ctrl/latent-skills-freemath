@@ -7,10 +7,13 @@
     strength_audit_nometa  all  67.1*(+27/-48 p=0.02) | centroid-wrong  66.9*(+26/-46 p=0.024) | centroid-right  69.4 (+1/-2 p=1)
     placebo_livemath_ts    all  65.8*(+29/-55 p=0.006) | centroid-wrong  65.0*(+23/-49 p=0.0029) | centroid-right  72.2 (+6/-6 p=1)
     livemath_ts            all  74.0 (+33/-29 p=0.7) | centroid-wrong  73.9 (+30/-27 p=0.79) | centroid-right  75.0 (+3/-2 p=1)
+    livemath_ts_meta       all  70.4 (+30/-39 p=0.34) | centroid-wrong  71.4 (+29/-34 p=0.61) | centroid-right  61.1 (+1/-5 p=0.22)
     chosen                 all  73.4 (+26/-24 p=0.89) | centroid-wrong  72.6 (+21/-22 p=1) | centroid-right  80.6 (+5/-2 p=0.45)
     strength_audit vs placebo_matched: +46/-34 p=0.22
     strength_audit_nometa vs placebo_matched: +44/-37 p=0.51
     livemath_ts vs placebo_livemath_ts: +54/-24 p=0.0009
+    livemath_ts_meta vs placebo_livemath_ts: +49/-32 p=0.075
+    livemath_ts_meta vs livemath_ts: +16/-29 p=0.072
     chosen vs placebo_matched: +43/-13 p=7.3e-05
   -- qwen3-14b  n=365  (centroid-right 36)
     baseline               all  75.6 | centroid-wrong  74.8 | centroid-right  83.3
@@ -19,10 +22,13 @@
     strength_audit_nometa  all  75.3 (+26/-27 p=1) | centroid-wrong  74.8 (+25/-25 p=1) | centroid-right  80.6 (+1/-2 p=1)
     placebo_livemath_ts    all  71.2*(+18/-34 p=0.036) | centroid-wrong  70.5 (+17/-31 p=0.059) | centroid-right  77.8 (+1/-3 p=0.62)
     livemath_ts            all  75.6 (+32/-32 p=1) | centroid-wrong  75.1 (+30/-29 p=1) | centroid-right  80.6 (+2/-3 p=1)
+    livemath_ts_meta       all  77.3 (+32/-26 p=0.51) | centroid-wrong  77.2 (+32/-24 p=0.35) | centroid-right  77.8 (+0/-2 p=0.5)
     chosen                 all  81.1*(+34/-14 p=0.0055) | centroid-wrong  80.2*(+31/-13 p=0.0096) | centroid-right  88.9 (+3/-1 p=0.62)
     strength_audit vs placebo_matched: +36/-25 p=0.2
     strength_audit_nometa vs placebo_matched: +34/-20 p=0.076
     livemath_ts vs placebo_livemath_ts: +42/-26 p=0.068
+    livemath_ts_meta vs placebo_livemath_ts: +44/-22 p=0.0092
+    livemath_ts_meta vs livemath_ts: +23/-17 p=0.43
     chosen vs placebo_matched: +49/-14 p=1.1e-05
   -- qwen3.6-27b  n=365  (centroid-right 36)
     baseline               all  93.4 | centroid-wrong  93.3 | centroid-right  94.4
@@ -31,8 +37,11 @@
     strength_audit_nometa  all  92.3 (+7/-11 p=0.48) | centroid-wrong  92.1 (+6/-10 p=0.45) | centroid-right  94.4 (+1/-1 p=1)
     placebo_livemath_ts    all  92.3 (+5/-9 p=0.42) | centroid-wrong  92.1 (+5/-9 p=0.42) | centroid-right  94.4 (+0/-0 p=1)
     livemath_ts            all  93.2 (+6/-7 p=1) | centroid-wrong  92.7 (+5/-7 p=0.77) | centroid-right  97.2 (+1/-0 p=1)
+    livemath_ts_meta       all  92.3 (+3/-7 p=0.34) | centroid-wrong  91.8 (+2/-7 p=0.18) | centroid-right  97.2 (+1/-0 p=1)
     chosen                 all  91.0*(+1/-10 p=0.012) | centroid-wrong  90.3*(+0/-10 p=0.002) | centroid-right  97.2 (+1/-0 p=1)
     strength_audit vs placebo_matched: +9/-6 p=0.61
     strength_audit_nometa vs placebo_matched: +12/-10 p=0.83
     livemath_ts vs placebo_livemath_ts: +8/-5 p=0.58
+    livemath_ts_meta vs placebo_livemath_ts: +8/-8 p=1
+    livemath_ts_meta vs livemath_ts: +5/-8 p=0.58
     chosen vs placebo_matched: +11/-14 p=0.69
