@@ -90,21 +90,28 @@ def _decode(torch, tok, model, prompts, max_new, bs):
     outs = []
     for i in range(0, len(prompts), bs):
         chunk = prompts[i:i + bs]
+        oom = False
         try:
             enc = tok(chunk, return_tensors="pt", padding=True, padding_side="left").to(dev)
             with torch.no_grad():
                 gen = model.generate(**enc, max_new_tokens=max_new, do_sample=False, temperature=None,
                                      top_p=None, top_k=None, pad_token_id=tok.pad_token_id)
+            new = tok.batch_decode(gen[:, enc["input_ids"].shape[1]:], skip_special_tokens=True)
         except torch.OutOfMemoryError:
-            enc = gen = None
+            oom = True
+        # Retry OUTSIDE the except block: inside it, the live exception keeps the failed
+        # attempt's activations referenced, so the retry starts with the card still full
+        # (2026-10-26: SuperGPQA 27B forcing pass OOMed down to batch 1 this way).
+        enc = gen = None
+        if oom:
             torch.cuda.empty_cache()
             if len(chunk) == 1:
-                raise
+                raise RuntimeError("OOM at batch size 1")
             h = len(chunk) // 2
             print(f"[vec] oom: batch {len(chunk)} -> {h}", flush=True)
             outs += _decode(torch, tok, model, chunk[:h], max_new, h) + _decode(torch, tok, model, chunk[h:], max_new, h)
             continue
-        outs += tok.batch_decode(gen[:, enc["input_ids"].shape[1]:], skip_special_tokens=True)
+        outs += new
         print(f"[vec]   {min(i + bs, len(prompts))}/{len(prompts)}", flush=True)
     return outs
 
@@ -117,7 +124,8 @@ def generate(torch, tok, model, prompts, max_new, bs, k):
         outs[i] = o
     idx = [i for i, o in enumerate(outs) if parse(o, k) is None]
     if idx:
-        cont = _decode(torch, tok, model, [prompts[i] + outs[i] + ANSWER_CUE for i in idx], 12, bs)
+        # forcing re-reads prompt + a full reply, far longer than the original prompts: smaller batches
+        cont = _decode(torch, tok, model, [prompts[i] + outs[i] + ANSWER_CUE for i in idx], 12, max(1, bs // 4))
         for j, i in enumerate(idx):
             outs[i] += ANSWER_CUE + cont[j]
     return outs, set(idx)
