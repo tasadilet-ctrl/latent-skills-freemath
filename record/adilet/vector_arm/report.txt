@@ -1,0 +1,60 @@
+
+== mmlupro_math_tq_sb  qwen3-14b  (HF engine, test n=365)
+  baseline   75.6  chars=2097 forced=45
+  placebo    73.2  (-2.5, +24/-33 p=0.29)  chars=1260 forced=14
+  text       77.5  (+1.9, +35/-28 p=0.45)  chars=2447 forced=41
+  B1         74.8  (-0.8, +21/-24 p=0.77)  chars=2181 forced=51  L37 g0.3 coh=+0.78
+  B2         76.7  (+1.1, +24/-20 p=0.65)  chars=1981 forced=38  L37 g0.3 coh=+0.80
+  CONTROL    76.4  (+0.8, +23/-20 p=0.76)  chars=1965 forced=37  L37 g0.3 coh=+0.76
+  text vs placebo: +46/-30 p=0.085
+  B1 vs CONTROL: +22/-28 p=0.48
+  B2 vs CONTROL: +22/-21 p=1
+  B1 vs text: +24/-34 p=0.24
+
+== mmlupro_math_tq_sb  qwen3-8b  (HF engine, test n=365)
+  baseline   72.9  chars=2146 forced=37
+  placebo    64.7* (-8.2, +24/-54 p=0.0009)  chars=1087 forced=11
+  text       72.9  (+0.0, +33/-33 p=1)  chars=2510 forced=18
+  B1         72.1  (-0.8, +29/-32 p=0.8)  chars=2139 forced=39  L34 g0.3 coh=+0.82
+  B2         74.0  (+1.1, +23/-19 p=0.64)  chars=1980 forced=24  L34 g0.3 coh=+0.88
+  CONTROL    73.4  (+0.5, +27/-25 p=0.89)  chars=2006 forced=24  L34 g0.3 coh=+0.80
+  text vs placebo: +51/-21 p=0.00053
+  B1 vs CONTROL: +27/-32 p=0.6
+  B2 vs CONTROL: +29/-27 p=0.89
+  B1 vs text: +36/-39 p=0.82
+
+== mmlupro_math_tq_sb  qwen3.6-27b  (HF engine, test n=365)
+  baseline   92.9  chars=3401 forced=32
+  placebo    91.8  (-1.1, +4/-8 p=0.39)  chars=2694 forced=27
+  text       93.4  (+0.5, +6/-4 p=0.75)  chars=3837 forced=44
+  B1         92.6  (-0.3, +7/-8 p=1)  chars=3416 forced=29  L62 g0.3 coh=+0.77
+  B2         92.1  (-0.8, +6/-9 p=0.61)  chars=3343 forced=32  L62 g0.3 coh=+0.77
+  CONTROL    92.1  (-0.8, +6/-9 p=0.61)  chars=3513 forced=40  L62 g0.3 coh=+0.72
+  text vs placebo: +10/-4 p=0.18
+  B1 vs CONTROL: +9/-7 p=0.8
+  B2 vs CONTROL: +8/-8 p=1
+  B1 vs text: +8/-11 p=0.65
+
+== supergpqa_math_hard  qwen3-14b  (HF engine, test n=360)
+  baseline   37.5  chars=3564 forced=139
+  placebo    33.9  (-3.6, +41/-54 p=0.22)  chars=1889 forced=42
+  text       37.8  (+0.3, +44/-43 p=1)  chars=3875 forced=145
+  B1         33.9  (-3.6, +29/-42 p=0.15)  chars=3612 forced=167  L37 g0.3 coh=+0.80
+  B2         37.5  (+0.0, +37/-37 p=1)  chars=3157 forced=131  L37 g0.3 coh=+0.83
+  CONTROL    35.0  (-2.5, +32/-41 p=0.35)  chars=3179 forced=117  L37 g0.3 coh=+0.78
+  text vs placebo: +62/-48 p=0.21
+  B1 vs CONTROL: +37/-41 p=0.73
+  B2 vs CONTROL: +44/-35 p=0.37
+  B1 vs text: +37/-51 p=0.17
+
+== supergpqa_math_hard  qwen3-8b  (HF engine, test n=360)
+  baseline   34.7  chars=3596 forced=132
+  placebo    26.4* (-8.3, +41/-71 p=0.0059)  chars=1644 forced=26
+  text       34.4  (-0.3, +47/-48 p=1)  chars=3647 forced=90
+  B1         24.4* (-10.3, +24/-61 p=7.4e-05)  chars=3636 forced=143  L34 g0.3 coh=+0.82
+  B2         29.7  (-5.0, +34/-52 p=0.066)  chars=3325 forced=120  L34 g0.3 coh=+0.88
+  CONTROL    30.3  (-4.4, +38/-54 p=0.12)  chars=3420 forced=108  L34 g0.3 coh=+0.81
+  text vs placebo: +67/-38 p=0.006
+  B1 vs CONTROL: +39/-60 p=0.044
+  B2 vs CONTROL: +45/-47 p=0.92
+  B1 vs text: +36/-72 p=0.00068
