@@ -25,7 +25,7 @@ meta rule does nothing: livemath_ts with and without it never differ significant
 
 Not covered: other model families, thinking mode, optimizers stronger than
 Qwen3.6-27B (the SkillOpt paper used GPT-5.5). Vector skills were run on the two MCQ
-benchmarks only (result 5; the vector results in `../` are Adil's LiveMath runs).
+benchmarks only, and do no better (result 5; the vector results in `../` are Adil's LiveMath runs).
 
 ## The benchmarks
 
@@ -80,29 +80,23 @@ splits, same stack as 3; `../../skill_search/mcq_math/run_ts_meta.sh`,
   where the problems need the room.
 
 **5. Vector arm of livemath_ts on MMLU-Pro and SuperGPQA** (`../../skill_search/vector_mcq/`,
-results in `vector_arm/`). **Partial: SuperGPQA on the 27B is being rerun** after its first
-run crashed (out of memory in the forcing pass). Three vectors per model and benchmark, built
-from the 40 train-split items with the kit's hooks: B1 = skill − placebo, B2 = skill −
-nothing, CONTROL = placebo − nothing. Fixed in advance at Adil's LiveMath settings
-(8B L34, 14B L37, 27B L62, γ = 0.3). Every cell on the same HF engine. Change vs no skill
-(* = p<0.05):
+table `vector_arm/vector_table.png`, report and fidelity in `vector_arm/`). Three vectors per
+model and benchmark, diff-in-means at the last prompt token over the 40 train-split items
+(kit hooks): B1 = skill − placebo, B2 = skill − nothing, CONTROL = placebo − nothing. Fixed
+in advance at Adil's LiveMath settings (8B L34, 14B L37, 27B L62, γ = 0.3, relative). Every
+cell, text ones included, on the same HF engine.
 
-| | MMLU-Pro 8B | 14B | 27B | SuperGPQA 8B | 14B |
-|---|---|---|---|---|---|
-| no skill (acc.) | 72.9 | 75.6 | 92.9 | 34.7 | 37.5 |
-| text livemath_ts | +0.0 | +1.9 | +0.5 | −0.3 | +0.3 |
-| text placebo | −8.2* | −2.5 | −1.1 | −8.3* | −3.6 |
-| B1 | −0.8 | −0.8 | −0.3 | −10.3* | −3.6 |
-| B2 | +1.1 | +1.1 | −0.8 | −5.0 | +0.0 |
-| CONTROL | +0.5 | +0.8 | −0.8 | −4.4 | −2.5 |
+![vector arm](vector_arm/vector_table.png)
 
-* No vector beats no skill; the one significant cell is a loss (B1, SuperGPQA 8B), also
-  below CONTROL (p=0.04).
-* The vectors do carry part of the text skill's effect on the next-token distribution
-  (fidelity 0.25–0.42 for the 8B and 14B, CONTROL ≈ 0 on the 8B), but the text skill
-  itself changes no accuracy, so there is nothing for them to transfer.
-* On the 27B, at L62, fidelity is ~0.06 for B1/B2, below CONTROL's 0.20: that operating
-  point does not carry this skill, so the 27B vector cells are weak evidence.
+* **No vector beats no skill.** 3 of 30 cells are significant, all losses (two are the text
+  placebo); B1 on SuperGPQA 8B (−10.3) is also below CONTROL (p=0.04).
+* The text skill itself changes nothing here (−0.6 to +1.9), so there is no gain to carry.
+* The 8B/14B vectors do carry part of the text skill's effect on the next-token
+  distribution (fidelity 0.23–0.42). On the 27B at L62, B1/B2 fidelity is ~0.06, below
+  CONTROL's 0.20: that operating point does not carry this skill, so the 27B vector cells
+  are weak evidence.
+* The SuperGPQA 27B cells were rerun once: the first run crashed out of memory in the
+  forcing pass, and a logging bug hid it (both fixed, `vec_mcq.py`, `run_vec_mcq.sh`).
 
 ## Skill audit: do any skills exploit the benchmark format?
 
@@ -145,6 +139,6 @@ nothing, CONTROL = placebo − nothing. Fixed in advance at Adil's LiveMath sett
 | `reports/` | results 1 and 2 (results 3 and 4 are in `protocol*/`) |
 | `protocol/<mcq bench>/`, `protocol_fm/<bench>/` | PROTOCOL.md selection (dev), chosen draft, test report |
 | `skills_learned/<run>/` | every SkillOpt skill version, `best_skill.md`, `summary.json`, `history.json` (no transcripts: they contain benchmark text) |
-| `vector_arm/` | vector-arm report (`report.txt`) and fidelity per model and benchmark |
+| `vector_arm/` | vector-arm table (`make_vector_table.py`, `compute_vector_cells.py`), report and fidelity per model and benchmark |
 | `orchestration/` | the box scripts that chained the runs, and the GPU garbage probe |
 | `make_table.py`, `latent_skills_table_updated.png` | the earlier LiveMath table |
