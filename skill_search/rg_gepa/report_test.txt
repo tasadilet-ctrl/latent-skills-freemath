@@ -1,0 +1,91 @@
+tasks: binary_alternation,cryptarithm,decimal_arithmetic,family_relationships,game_of_life,largest_island,manipulate_matrix,polynomial_multiplication,pool_matrix,power_function,products,rotate_matrix,shortest_path,spell_backward,spiral_matrix,string_manipulation,time_intervals,tower_of_hanoi,word_sorting
+TEST_DONE qwen3-8b
+tasks: binary_alternation,cryptarithm,decimal_arithmetic,family_relationships,largest_island,manipulate_matrix,polynomial_multiplication,pool_matrix,power_function,products,rotate_matrix,shortest_path,spell_backward,spiral_matrix,string_manipulation,tower_of_hanoi,word_sorting
+TEST_DONE qwen3-14b
+TESTS_ALL_DONE
+
+== qwen3-8b default (test seed 0, n=200)
+task                        none  seed  plac  brev  GEPA  vs none / plac / seed (p)   found  words  leaks
+binary_alternation          26.5  21.5  23.0  14.5  27.5  +1.0(0.9) / +4.5(0.3) / +6.0(0.1)   -       230  number:1010
+cryptarithm                  4.0   5.5   1.0   1.0   7.5  +3.5(0.1) / +6.5(0.002*) / +2.0(0.5)   -       183  none
+decimal_arithmetic          48.5  52.0  46.5  47.0  52.0  +3.5(0.04) / +5.5(0.03) / +0.0(1)   -        12  none
+family_relationships        54.0  59.5  54.5  56.0  64.5  +10.5(0.0008*) / +10.0(0.002*) / +5.0(0.2)   -       188  answer:daughter;answer:father;answer:husband
+game_of_life                12.5   6.0  10.5   5.5  12.0  -0.5(1) / +1.5(0.4) / +6.0(0.002*)   -       161  none
+largest_island              39.0  39.5  34.0  26.5  41.0  +2.0(0.6) / +7.0(0.02) / +1.5(0.7)   -       205  none
+manipulate_matrix           23.5  25.0   8.5  16.0  25.0  +1.5(0.7) / +16.5(5e-07*) / +0.0(1)   -       162  none
+polynomial_multiplication   16.5  11.5  14.5  21.0  53.0  +36.5(1e-18*) / +38.5(2e-20*) / +41.5(2e-21*)   FOUND   169  none
+pool_matrix                 39.0  43.0  41.0  39.5  40.5  +1.5(0.7) / -0.5(1) / -2.5(0.2)   -        12  none
+power_function              38.5  39.0  38.0  34.5  41.0  +2.5(0.2) / +3.0(0.07) / +2.0(0.4)   -       170  none
+products                    54.5  62.0  49.5  54.0  92.0  +37.5(1e-21*) / +42.5(1e-24*) / +30.0(3e-17*)   FOUND   140  none
+rotate_matrix               18.0  24.5  35.5  44.0  42.5  +24.5(3e-13*) / +7.0(0.09) / +18.0(3e-06*)   -       165  number:180;number:270;number:360
+shortest_path               11.0  32.0  11.0   2.5  30.0  +19.0(3e-07*) / +19.0(7e-08*) / -2.0(0.6)   -        12  none
+spell_backward              56.5  52.5  31.0  31.5  60.5  +4.0(0.3) / +29.5(6e-12*) / +8.0(0.03)   -       153  none
+spiral_matrix               15.0  13.5  15.0  11.5  11.0  -4.0(0.1) / -4.0(0.1) / -2.5(0.3)   -       163  none
+string_manipulation         25.5  27.0  20.5  16.0  31.5  +6.0(0.1) / +11.0(0.0009*) / +4.5(0.09)   -        12  none
+time_intervals              50.0  61.0  56.0  50.5  56.5  +6.5(0.08) / +0.5(1) / -4.5(0.3)   -       213  none
+tower_of_hanoi              11.5  11.5  11.5   8.0  11.5  +0.0(1) / +0.0(1) / +0.0(1)   -        12  none
+word_sorting                32.0  35.5  22.0  24.5  52.0  +20.0(3e-07*) / +30.0(6e-15*) / +16.5(1e-05*)   FOUND   170  none
+
+== qwen3-8b hard (test seed 0, n=200)
+task                        none  seed  plac  brev  GEPA  vs none / plac / seed (p)
+binary_alternation          15.0  12.5  18.0  14.0  16.0  +1.0(0.8) / -2.0(0.6) / +3.5(0.3)
+cryptarithm                  0.0   0.0   0.5   0.0   2.5  +2.5(0.06) / +2.0(0.1) / +2.5(0.06)
+decimal_arithmetic          32.0  33.0  29.0  26.5  32.0  +0.0(1) / +3.0(0.3) / -1.0(0.7)
+family_relationships        48.0  67.0  45.5  49.0  57.0  +9.0(0.0009*) / +11.5(0.002*) / -10.0(0.02*)
+game_of_life                 0.0   0.0   0.0   0.0   0.0  +0.0(1) / +0.0(1) / +0.0(1)
+largest_island              37.0  37.0  31.0  28.5  39.0  +2.0(0.6) / +8.0(0.02) / +2.0(0.6)
+manipulate_matrix           23.5  20.5  19.5  15.5  20.0  -3.5(0.3) / +0.5(1) / -0.5(1)
+polynomial_multiplication    2.5   1.5   4.5   2.5  15.5  +13.0(9e-07*) / +11.0(5e-07*) / +14.0(7e-09*)
+pool_matrix                 38.0  33.5  33.0  32.0  33.0  -5.0(0.03) / +0.0(1) / -0.5(1)
+power_function               0.0   1.0   0.0   0.0   0.0  +0.0(1) / +0.0(1) / -1.0(0.5)
+products                     0.0   1.0   0.0   0.0  29.5  +29.5(3e-18*) / +29.5(3e-18*) / +28.5(2e-15*)
+rotate_matrix                7.5   0.5  29.5  31.0  14.0  +6.5(0.01*) / -15.5(8e-09*) / +13.5(1e-07*)
+shortest_path                4.5  12.0   7.0   0.5  13.5  +9.0(0.001*) / +6.5(0.02*) / +1.5(0.7)
+spell_backward              48.0  44.5  26.5  24.0  44.5  -3.5(0.4) / +18.0(1e-05*) / +0.0(1)
+spiral_matrix                0.0   0.0   0.0   0.0   0.0  +0.0(1) / +0.0(1) / +0.0(1)
+string_manipulation          7.5  10.0   9.0  10.0  10.5  +3.0(0.2) / +1.5(0.7) / +0.5(1)
+time_intervals              47.5  50.5  45.0  35.5  44.5  -3.0(0.5) / -0.5(1) / -6.0(0.07)
+tower_of_hanoi               0.0   0.0   0.0   0.0   0.0  +0.0(1) / +0.0(1) / +0.0(1)
+word_sorting                 2.0   2.0   0.5   2.0   6.5  +4.5(0.02*) / +6.0(0.0005*) / +4.5(0.01*)
+
+== qwen3-14b default (test seed 0, n=200)
+task                        none  seed  plac  brev  GEPA  vs none / plac / seed (p)   found  words  leaks
+binary_alternation          24.5  32.5  26.5  21.0  37.0  +12.5(0.007*) / +10.5(0.02*) / +4.5(0.4)   -       262  number:1010
+cryptarithm                  9.0  11.0   7.5   2.5  13.5  +4.5(0.1) / +6.0(0.04) / +2.5(0.5)   -       248  none
+decimal_arithmetic          24.0  26.5  21.5  22.0  56.0  +32.0(1e-16*) / +34.5(6e-19*) / +29.5(4e-16*)   FOUND   103  none
+family_relationships        67.5  78.0  67.0  71.5  75.0  +7.5(0.01*) / +8.0(0.02*) / -3.0(0.3)   -       225  answer:daughter;answer:father;answer:father-in-law
+largest_island              41.0  45.0  35.0  26.5  38.5  -2.5(0.4) / +3.5(0.2) / -6.5(0.02)   -       175  none
+manipulate_matrix           27.5  20.5  12.0   6.5  28.5  +1.0(0.9) / +16.5(2e-07*) / +8.0(0.02*)   -       230  none
+polynomial_multiplication   66.0  60.0  58.5  49.5  63.0  -3.0(0.4) / +4.5(0.2) / +3.0(0.4)   -       109  none
+pool_matrix                 40.0  39.0  33.5  35.0  39.0  -1.0(0.8) / +5.5(0.02) / +0.0(1)   -       240  none
+power_function              38.5  40.5  41.5  27.0  38.5  +0.0(1) / -3.0(0.2) / -2.0(0.1)   -        12  none
+products                    45.0  54.5  44.5  45.5  95.5  +50.5(8e-31*) / +51.0(4e-31*) / +41.0(4e-25*)   FOUND   161  none
+rotate_matrix               56.0  62.0  55.0  46.5  69.0  +13.0(6e-06*) / +14.0(2e-07*) / +7.0(0.05)   -       204  number:180;number:270;number:360
+shortest_path               30.5  47.0  18.0  11.5  47.0  +16.5(0.0004*) / +29.0(1e-09*) / +0.0(1)   -        12  none
+spell_backward              36.5  67.0  31.0  31.5  67.0  +30.5(4e-12*) / +36.0(8e-15*) / +0.0(1)   -       183  none
+spiral_matrix               13.0  16.0  13.0  15.0  19.5  +6.5(0.001*) / +6.5(0.007*) / +3.5(0.1)   -       235  none
+string_manipulation         35.5  37.5  22.0  13.5  35.0  -0.5(1) / +13.0(2e-05*) / -2.5(0.5)   -       205  none
+tower_of_hanoi               8.0  11.5  13.5  11.5  14.0  +6.0(0.0005*) / +0.5(1) / +2.5(0.3)   -       271  none
+word_sorting                46.0  51.0  25.5  22.0  57.0  +11.0(0.006*) / +31.5(6e-13*) / +6.0(0.1)   -       237  none
+
+== qwen3-14b hard (test seed 0, n=200)
+task                        none  seed  plac  brev  GEPA  vs none / plac / seed (p)
+binary_alternation          12.0  17.0  18.0  18.5  18.5  +6.5(0.007*) / +0.5(1) / +1.5(0.5)
+cryptarithm                  0.5   2.0   1.0   0.0   3.0  +2.5(0.1) / +2.0(0.2) / +1.0(0.7)
+decimal_arithmetic           0.0   0.0   0.0   0.0  30.5  +30.5(9e-19*) / +30.5(9e-19*) / +30.5(9e-19*)
+family_relationships        65.0  78.5  67.0  71.0  76.0  +11.0(0.003*) / +9.0(0.005*) / -2.5(0.4)
+largest_island              42.5  52.0  28.0  30.0  41.5  -1.0(0.9) / +13.5(7e-06*) / -10.5(0.002*)
+manipulate_matrix           23.5  17.5  16.0   9.5  23.5  +0.0(1) / +7.5(0.02) / +6.0(0.07)
+polynomial_multiplication   16.5  17.0  17.0   7.0  21.0  +4.5(0.1) / +4.0(0.1) / +4.0(0.2)
+pool_matrix                 35.5  25.5  32.0  29.5  25.5  -10.0(4e-05*) / -6.5(0.02*) / +0.0(1)
+power_function               0.5   3.5   0.5   0.0   1.5  +1.0(0.6) / +1.0(0.6) / -2.0(0.3)
+products                     0.0   0.0   0.0   0.0  60.0  +60.0(2e-36*) / +60.0(2e-36*) / +60.0(2e-36*)
+rotate_matrix               30.5  36.5  31.5  31.5  31.5  +1.0(0.5) / +0.0(1) / -5.0(0.006*)
+shortest_path               16.0  18.0   9.5  29.5  15.0  -1.0(0.9) / +5.5(0.1) / -3.0(0.3)
+spell_backward              32.5  60.0  19.5  24.0  60.0  +27.5(8e-09*) / +40.5(3e-16*) / +0.0(1)
+spiral_matrix                0.0   0.0   0.0   0.0   0.0  +0.0(1) / +0.0(1) / +0.0(1)
+string_manipulation         11.5  13.5   7.0   7.5  13.5  +2.0(0.4) / +6.5(0.004*) / +0.0(1)
+tower_of_hanoi               0.0   0.0   0.0   0.0   0.0  +0.0(1) / +0.0(1) / +0.0(1)
+word_sorting                 5.0   6.5   2.0   1.0   9.5  +4.5(0.08) / +7.5(0.0007*) / +3.0(0.3)
+
+[exited with code 0]

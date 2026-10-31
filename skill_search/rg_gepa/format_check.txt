@@ -1,0 +1,40 @@
+qwen3-8b  products                   default none    acc= 54.5 trunc=  0 nopred=  0 chars=  158 fmt_only_misses=0
+qwen3-8b  products                   default placebo acc= 49.5 trunc=  1 nopred=  0 chars=  100 fmt_only_misses=0
+qwen3-8b  products                   default gepa    acc= 92.0 trunc=  0 nopred=  0 chars=  585 fmt_only_misses=0
+   e.g. hard none: pred '52974121350' gold '52919177850'
+qwen3-8b  products                   hard    none    acc=  0.0 trunc=  1 nopred=  0 chars=   89 fmt_only_misses=0
+qwen3-8b  products                   hard    placebo acc=  0.0 trunc=  3 nopred=  0 chars=   65 fmt_only_misses=0
+qwen3-8b  products                   hard    gepa    acc= 29.5 trunc=  0 nopred=  0 chars=  879 fmt_only_misses=0
+   e.g. hard none: pred '52974121350' gold '52919177850'
+qwen3-14b products                   default none    acc= 45.0 trunc=  1 nopred=  0 chars=   36 fmt_only_misses=1
+qwen3-14b products                   default placebo acc= 44.5 trunc=  0 nopred=  0 chars=   23 fmt_only_misses=0
+qwen3-14b products                   default gepa    acc= 95.5 trunc=  3 nopred=  0 chars=  617 fmt_only_misses=0
+   e.g. hard none: pred '52910141850' gold '52919177850'
+qwen3-14b products                   hard    none    acc=  0.0 trunc=  0 nopred=  0 chars=   28 fmt_only_misses=0
+qwen3-14b products                   hard    placebo acc=  0.0 trunc=  0 nopred=  0 chars=   28 fmt_only_misses=0
+qwen3-14b products                   hard    gepa    acc= 60.0 trunc=  7 nopred=  0 chars= 1224 fmt_only_misses=0
+   e.g. hard none: pred '52910141850' gold '52919177850'
+qwen3-14b decimal_arithmetic         default none    acc= 24.0 trunc=  0 nopred=  0 chars=   32 fmt_only_misses=0
+qwen3-14b decimal_arithmetic         default placebo acc= 21.5 trunc=  0 nopred=  0 chars=   30 fmt_only_misses=0
+qwen3-14b decimal_arithmetic         default gepa    acc= 56.0 trunc=  1 nopred=  0 chars=  534 fmt_only_misses=0
+   e.g. hard none: pred '122.341321432' gold '164.057469084'
+qwen3-14b decimal_arithmetic         hard    none    acc=  0.0 trunc=  0 nopred=  0 chars=   34 fmt_only_misses=0
+qwen3-14b decimal_arithmetic         hard    placebo acc=  0.0 trunc=  0 nopred=  0 chars=   39 fmt_only_misses=0
+qwen3-14b decimal_arithmetic         hard    gepa    acc= 30.5 trunc=  1 nopred=  0 chars=  735 fmt_only_misses=0
+   e.g. hard none: pred '122.341321432' gold '164.057469084'
+qwen3-8b  polynomial_multiplication  default none    acc= 16.5 trunc=  5 nopred= 18 chars= 1412 fmt_only_misses=0
+qwen3-8b  polynomial_multiplication  default placebo acc= 14.5 trunc=  2 nopred=  2 chars= 1330 fmt_only_misses=0
+qwen3-8b  polynomial_multiplication  default gepa    acc= 53.0 trunc=  7 nopred=  0 chars= 2133 fmt_only_misses=0
+   e.g. hard none: pred '30528144y^{10} - 83776316y^8 - 43041274y^7 + 96609' gold '30618244*y**10 - 83244236*y**8 - 42992474*y**7 + 5'
+qwen3-8b  polynomial_multiplication  hard    none    acc=  2.5 trunc= 38 nopred= 29 chars= 2269 fmt_only_misses=0
+qwen3-8b  polynomial_multiplication  hard    placebo acc=  4.5 trunc= 33 nopred=  5 chars= 2256 fmt_only_misses=0
+qwen3-8b  polynomial_multiplication  hard    gepa    acc= 15.5 trunc= 58 nopred=  1 chars= 3020 fmt_only_misses=0
+   e.g. hard none: pred '30528144y^{10} - 83776316y^8 - 43041274y^7 + 96609' gold '30618244*y**10 - 83244236*y**8 - 42992474*y**7 + 5'
+qwen3-8b  word_sorting               default none    acc= 32.0 trunc=  1 nopred=  0 chars=  725 fmt_only_misses=0
+qwen3-8b  word_sorting               default placebo acc= 22.0 trunc=  2 nopred=  1 chars=  552 fmt_only_misses=0
+qwen3-8b  word_sorting               default gepa    acc= 52.0 trunc=  2 nopred=  0 chars= 1803 fmt_only_misses=0
+   e.g. hard none: pred 'aërial,bad,distribution,find,Hart,hands,inform,pro' gold 'Hart, Wilkins, aërial, bad, distribution, face, fi'
+qwen3-8b  word_sorting               hard    none    acc=  2.0 trunc=  7 nopred=  0 chars=  916 fmt_only_misses=0
+qwen3-8b  word_sorting               hard    placebo acc=  0.5 trunc=  6 nopred=  0 chars=  756 fmt_only_misses=0
+qwen3-8b  word_sorting               hard    gepa    acc=  6.5 trunc= 10 nopred=  0 chars= 2124 fmt_only_misses=0
+   e.g. hard none: pred 'aërial,bad,distribution,find,Hart,hands,inform,pro' gold 'Hart, Wilkins, aërial, bad, distribution, face, fi'

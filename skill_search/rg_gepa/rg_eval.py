@@ -1,0 +1,70 @@
+"""Evaluate a model (vLLM OpenAI server) on Reasoning Gym tasks, optionally with a skill as system prompt.
+
+usage: rg_eval.py --tasks a,b --n 60 --seed 1 [--skill file.md] --out out.jsonl
+Items are regenerated from (task, seed, index), so gold answers never leave Reasoning Gym.
+"""
+import argparse, asyncio, json, re, sys
+import reasoning_gym as rg
+from openai import AsyncOpenAI
+
+SUFFIX = "\n\nEnd your reply with the final answer inside <answer></answer> tags."
+ANS = re.compile(r"<answer>(.*?)</answer>", re.S)
+
+def items(task, n, seed, config=None):
+    d = rg.create_dataset(task, size=n, seed=seed, **(config or {}))
+    return d, [d[i] for i in range(n)]
+
+def extract(text):
+    m = ANS.findall(text or "")
+    return m[-1].strip() if m else None
+
+async def ask(cli, sem, system, q, max_tokens):
+    msgs = ([{"role": "system", "content": system}] if system else []) + [{"role": "user", "content": q + SUFFIX}]
+    async with sem:
+        r = await cli.chat.completions.create(model="target", messages=msgs, temperature=0, max_tokens=max_tokens,
+                                             extra_body={"chat_template_kwargs": {"enable_thinking": False}})
+        text, fin = r.choices[0].message.content or "", r.choices[0].finish_reason
+        forced = False
+        if extract(text) is None and fin == "length":  # same forcing as the paper: ask for the answer
+            r2 = await cli.chat.completions.create(model="target", temperature=0, max_tokens=200, stop=["</answer>"],
+                messages=msgs + [{"role": "assistant", "content": text + "\n\n<answer>"}],
+                extra_body={"chat_template_kwargs": {"enable_thinking": False},
+                            "continue_final_message": True, "add_generation_prompt": False})
+            text, forced = text + "\n\n<answer>" + (r2.choices[0].message.content or "") + "</answer>", True
+        return text, fin, forced
+
+async def run(tasks, n, seed, system, max_tokens, port, conc, config=None):
+    cli = AsyncOpenAI(base_url=f"http://localhost:{port}/v1", api_key="x", timeout=3600)
+    sem = asyncio.Semaphore(conc)
+    jobs, meta = [], []
+    for t in tasks:
+        d, es = items(t, n, seed, (config or {}).get(t))
+        for i, e in enumerate(es):
+            jobs.append(ask(cli, sem, system, e["question"], max_tokens)); meta.append((t, i, d, e))
+    outs = await asyncio.gather(*jobs)
+    rows = []
+    for (t, i, d, e), (text, fin, forced) in zip(meta, outs):
+        a = extract(text)
+        try: s = float(d.score_answer(a, e)) if a is not None else 0.0
+        except Exception: s = 0.0
+        rows.append(dict(task=t, idx=i, seed=seed, score=s, correct=s >= 1.0, pred=a, gold=e["answer"],
+                         truncated=fin == "length", forced=forced, chars=len(text), reply=text))
+    return rows
+
+if __name__ == "__main__":
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--tasks", required=True); ap.add_argument("--n", type=int, default=60)
+    ap.add_argument("--seed", type=int, default=1); ap.add_argument("--skill"); ap.add_argument("--out", required=True)
+    ap.add_argument("--max_tokens", type=int, default=2048); ap.add_argument("--port", type=int, default=8100)
+    ap.add_argument("--conc", type=int, default=128); ap.add_argument("--config")
+    a = ap.parse_args()
+    system = open(a.skill).read() if a.skill else None
+    cfg = json.load(open(a.config)) if a.config else None
+    rows = asyncio.run(run(a.tasks.split(","), a.n, a.seed, system, a.max_tokens, a.port, a.conc, cfg))
+    with open(a.out, "w") as f:
+        for r in rows: f.write(json.dumps(r) + "\n")
+    from collections import defaultdict
+    g = defaultdict(list)
+    for r in rows: g[r["task"]].append(r)
+    for t, rs in g.items():
+        print(f"{t:28s} acc={100*sum(r['correct'] for r in rs)/len(rs):5.1f} trunc={100*sum(r['truncated'] for r in rs)/len(rs):4.0f}% chars={sum(r['chars'] for r in rs)//len(rs)}")
