@@ -1,0 +1,47 @@
+clean test items: 130 (indices 0 and 71-199)
+
+GEPA test (vLLM), default split: all 200 vs clean
+  qwen3-8b products             (all/clean/used) none=54.5/51.5/60.0  placebo=49.5/48.5/51.4  seed=62.0/60.0/65.7  gepa=92.0/90.0/95.7
+      clean: vs none: +51/-1 p=2e-14 vs placebo: +55/-1 p=2e-15 vs seed: +40/-1 p=4e-11
+  qwen3-14b products             (all/clean/used) none=45.0/45.4/44.3  placebo=44.5/44.6/44.3  seed=54.5/51.5/60.0  gepa=95.5/93.8/98.6
+      clean: vs none: +63/-0 p=2e-19 vs placebo: +64/-0 p=1e-19 vs seed: +55/-0 p=6e-17
+  qwen3-14b decimal_arithmetic   (all/clean/used) none=24.0/22.3/27.1  placebo=21.5/20.8/22.9  seed=26.5/24.6/30.0  gepa=56.0/55.4/57.1
+      clean: vs none: +44/-1 p=3e-12 vs placebo: +45/-0 p=6e-14 vs seed: +40/-0 p=2e-12
+  qwen3-8b word_sorting         (all/clean/used) none=32.0/30.8/34.3  placebo=22.0/20.0/25.7  seed=35.5/35.4/35.7  gepa=52.0/48.5/58.6
+      clean: vs none: +31/-8 p=0.0003 vs placebo: +40/-3 p=3e-09 vs seed: +27/-10 p=0.008
+
+Vector arm (HF), clean items only
+  decimal_arithmetic qwen3-14b: baseline=22.3  placebo=20.8  text=56.2  B1=54.6  B2=53.8  CONTROL=20.0
+      text vs placebo: +46/-0 p=2.8e-14
+      B1 vs CONTROL: +46/-1 p=6.8e-13
+      B2 vs CONTROL: +45/-1 p=1.3e-12
+      B1 vs text: +2/-4 p=0.69
+      B2 vs text: +1/-4 p=0.38
+  products qwen3-8b: baseline=50.8  placebo=46.9  text=90.8  B1=86.2  B2=73.8  CONTROL=46.9
+      text vs placebo: +58/-1 p=2.1e-16
+      B1 vs CONTROL: +51/-0 p=8.9e-16
+      B2 vs CONTROL: +35/-0 p=5.8e-11
+      B1 vs text: +7/-13 p=0.26
+      B2 vs text: +1/-23 p=3e-06
+  products qwen3-14b: baseline=45.4  placebo=44.6  text=95.4  B1=45.4  B2=48.5  CONTROL=45.4
+      text vs placebo: +66/-0 p=2.7e-20
+      B1 vs CONTROL: +2/-2 p=1
+      B2 vs CONTROL: +5/-1 p=0.22
+      B1 vs text: +0/-65 p=5.4e-20
+      B2 vs text: +0/-61 p=8.7e-19
+  word_sorting qwen3-8b: baseline=28.5  placebo=23.1  text=47.7  B1=30.8  B2=20.8  CONTROL=29.2
+      text vs placebo: +38/-6 p=9.4e-07
+      B1 vs CONTROL: +14/-12 p=0.85
+      B2 vs CONTROL: +5/-16 p=0.027
+      B1 vs text: +9/-31 p=0.00068
+      B2 vs text: +5/-40 p=7.9e-08
+decimal_arithmetic   qwen3-14b out    B1     all= 55.5 clean= 54.6
+decimal_arithmetic   qwen3-14b rand1  random all= 22.5 clean= 20.0
+decimal_arithmetic   qwen3-14b rand2  random all= 24.0 clean= 21.5
+products             qwen3-8b out    B1     all= 87.5 clean= 86.2
+products             qwen3-8b rand1  random all= 53.5 clean= 52.3
+products             qwen3-8b rand2  random all= 53.0 clean= 51.5
+qwen3-8b products             none=60.0 seed=62.5 placebo=57.5 brevity=60.0 gepa=89.0  | vs none +60/-2 p=8e-16 vs placebo +66/-3 p=2e-16 vs seed +56/-3 p=1e-13
+qwen3-8b word_sorting         none=36.5 seed=41.5 placebo=25.0 brevity=28.0 gepa=48.0  | vs none +34/-11 p=0.0008 vs placebo +57/-11 p=1e-08 vs seed +32/-19 p=0.09
+qwen3-14b products             none=50.0 seed=61.0 placebo=49.0 brevity=49.0 gepa=95.5  | vs none +92/-1 p=2e-26 vs placebo +93/-0 p=2e-28 vs seed +71/-2 p=6e-19
+qwen3-14b decimal_arithmetic   none=24.5 seed=25.5 placebo=22.5 brevity=23.5 gepa=52.5  | vs none +58/-2 p=3e-15 vs placebo +61/-1 p=3e-17 vs seed +56/-2 p=1e-14

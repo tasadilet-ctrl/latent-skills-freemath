@@ -52,3 +52,18 @@ Caveat: the polynomial skill also fixes answer syntax (`*`, `**`); 18/200 baseli
 parsable answer, so part of that gain is format. Word sorting skill adds a fact (ASCII order:
 uppercase before lowercase). Leak-check hits (family_relationships, rotate_matrix,
 binary_alternation) are generic words/numbers and none of those skills passed anyway.
+
+Correction (2026-11-01): polynomial_multiplication items differ between Python processes, so its
+paired McNemar p-values above are invalid (accuracies are valid; unpaired tests still p<1e-15).
+The other four found skills use reproducible generators. See vec/README.md.
+
+## Arm checks (2026-11-01, `checks_report.txt`)
+
+* Item overlap: Reasoning Gym item i of seed s is generated from seed s+i, so GEPA train (seed 11)
+  and val (seed 12) and the vector pool (seeds 21/22) are test items 11–70 of seed 0. On the 130
+  never-used test items all four reproducible skills still pass, and the vector results hold.
+* Fresh test, seed 100000 (no possible overlap), vLLM, n=200: products 8B 60.0 → 89.0, products 14B
+  50.0 → 95.5, decimal 14B 24.5 → 52.5 (all p<1e-13 vs none/placebo/seed skill); word sorting 8B
+  36.5 → 48.0 (vs none p=0.0008, vs placebo p=1e-8, vs seed skill 41.5 p=0.09: not significant).
+* Random-direction vectors (same per-layer norm as B1, 2 seeds) give baseline accuracy:
+  decimal 14B 22.5/24.0 (B1 55.5), products 8B 53.5/53.0 (B1 87.5).

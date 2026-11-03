@@ -51,7 +51,9 @@ artefact is controlled, no skill survives its placebo. We then build a shortcut-
 math benchmarks (two multiple-choice sets audited for answer-structure shortcuts and five
 free-form ones), learn skills on it with SkillOpt under a pre-registered three-model selection
 rule, and test text skills, placebos and steering vectors with paired exact tests. Of
-\nTextTests{} text-skill comparisons, \nTextSig{} are significant and all but one are losses; of
+\nTextTests{} text-skill comparisons, \nTextSig{} are significant and all but six are losses; five of the
+six gains are on one benchmark and model (HARDMath2, Qwen3.6-27B), where a length-matched placebo
+gains more than any skill; of
 \nVecTests{} vector comparisons, \nVecSig{} are significant and all are losses. Vectors reproduce a
 third of a text skill's effect on the next-token distribution, but the text skill itself changes
 no accuracy, so there is nothing for them to carry.
@@ -88,7 +90,7 @@ with a placebo-subtracted extraction arm that separates the procedure from promp
 is an answer-format shortcut, and that the remainder does not exceed a placebo
 (\S\ref{sec:shortcut}).
 (3) A shortcut-free suite of seven math benchmarks with a pre-registered skill-selection protocol,
-on which no text skill and no steering vector beats the unskilled baseline
+on which no text skill and no steering vector beats a length-matched placebo
 (\S\ref{sec:clean}--\ref{sec:cleanvec}).
 (4) Paired exact significance tests with Holm correction throughout, and a list of harness faults
 that each would have reversed a conclusion without raising an error (Appendix~\ref{app:faults}).
@@ -518,13 +520,15 @@ variant (v2) is $-2.6$ against a placebo at $+7.8^{*}$ on the 153 of 205 OTHER i
 \label{sec:clean}
 
 Table~\ref{tab:clean} gives every text condition on the seven shortcut-free benchmarks.
-\textbf{No skill beats no system prompt.} Of \nTextTests{} comparisons, \nTextSig{} are significant
-at $p<0.05$ (about seven are expected by chance) and fifteen of them are losses. \nTextHolmRow{}
+\textbf{No skill beats its placebo.} Of \nTextTests{} comparisons, \nTextSig{} are significant
+at $p<0.05$ (about seven are expected by chance) and seventeen of them are losses. \nTextHolmRow{}
 survive Holm correction within their row and \nTextHolmAll{} across the whole table; those four are
 all \texttt{livemath\_ts} with and without the meta rule on Qwen3-8B, on RealMath and IMO-AnswerBench,
-and they are format failures rather than reasoning losses (below). The one gain, the SkillOpt draft
-on MMLU-Pro with the 14B ($+5.5$), survives correction within its row, did not appear on dev, and
-reverses on the 27B with the same text ($-2.5^{*}$).
+and they are format failures rather than reasoning losses (below). Six comparisons are gains. One,
+the SkillOpt draft on MMLU-Pro with the 14B ($+5.5$), survives correction within its row, did not
+appear on dev, and reverses on the 27B with the same text ($-2.5^{*}$). The other five are on
+HARDMath2 with the 27B, where every system prompt helps and the length-matched placebo helps most
+($+14.9$, against $+8.3$ to $+12.4$ for the skills; below).
 
 \begin{table*}[t]
 \centering\small
@@ -548,8 +552,9 @@ thinking off, answer forcing, 2048 tokens (4096 for the 27B).}
 \end{table*}
 
 \paragraph{The meta rule is inert without a meta option.} \texttt{livemath\_ts} with and without the
-meta-option rule never differ significantly (0 of 21 paired comparisons; smallest $p=0.07$). The
-same rule took the 14B from 3.4\% to 26.3\% on LiveMath META. Here there is nothing for it to act on.
+meta-option rule differ significantly once in 21 paired comparisons (HARDMath2 27B, $+8.3$ with the
+rule, $p=0.013$; next smallest $p=0.07$), on a benchmark that has no options at all. The same rule
+took the 14B from 3.4\% to 26.3\% on LiveMath META. Here there is nothing for it to act on.
 
 \paragraph{A multiple-choice skill makes small models invent options.} \texttt{livemath\_ts} says to
 compare the options. On free-form questions, with no options, Qwen3-8B often derives the correct
@@ -561,13 +566,21 @@ unchanged (2586 against 2664 characters on RealMath 8B), so it is not a budget e
 
 \paragraph{Placebos hurt by shortening replies.} The length-matched placebos are the most frequent
 significant losses (MMLU-Pro 8B $-7.7$ and $-7.1$, SuperGPQA 8B $-6.9$ and $-9.4$, IMO-AnswerBench
-8B $-4.9$ and 14B $-5.9$). Their ``be concise'' style rules halve reply length (2586 to 531 characters
+8B $-6.3$ and 14B $-6.3$). Their ``be concise'' style rules halve reply length (2586 to 531 characters
 on RealMath 8B), and these problems need the room. This is also why ``\texttt{livemath\_ts} beats its
 placebo'' (MMLU-Pro 8B, $+54/-24$ discordant items) is not a skill effect: the placebo is harmful,
-and \texttt{livemath\_ts} does not beat no skill anywhere.
+and \texttt{livemath\_ts} does not beat no skill on any benchmark except HARDMath2 27B.
+The 27B on HARDMath2 is the mirror image. With no system prompt its replies are short (median 3{,}563
+characters at a 4096-token budget); every system prompt, placebos included, more than doubles them
+(8{,}314 to 9{,}437) and raises accuracy, and the placebo raises it most ($+14.9$). Length again
+explains the effect; the procedure in the skill adds nothing on top of it.
 
 \paragraph{The selection rule picks the seed.} On all seven benchmarks the pre-registered rule chose
 SkillOpt's four-line seed or the seed plus empty tags: every longer, optimised draft lost on dev.
+% TODO(rescore): with Math-Verify working, dev selection picks a longer draft on HARDMath2, RealMath
+% and IMO-AnswerBench; those drafts' test cells are queued, then replace the SkillOpt column there.
+This selection was made with the string-match scorer (Appendix~\ref{app:faults}); rescored, the rule
+picks a longer draft on HARDMath2, RealMath and IMO-AnswerBench, whose test cells are pending.
 SkillOpt's own validation gains did not reach test, and the optimised drafts contain benchmark
 priors and memorised training items rather than general method (Appendix~\ref{app:audit}).
 
@@ -601,7 +614,7 @@ one layer (8B L34, 14B L37, 27B L62), $\gamma=0.3$, fixed in advance.}
 \paragraph{Fidelity.} At the fixed operating point the 8B and 14B vectors reach $F=0.23$--$0.42$, and
 the 8B CONTROL is $\approx0$ (Table~\ref{tab:fid}): the vectors carry a third of the text skill's
 effect on the next-token distribution and the placebo direction carries none. On the 27B at layer 62,
-the LiveMath operating point, B1 and B2 reach only $F\approx0.06$, below CONTROL's $0.20$; that layer
+the LiveMath operating point, B1 and B2 reach only $F=0.06$--$0.10$, below CONTROL's $0.20$; that layer
 does not carry this skill, so the 27B vector cells are weak evidence.
 
 \begin{table}[t]
@@ -626,8 +639,9 @@ steering vector, in and out of domain. Three results answer that question for th
 tested. On LiveMath, the large skill gains reported for hand-written and optimised skills alike are
 an answer-format shortcut, and without it the remaining gain is matched by a placebo. On seven math
 benchmarks without such shortcuts, neither a text skill nor a steering vector improves on the
-unskilled model for Qwen3-8B, Qwen3-14B or Qwen3.6-27B: across \nTextTests{} text and \nVecTests{}
-vector comparisons, almost every significant effect is a loss. And what skills and placebos change
+length-matched placebo for Qwen3-8B, Qwen3-14B or Qwen3.6-27B: across \nTextTests{} text and
+\nVecTests{} vector comparisons, most significant effects are losses, and the few gains are matched
+or exceeded by the placebo. And what skills and placebos change
 is mostly how much the model writes, not how well it reasons. Steering vectors reproduce part of a
 text skill's distributional effect, so the method works as intended; there is simply no behavioural
 effect to transfer. Our recommendations for skill evaluation follow: audit the benchmark for
@@ -643,8 +657,8 @@ procedural skill may need reasoning tokens to act on, and other families may res
 GPT-5.5, whose released LiveMath skill we evaluate but did not rerun on the shortcut-free suite.
 \textbf{Benchmarks.} The matrix covers three benchmarks, and several of its off-diagonal and
 embedding cells were not completed (Table~\ref{tab:matrix}). BeyondAIME ($n=40$) and ArxivMath
-($n=43$) can only detect large effects, and HARDMath2 and ArxivMath sit near the floor with thinking
-off. \textbf{Vectors.} We test single-direction CAA vectors at one layer and one strength, fixed in
+($n=43$) can only detect large effects, and the 8B and 14B score below 10\% on HARDMath2 and
+ArxivMath with thinking off. \textbf{Vectors.} We test single-direction CAA vectors at one layer and one strength, fixed in
 advance; the 27B operating point does not carry \texttt{livemath\_ts}, and per-paragraph vectors or
 learned interventions \citep{wu2024reft,wu2025reps} might fare differently. Transfer cells require
 re-extraction per model. \textbf{Skills.} The matrix's LiveMath skill is test-set-informed (mitigated
@@ -975,7 +989,7 @@ therefore not the extraction method, which is CAA, nor the in-domain text-versus
 which \citet{jiang2026latent} make on synthetic arithmetic. It is the comparison across unrelated
 domains, at 8B to 27B scale, on the benchmarks the agent-skills literature uses, with a placebo
 control for prompt presence and paired significance tests, and the finding that on benchmarks
-without answer shortcuts neither representation improves on the unskilled model.
+without answer shortcuts neither representation improves on a length-matched placebo.
 
 \begin{table*}[t]
 \centering\small
@@ -1043,7 +1057,8 @@ prompt.
 
 A placebo is not neutral on every benchmark, however. On the shortcut-free suite the length-matched
 placebos ask for brevity, halve reply length, and cost up to 9.4 points where problems need long
-derivations (\S\ref{sec:clean}). A placebo therefore controls for prompt presence only where it does
+derivations; where the bare model stops early (HARDMath2, 27B) any system prompt lengthens replies
+and the placebo gains 14.9 points (\S\ref{sec:clean}). A placebo therefore controls for prompt presence only where it does
 not itself change verbosity, and its effect must be read next to reply length.
 
 \subsection{Extraction pool}
@@ -1114,6 +1129,12 @@ producing an error.
   printed $n=456$ rather than 608. Each shard's status is now checked.
   \item \textbf{Filename collision.} Output files carried no model tag, so a run of one model
   overwrote the results of the other.
+  \item \textbf{Math-Verify not installed.} The environment that ran the shortcut-free suite lacked
+  the \texttt{math\_verify} package. The scorer caught the import error as a failed check, so every
+  free-form cell counted exact string matches only (no symbolic or numeric match in 16.7k test
+  records). All free-form cells are rescored from the saved replies with it installed; accuracies rise
+  by up to 19 points (HARDMath2 27B, no skill: 4.1\% to 23.1\%), and on HARDMath2 27B the rescoring
+  reveals effects of 8 to 15 points that string matching had hidden.
   \item \textbf{Math-Verify in threads.} Math-Verify's timeouts use \texttt{signal.alarm}, which
   fails silently outside the main thread; inside SkillOpt's rollout threads every symbolic and
   numeric check returned ``wrong'', and only exact string matches counted. Comparisons now run in a

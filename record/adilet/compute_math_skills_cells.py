@@ -3,7 +3,10 @@
     python compute_math_skills_cells.py > math_skills_cells.json
 
 MCQ: ~/mcq_math/protocol/<bench>/results_rescored (format-neutral parser).
-Free-form: ~/skillopt_work/protocol_fm/<bench>/results.
+Free-form: ~/skillopt_work/protocol_fm/<bench>/results_mv: the saved replies rescored with Math-Verify
+installed (math_gepa/rescore_mv.py). The original results/ were scored by string match only, because
+math_verify was missing from the run env and the scorer counted its ImportError as "wrong";
+those cells are kept in math_skills_cells_stringonly.json.
 "letters" counts free-form replies that answer with an option letter (A-J) although the
 question has no options: livemath_ts tells the model to compare options, and the small models
 then invent them. Every cell is paired with its row's baseline on identical items: exact two-sided McNemar.
@@ -16,7 +19,7 @@ import re
 H = os.path.expanduser("~")
 BENCHES = [("mmlupro_math_tq_sb", "MMLU-Pro math", "mcq", f"{H}/mcq_math/protocol/mmlupro_math_tq_sb/results_rescored"),
            ("supergpqa_math_hard", "SuperGPQA hard math", "mcq", f"{H}/mcq_math/protocol/supergpqa_math_hard/results_rescored")]
-BENCHES += [(b, lab, "freeform", f"{H}/skillopt_work/protocol_fm/{b}/results") for b, lab in
+BENCHES += [(b, lab, "freeform", f"{H}/skillopt_work/protocol_fm/{b}/results_mv") for b, lab in
             [("beyondaime", "BeyondAIME"), ("hardmath2", "HARDMath2"), ("realmath", "RealMath"),
              ("imoanswer", "IMO-AnswerBench"), ("arxivmath", "ArxivMath")]]
 MODELS = [("qwen3-8b", "Qwen 3 8b"), ("qwen3-14b", "Qwen 3 14b"), ("qwen3.6-27b", "Qwen 3.6 27b")]
