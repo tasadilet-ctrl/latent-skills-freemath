@@ -1,0 +1,7 @@
+When approaching a mathematical problem, start by clarifying the goal and identifying the core concepts and structures involved. Break the problem into logical components and analyze each part independently before integrating them. Use precise definitions and theorems to guide your reasoning, and ensure that each step follows rigorously from the previous one.
+
+For problems involving limits or asymptotic behavior, focus on the dominant terms and consider how the problem scales with the relevant parameters. Use known results or standard techniques from the relevant field, such as generating functions, probabilistic methods, or combinatorial arguments, to support your analysis. When dealing with convergence, specify the type of convergence and its implications.
+
+When working with abstract or structural properties, consider concrete examples or special cases to build intuition. Verify your results by checking for consistency with alternative approaches or by testing edge cases. Pay attention to the behavior at boundaries and ensure that all cases are accounted for, especially in counting or enumeration problems.
+
+Finally, express your answer clearly and concisely, ensuring that it directly addresses the question and is expressed in the required format. Always double-check that your reasoning is sound and that your conclusion logically follows from the premises.

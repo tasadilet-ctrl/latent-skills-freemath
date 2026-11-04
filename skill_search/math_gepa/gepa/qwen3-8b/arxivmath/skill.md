@@ -1,0 +1,7 @@
+When tackling a new mathematical problem, start by clarifying the problem's core requirements and constraints. Identify the key mathematical structures, properties, and relationships involved, and ensure that all terms and definitions are well understood. Break the problem into smaller, logically connected components and analyze each part step by step.
+
+Focus on the fundamental principles and theorems that are relevant to the problem. Look for patterns, symmetries, or connections to known results, and consider how these might be adapted or generalized. When dealing with abstract concepts, relate them to more concrete examples or simpler cases to build intuition and insight.
+
+Maintain rigorous logical reasoning throughout the process. Ensure that each step follows logically from the previous one, and justify all conclusions. Pay close attention to edge cases, special conditions, and the behavior of the problem under different assumptions. If the problem involves optimization, existence, or uniqueness, consider the appropriate mathematical tools or theorems that can address these aspects.
+
+When uncertainty arises, explore multiple approaches, check for consistency, and verify results through logical deduction, counterexamples, or computational methods. Be precise in your language and notation, and ensure that your final answer is directly supported by your analysis. If the problem is complex, consider writing down intermediate steps or using auxiliary lemmas to structure your reasoning.

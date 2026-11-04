@@ -27,6 +27,10 @@ MODELS = [("qwen3-8b", "Qwen 3 8b"), ("qwen3-14b", "Qwen 3 14b"), ("qwen3.6-27b"
 COLS = {"baseline": "baseline", "placebo": "placebo_matched", "strength_audit": "strength_audit",
         "strength_audit_nometa": "strength_audit_nometa", "placebo_ts": "placebo_livemath_ts",
         "livemath_ts": "livemath_ts", "livemath_ts_meta": "livemath_ts_meta", "skill": "chosen"}
+# With dev rescored by Math-Verify, the pre-registered selection rule picks a different SkillOpt draft
+# on three benchmarks; their test cells replace "chosen" (the string-match pick) there.
+RESELECTED = {"hardmath2": "skill_v0002_61d4bbd9", "realmath": "skill_v0001_06ba8e79",
+              "imoanswer": "best_skill_569fafce"}
 
 
 def load(d, b, m, c):
@@ -60,6 +64,8 @@ for b, lab, kind, d in BENCHES:
         b_acc = 100 * sum(base.values()) / len(base)
         cells = {}
         for col, c in COLS.items():
+            if col == "skill" and b in RESELECTED:
+                c = RESELECTED[b]
             raw = load(d, b, m, c)
             if raw is None:
                 continue

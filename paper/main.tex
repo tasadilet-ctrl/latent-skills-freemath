@@ -521,14 +521,14 @@ variant (v2) is $-2.6$ against a placebo at $+7.8^{*}$ on the 153 of 205 OTHER i
 
 Table~\ref{tab:clean} gives every text condition on the seven shortcut-free benchmarks.
 \textbf{No skill beats its placebo.} Of \nTextTests{} comparisons, \nTextSig{} are significant
-at $p<0.05$ (about seven are expected by chance) and seventeen of them are losses. \nTextHolmRow{}
+at $p<0.05$ (about seven are expected by chance) and eighteen of them are losses. \nTextHolmRow{}
 survive Holm correction within their row and \nTextHolmAll{} across the whole table; those four are
 all \texttt{livemath\_ts} with and without the meta rule on Qwen3-8B, on RealMath and IMO-AnswerBench,
 and they are format failures rather than reasoning losses (below). Six comparisons are gains. One,
 the SkillOpt draft on MMLU-Pro with the 14B ($+5.5$), survives correction within its row, did not
 appear on dev, and reverses on the 27B with the same text ($-2.5^{*}$). The other five are on
 HARDMath2 with the 27B, where every system prompt helps and the length-matched placebo helps most
-($+14.9$, against $+8.3$ to $+12.4$ for the skills; below).
+($+14.9$, against $+8.3$ to $+13.2$ for the skills; below).
 
 \begin{table*}[t]
 \centering\small
@@ -575,12 +575,13 @@ characters at a 4096-token budget); every system prompt, placebos included, more
 (8{,}314 to 9{,}437) and raises accuracy, and the placebo raises it most ($+14.9$). Length again
 explains the effect; the procedure in the skill adds nothing on top of it.
 
-\paragraph{The selection rule picks the seed.} On all seven benchmarks the pre-registered rule chose
-SkillOpt's four-line seed or the seed plus empty tags: every longer, optimised draft lost on dev.
-% TODO(rescore): with Math-Verify working, dev selection picks a longer draft on HARDMath2, RealMath
-% and IMO-AnswerBench; those drafts' test cells are queued, then replace the SkillOpt column there.
-This selection was made with the string-match scorer (Appendix~\ref{app:faults}); rescored, the rule
-picks a longer draft on HARDMath2, RealMath and IMO-AnswerBench, whose test cells are pending.
+\paragraph{Optimised drafts do no better than a placebo.} With dev scored by Math-Verify, the
+pre-registered rule keeps SkillOpt's four-line seed (or the seed plus empty tags) on four benchmarks
+and picks a longer, optimised draft on HARDMath2, RealMath and IMO-AnswerBench. (Scored by string
+match only, as first run, it chose the seed on all seven; Appendix~\ref{app:faults}.) The optimised
+drafts beat no skill only on HARDMath2 with the 27B ($+13.2$), where the placebo gains more
+($+14.9$); on IMO-AnswerBench with the 8B the draft loses $6.3$ points, which survives correction
+within its row. On the other seven cells they change accuracy by $-3.1$ to $+2.4$, none significant.
 SkillOpt's own validation gains did not reach test, and the optimised drafts contain benchmark
 priors and memorised training items rather than general method (Appendix~\ref{app:audit}).
 
