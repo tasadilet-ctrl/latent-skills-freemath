@@ -1,0 +1,319 @@
+[
+  {
+    "step": 1,
+    "epoch": 1,
+    "step_in_epoch": 0,
+    "timing": {
+      "rollout_s": 47.9,
+      "reflect_s": 242.5,
+      "aggregate_s": 299.1,
+      "select_s": 0.0,
+      "update_s": 0.0,
+      "evaluate_s": 70.2
+    },
+    "tokens": {
+      "analyst": {
+        "calls": 5,
+        "prompt_tokens": 62614,
+        "completion_tokens": 20790
+      },
+      "merge": {
+        "calls": 2,
+        "prompt_tokens": 3290,
+        "completion_tokens": 7640
+      }
+    },
+    "rollout_hard": 0.8,
+    "rollout_soft": 0.8,
+    "rollout_n": 40,
+    "accumulation_batches": [
+      {
+        "batch_idx": 0,
+        "batch_seed": 1003,
+        "n_envs": 40,
+        "hard": 0.8,
+        "soft": 0.8,
+        "n_failure_patches": 1,
+        "n_success_patches": 4
+      }
+    ],
+    "n_patches": 5,
+    "n_failure_patches": 1,
+    "n_success_patches": 4,
+    "n_edits_merged": 3,
+    "n_edits_ranked": 3,
+    "edit_budget": 4,
+    "lr_control_mode": "fixed",
+    "support_counts": [
+      8,
+      8,
+      8
+    ],
+    "candidate_hash": "a480efefd694f23c",
+    "candidate_skill_len": 1708,
+    "edit_apply_summary": {
+      "total": 3,
+      "applied": 3,
+      "skipped": 0,
+      "errors": 0
+    },
+    "selection_hard": 0.75,
+    "selection_soft": 0.75,
+    "gate_metric": "hard",
+    "candidate_gate_score": 0.75,
+    "action": "reject",
+    "current_score": 0.79,
+    "best_score": 0.79,
+    "best_step": 0,
+    "current_origin": "initial_skill",
+    "best_origin": "initial_skill",
+    "skill_len": 404,
+    "wall_time_s": 659.7
+  },
+  {
+    "step": 2,
+    "epoch": 2,
+    "step_in_epoch": 0,
+    "timing": {
+      "rollout_s": 49.7,
+      "reflect_s": 196.8,
+      "aggregate_s": 554.2,
+      "select_s": 79.1,
+      "update_s": 0.0,
+      "evaluate_s": 74.4
+    },
+    "tokens": {
+      "analyst": {
+        "calls": 6,
+        "prompt_tokens": 69056,
+        "completion_tokens": 24231
+      },
+      "merge": {
+        "calls": 3,
+        "prompt_tokens": 4632,
+        "completion_tokens": 14166
+      },
+      "ranking": {
+        "calls": 1,
+        "prompt_tokens": 825,
+        "completion_tokens": 2024
+      }
+    },
+    "rollout_hard": 0.75,
+    "rollout_soft": 0.75,
+    "rollout_n": 40,
+    "accumulation_batches": [
+      {
+        "batch_idx": 0,
+        "batch_seed": 2003,
+        "n_envs": 40,
+        "hard": 0.75,
+        "soft": 0.75,
+        "n_failure_patches": 2,
+        "n_success_patches": 4
+      }
+    ],
+    "n_patches": 6,
+    "n_failure_patches": 2,
+    "n_success_patches": 4,
+    "n_edits_merged": 4,
+    "n_edits_ranked": 3,
+    "edit_budget": 3,
+    "lr_control_mode": "fixed",
+    "support_counts": [
+      10,
+      10,
+      8
+    ],
+    "candidate_hash": "c4898050019c805f",
+    "candidate_skill_len": 1479,
+    "edit_apply_summary": {
+      "total": 3,
+      "applied": 3,
+      "skipped": 0,
+      "errors": 0
+    },
+    "selection_hard": 0.75,
+    "selection_soft": 0.75,
+    "gate_metric": "hard",
+    "candidate_gate_score": 0.75,
+    "action": "reject",
+    "current_score": 0.79,
+    "best_score": 0.79,
+    "best_step": 0,
+    "current_origin": "slow_update_placeholder_epoch_01",
+    "best_origin": "initial_skill",
+    "skill_len": 457,
+    "wall_time_s": 954.3
+  },
+  {
+    "step": 3,
+    "epoch": 3,
+    "step_in_epoch": 0,
+    "timing": {
+      "rollout_s": 47.5,
+      "reflect_s": 257.7,
+      "aggregate_s": 427.3,
+      "select_s": 105.3,
+      "update_s": 0.0,
+      "evaluate_s": 74.6
+    },
+    "tokens": {
+      "analyst": {
+        "calls": 6,
+        "prompt_tokens": 83090,
+        "completion_tokens": 24709
+      },
+      "merge": {
+        "calls": 3,
+        "prompt_tokens": 6703,
+        "completion_tokens": 10890
+      },
+      "meta_skill": {
+        "calls": 0,
+        "prompt_tokens": 0,
+        "completion_tokens": 0
+      },
+      "ranking": {
+        "calls": 1,
+        "prompt_tokens": 1529,
+        "completion_tokens": 2688
+      },
+      "slow_update": {
+        "calls": 0,
+        "prompt_tokens": 0,
+        "completion_tokens": 0
+      }
+    },
+    "rollout_hard": 0.75,
+    "rollout_soft": 0.75,
+    "rollout_n": 40,
+    "accumulation_batches": [
+      {
+        "batch_idx": 0,
+        "batch_seed": 3003,
+        "n_envs": 40,
+        "hard": 0.75,
+        "soft": 0.75,
+        "n_failure_patches": 2,
+        "n_success_patches": 4
+      }
+    ],
+    "n_patches": 6,
+    "n_failure_patches": 2,
+    "n_success_patches": 4,
+    "n_edits_merged": 3,
+    "n_edits_ranked": 2,
+    "edit_budget": 2,
+    "lr_control_mode": "fixed",
+    "support_counts": [
+      8,
+      8
+    ],
+    "candidate_hash": "21a51665477540a1",
+    "candidate_skill_len": 2942,
+    "edit_apply_summary": {
+      "total": 2,
+      "applied": 2,
+      "skipped": 0,
+      "errors": 0
+    },
+    "selection_hard": 0.71,
+    "selection_soft": 0.71,
+    "gate_metric": "hard",
+    "candidate_gate_score": 0.71,
+    "action": "reject",
+    "current_score": 0.79,
+    "best_score": 0.79,
+    "best_step": 0,
+    "current_origin": "slow_update_epoch_02",
+    "best_origin": "initial_skill",
+    "skill_len": 2020,
+    "wall_time_s": 912.3
+  },
+  {
+    "step": 4,
+    "epoch": 4,
+    "step_in_epoch": 0,
+    "timing": {
+      "rollout_s": 46.4,
+      "reflect_s": 306.5,
+      "aggregate_s": 557.5,
+      "select_s": 88.3,
+      "update_s": 0.0,
+      "evaluate_s": 66.6
+    },
+    "tokens": {
+      "analyst": {
+        "calls": 6,
+        "prompt_tokens": 82214,
+        "completion_tokens": 25422
+      },
+      "merge": {
+        "calls": 3,
+        "prompt_tokens": 6667,
+        "completion_tokens": 14206
+      },
+      "meta_skill": {
+        "calls": 0,
+        "prompt_tokens": 0,
+        "completion_tokens": 0
+      },
+      "ranking": {
+        "calls": 1,
+        "prompt_tokens": 1802,
+        "completion_tokens": 2252
+      },
+      "slow_update": {
+        "calls": 0,
+        "prompt_tokens": 0,
+        "completion_tokens": 0
+      }
+    },
+    "rollout_hard": 0.725,
+    "rollout_soft": 0.725,
+    "rollout_n": 40,
+    "accumulation_batches": [
+      {
+        "batch_idx": 0,
+        "batch_seed": 4003,
+        "n_envs": 40,
+        "hard": 0.725,
+        "soft": 0.725,
+        "n_failure_patches": 2,
+        "n_success_patches": 4
+      }
+    ],
+    "n_patches": 6,
+    "n_failure_patches": 2,
+    "n_success_patches": 4,
+    "n_edits_merged": 4,
+    "n_edits_ranked": 2,
+    "edit_budget": 2,
+    "lr_control_mode": "fixed",
+    "support_counts": [
+      11,
+      8
+    ],
+    "candidate_hash": "456d687a693c5cdf",
+    "candidate_skill_len": 4274,
+    "edit_apply_summary": {
+      "total": 2,
+      "applied": 2,
+      "skipped": 0,
+      "errors": 0
+    },
+    "selection_hard": 0.74,
+    "selection_soft": 0.74,
+    "gate_metric": "hard",
+    "candidate_gate_score": 0.74,
+    "action": "reject",
+    "current_score": 0.79,
+    "best_score": 0.79,
+    "best_step": 0,
+    "current_origin": "slow_update_epoch_03",
+    "best_origin": "initial_skill",
+    "skill_len": 2314,
+    "wall_time_s": 1065.3
+  }
+]
