@@ -3,13 +3,14 @@
 # of run_skillopt.sbatch: target on GPU 0, optimizer Qwen3.6-27B on GPU 1, both FlashInfer.
 #
 #   train_one.sh <size> <R> [extra --cfg-options ...]      size in 4b 8b 14b 27b, R = run (= train.seed)
+#   env: RUN_NAME (output name), SPLIT (dir under mq_split, default mmlupro_math_tq_sb), BATCH (default 40)
 #
 # Env mcqkit = mcqmath with the kit runner's prompt, forcing and parser (identical to evaluate_mcq_t1.py),
 # options not shuffled. Split = the paper's pre-registered one (mq_split: train 40 / val 100 / test 365);
 # batch 40 = the whole train split, 4 epochs = 4 steps. Output: ~/skillopt_work/outputs/$RUN_NAME/.
 set -uo pipefail
 S=$1; R=$2; shift 2
-W=$HOME/skillopt_work; VENV=$W/vllm_env; B=mmlupro_math_tq_sb
+W=$HOME/skillopt_work; VENV=$W/vllm_env; B=${SPLIT:-mmlupro_math_tq_sb}; BATCH=${BATCH:-40}
 declare -A HF=([4b]=Qwen/Qwen3-4B [8b]=Qwen/Qwen3-8B [14b]=Qwen/Qwen3-14B [27b]=Qwen/Qwen3.6-27B)
 declare -A TOK=([4b]=2048 [8b]=2048 [14b]=2048 [27b]=4096)
 TARGET=${HF[$S]}; OPT=Qwen/Qwen3.6-27B
@@ -44,7 +45,7 @@ cd $W/SkillOpt
 .venv/bin/python scripts/train.py --config configs/mcqkit/default.yaml \
   --target_backend qwen_chat --optimizer_backend qwen_chat --target_model $TARGET --optimizer_model $OPT \
   --cfg-options env.split_mode=split_dir env.split_dir=$W/mq_split/$B env.out_root=$OUT env.exec_timeout=900 \
-    env.max_completion_tokens=${TOK[$S]} evaluation.eval_test=false train.batch_size=40 train.seed=$R \
+    env.max_completion_tokens=${TOK[$S]} evaluation.eval_test=false train.batch_size=$BATCH train.seed=$R \
     model.target_qwen_chat_temperature=1.0 model.optimizer_qwen_chat_temperature=1.0 \
     model.target_qwen_chat_thinking_mode=disabled model.optimizer_qwen_chat_thinking_mode=enabled "$@" \
   > $W/logs/${NAME}_train.log 2>&1
