@@ -10,6 +10,8 @@ is also what the mcqkit SkillOpt env sends during training. Changes: sampling at
 engine seed --seed (top_p 1), the cue sampled at the same temperature, and the guide's file layout:
 <out-dir>/<bench>_<model tag>_<condition>_s0of1.json, condition = "baseline" or the skill file's stem
 (e.g. 8b_r3). Every question is answered; held-out ids are chosen when the table is made.
+A --skills entry "hints:<file>.json" ({id: text}) gives each question its own system prompt (no prompt if the
+id is missing); its condition is the file's stem.
 """
 from __future__ import annotations
 
@@ -45,7 +47,8 @@ def main() -> None:
     os.makedirs(args.out_dir, exist_ok=True)
     todo = []
     for sk in args.skills:
-        cond = "baseline" if sk == "none" else os.path.basename(sk)[:-3]
+        base = sk[len("hints:"):] if sk.startswith("hints:") else sk
+        cond = "baseline" if sk == "none" else os.path.splitext(os.path.basename(base))[0]
         out = os.path.join(args.out_dir, f"{bench}_{tag}_{cond}_s0of1.json")
         if os.path.exists(out):
             print(f"[skip] {out}", flush=True)
@@ -67,8 +70,12 @@ def main() -> None:
         return tok.apply_chat_template(msgs, tokenize=False, add_generation_prompt=True, enable_thinking=False)
 
     for sk, cond, out in todo:
-        skill = None if sk == "none" else open(sk).read()
-        prompts = [prompt(r, skill) for r in rows]
+        if sk.startswith("hints:"):
+            hints = json.load(open(sk[len("hints:"):]))
+            prompts = [prompt(r, hints.get(r["id"]) or None) for r in rows]
+        else:
+            skill = None if sk == "none" else open(sk).read()
+            prompts = [prompt(r, skill) for r in rows]
         t0 = time.time()
         outs = [o.outputs[0].text for o in llm.generate(prompts, samp)]
         idx = [j for j, (o, r) in enumerate(zip(outs, rows)) if parse(o, len(r["options"])) is None]

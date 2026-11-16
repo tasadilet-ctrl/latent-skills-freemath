@@ -64,7 +64,15 @@ def score_ff(text, gold):
         return tp.submit(ev.evaluate, text, gold).result()
 
 def load(bench):
-    """train, val rows. MCQ train = the items in neither the val nor the test split."""
+    """train, val rows. MCQ train = the items in neither the val nor the test split.
+    GEPA_SPLIT_IDS=<ids.json with "train"/"val" lists> (MCQ only) uses that split instead, e.g. the T2 split
+    (t1_mmlupro/split_t2_ids.json: train 100 / val 150)."""
+    sp = os.environ.get("GEPA_SPLIT_IDS")
+    if sp and bench in MCQ:
+        ids = json.load(open(sp))
+        rows = [json.loads(l) for l in open(f"{H}/mcq_math/data/{bench}.jsonl")]
+        tr, va = set(ids["train"]), set(ids["val"])
+        return [r for r in rows if r["id"] in tr], [r for r in rows if r["id"] in va]
     if bench in MCQ:
         rows = [json.loads(l) for l in open(f"{H}/mcq_math/data/{bench}.jsonl")]
         p = f"{H}/mcq_math/protocol/{bench}"
