@@ -32,7 +32,9 @@ test_model() {  # <size> <task> <gpu> <port>
   declare -A HFM=([8b]=Qwen/Qwen3-8B [14b]=Qwen/Qwen3-14B)
   local s=$1 t=$2 g=$3 P=$4 M tag; M=${HFM[$s]}
   tag=$(basename $M | tr A-Z a-z); local D=$RG/skillopt_ctrl/$tag; mkdir -p $D
-  (cd $RG && HF_HUB_OFFLINE=1 bash serve.sh $M $g $P > $D/server.log 2>&1) & local SP=$!
+  # own process group, so the stop below also reaches vllm serve and its engine (killing only the
+  # wrapper left both servers holding the GPUs on 2026-11-16)
+  (cd $RG && HF_HUB_OFFLINE=1 setsid bash serve.sh $M $g $P > $D/server.log 2>&1) & local SP=$!
   until curl -sf localhost:$P/v1/models >/dev/null; do sleep 10; kill -0 $SP 2>/dev/null || { log "rg test server died $s"; return 1; }; done
   declare -A SK=([none]="" [seed]="--skill $RG/seed_skill.md" [skillopt]="--skill $RG/skillopt_ctrl/skills/skillopt_${s}_${t}.md" [gepa]="--skill $RG/gepa/$tag/$t/skill.md")
   for c in none seed skillopt gepa; do
@@ -43,7 +45,8 @@ test_model() {  # <size> <task> <gpu> <port>
       log "rg test $s $t $c $mode: $(grep -o 'acc= *[0-9.]*' ${o%.jsonl}.txt)"
     done
   done
-  kill $SP; wait $SP 2>/dev/null
+  local PG; PG=$(pgrep -u "$USER" -P $SP -f "serve.sh" | head -1)
+  [ -n "$PG" ] && kill -- -$PG 2>/dev/null; kill $SP 2>/dev/null; wait $SP 2>/dev/null
 }
 test_model 8b products 0 8101 & test_model 14b decimal_arithmetic 1 8102 & wait
 log "RG_DONE"
