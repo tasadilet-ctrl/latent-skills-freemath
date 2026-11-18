@@ -6,8 +6,9 @@ seed 100000 (n 200), which shares no items with train or val. Run with ~/rg_env/
 import json, os, sys
 import reasoning_gym as rg
 out, tasks = sys.argv[1], sys.argv[2:]
+NTR = int(os.environ.get("RG_TRAIN_N", "60"))  # batch-size sweep uses 100
 for t in tasks:
-    for split, seed, n in (("train", 11, 60), ("val", 12, 40)):
+    for split, seed, n in (("train", 11, NTR), ("val", 12, 40)):
         d = rg.create_dataset(t, size=n, seed=seed)
         items = [{"id": f"{t}-s{seed}-{i}", "question": d[i]["question"], "answer": str(d[i]["answer"]),
                   "task": t, "seed": seed, "idx": i, "size": n} for i in range(n)]
@@ -15,4 +16,4 @@ for t in tasks:
         json.dump(items, open(f"{out}/{t}/{split}/items.json", "w"))
     os.makedirs(f"{out}/{t}/test", exist_ok=True)
     json.dump([], open(f"{out}/{t}/test/items.json", "w"))
-    print(t, "train 60 (seed 11), val 40 (seed 12) ->", f"{out}/{t}")
+    print(t, f"train {NTR} (seed 11), val 40 (seed 12) ->", f"{out}/{t}")

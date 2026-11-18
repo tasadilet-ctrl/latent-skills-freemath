@@ -3,12 +3,13 @@
 # (thinking off, T 1.0), optimizer Qwen3.6-27B on GPU 1 (thinking on, T 1.0), 4 epochs, batch 60 = whole train
 # split, validation 40 questions x RGYM_VAL_REPEATS (default 4). Starting skill: the GEPA control's seed prompt.
 #   train_rg.sh <size> <task>        e.g. train_rg.sh 8b products       Output: outputs/rg_<task>_<size>_r1
+# Optional env: RUN_NAME, RG_SPLIT (split root, default ~/skillopt_work/rg_split), BATCH (60), EPOCHS (4).
 set -uo pipefail
 S=$1; TASK=$2; R=1
 W=$HOME/skillopt_work; VENV=$W/vllm_env
 declare -A HF=([4b]=Qwen/Qwen3-4B [8b]=Qwen/Qwen3-8B [14b]=Qwen/Qwen3-14B [27b]=Qwen/Qwen3.6-27B)
 TARGET=${HF[$S]}; OPT=Qwen/Qwen3.6-27B
-NAME=rg_${TASK}_${S}_r$R; OUT=$W/outputs/$NAME
+NAME=${RUN_NAME:-rg_${TASK}_${S}_r$R}; OUT=$W/outputs/$NAME
 export HF_HUB_OFFLINE=1 PATH=$VENV/bin:$PATH RGYM_VAL_REPEATS=${RGYM_VAL_REPEATS:-4}
 mkdir -p $W/logs
 free_port() { while :; do p=$((20000 + RANDOM % 20000)); ss -ltn | awk '{print $4}' | grep -q ":$p\$" || { echo $p; return; }; done; }
@@ -35,8 +36,8 @@ export TARGET_QWEN_CHAT_TIMEOUT_SECONDS=900 OPTIMIZER_QWEN_CHAT_TIMEOUT_SECONDS=
 cd $W/SkillOpt
 .venv/bin/python scripts/train.py --config configs/rgym/default.yaml \
   --target_backend qwen_chat --optimizer_backend qwen_chat --target_model $TARGET --optimizer_model $OPT \
-  --cfg-options env.split_mode=split_dir env.split_dir=$W/rg_split/$TASK env.out_root=$OUT env.exec_timeout=900 \
-    env.max_completion_tokens=2048 evaluation.eval_test=false train.batch_size=60 train.seed=$R \
+  --cfg-options env.split_mode=split_dir env.split_dir=${RG_SPLIT:-$W/rg_split}/$TASK env.out_root=$OUT env.exec_timeout=900 \
+    env.max_completion_tokens=2048 evaluation.eval_test=false train.batch_size=${BATCH:-60} train.num_epochs=${EPOCHS:-4} train.seed=$R \
     model.target_qwen_chat_temperature=1.0 model.optimizer_qwen_chat_temperature=1.0 \
     model.target_qwen_chat_thinking_mode=disabled model.optimizer_qwen_chat_thinking_mode=enabled \
   > $W/logs/${NAME}_train.log 2>&1
