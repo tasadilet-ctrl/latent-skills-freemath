@@ -1,7 +1,7 @@
 #!/bin/bash
 # Queue step 2: SkillOpt positive control on Reasoning Gym (Qwen3-8B products, Qwen3-14B decimal_arithmetic,
-# the GEPA control's two strongest cells). Install the rgym env, build the split, train both, then test on the
-# fresh seed 100000 (n 200): none / seed prompt / SkillOpt skill / GEPA skill, greedy and T 1.0 (seeds 1-3).
+# the two tasks with the most headroom). Install the rgym env, build the split, train both, then test on the
+# fresh seed 100000 (n 200): none / seed prompt / SkillOpt skill, greedy and T 1.0 (seeds 1-3).
 # Results: ~/rg_gepa/skillopt_ctrl/<model tag>/<task>_<condition>_<t0|t1s1|t1s2|t1s3>.jsonl
 set -uo pipefail
 cd "$(dirname "$0")"; H=$(pwd)
@@ -36,8 +36,8 @@ test_model() {  # <size> <task> <gpu> <port>
   # wrapper left both servers holding the GPUs on 2026-11-16)
   (cd $RG && HF_HUB_OFFLINE=1 setsid bash serve.sh $M $g $P > $D/server.log 2>&1) & local SP=$!
   until curl -sf localhost:$P/v1/models >/dev/null; do sleep 10; kill -0 $SP 2>/dev/null || { log "rg test server died $s"; return 1; }; done
-  declare -A SK=([none]="" [seed]="--skill $RG/seed_skill.md" [skillopt]="--skill $RG/skillopt_ctrl/skills/skillopt_${s}_${t}.md" [gepa]="--skill $RG/gepa/$tag/$t/skill.md")
-  for c in none seed skillopt gepa; do
+  declare -A SK=([none]="" [seed]="--skill $RG/seed_skill.md" [skillopt]="--skill $RG/skillopt_ctrl/skills/skillopt_${s}_${t}.md")
+  for c in none seed skillopt; do
     for mode in t0 t1s1 t1s2 t1s3; do
       o=$D/${t}_${c}_${mode}.jsonl; [ -s $o ] && continue
       case $mode in t0) TS="--temperature 0";; t1s*) TS="--temperature 1.0 --req-seed ${mode#t1s}";; esac
@@ -45,7 +45,7 @@ test_model() {  # <size> <task> <gpu> <port>
       log "rg test $s $t $c $mode: $(grep -o 'acc= *[0-9.]*' ${o%.jsonl}.txt)"
     done
   done
-  local PG; PG=$(pgrep -u "$USER" -P $SP -f "serve.sh" | head -1)
+  local PG; PG=$(pgrep -u "$USER" -P $SP | head -1)
   [ -n "$PG" ] && kill -- -$PG 2>/dev/null; kill $SP 2>/dev/null; wait $SP 2>/dev/null
 }
 test_model 8b products 0 8101 & test_model 14b decimal_arithmetic 1 8102 & wait

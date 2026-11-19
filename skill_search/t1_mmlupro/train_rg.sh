@@ -1,7 +1,7 @@
 #!/bin/bash
 # One SkillOpt training on a Reasoning Gym task (positive control), same stack as train_one.sh: target on GPU 0
 # (thinking off, T 1.0), optimizer Qwen3.6-27B on GPU 1 (thinking on, T 1.0), 4 epochs, batch 60 = whole train
-# split, validation 40 questions x RGYM_VAL_REPEATS (default 4). Starting skill: the GEPA control's seed prompt.
+# split, validation 40 questions x RGYM_VAL_REPEATS (default 4). Starting skill: the one-liner (rgym_env/initial.md).
 #   train_rg.sh <size> <task>        e.g. train_rg.sh 8b products       Output: outputs/rg_<task>_<size>_r1
 # Optional env: RUN_NAME, RG_SPLIT (split root, default ~/skillopt_work/rg_split), BATCH (60), EPOCHS (4).
 set -uo pipefail

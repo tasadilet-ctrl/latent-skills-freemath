@@ -1,12 +1,17 @@
 #!/usr/bin/env bash
 # Build the 5-run MMLU-Pro table (PNG + markdown) with Adil's make_runs_table_png.py.
-# Usage: bash make_table.sh <work dir> [runs] [t1|t2]   (results are pulled from the box; nothing is committed)
+# Usage: bash make_table.sh <work dir> [runs] [t1|t2|t3]   (results are pulled from the box; nothing is committed)
 #   t1 (default): train 40 / val 100 / test 365, results/, with the one-line and elimination prompt columns
+#   t3: as t2 but batch 1, 1 epoch (the Reasoning Gym sweep's best), results_t3/
 #   t2: Adil's split train 100 / val 150 / test 255 (make_split_t2.py), 4 samples per val question, results_t2/
 # Runs with any file missing are left out (the title says how many runs went in).
 set -euo pipefail
 S=${1:?work dir}; N=${2:-5}; EXP=${3:-t1}
-if [ "$EXP" = t2 ]; then
+if [ "$EXP" = t3 ]; then
+  RES=results_t3; SPLITDIR=mmlupro_math_t2; COLS="4b 8b 14b 27b"; NTEST=255
+  SETUP="train 100 / val 150 (each val question scored 4 times, averaged), batch 1, 1 epoch (100 steps), starting skill = the elimination prompt"
+  ONE=""; ONE2=""
+elif [ "$EXP" = t2 ]; then
   RES=results_t2; SPLITDIR=mmlupro_math_t2; COLS="4b 8b 14b 27b"; NTEST=255
   SETUP="train 100 / val 150 (each val question scored 4 times, averaged), batch 100, 4 epochs"
   ONE=""; ONE2=""

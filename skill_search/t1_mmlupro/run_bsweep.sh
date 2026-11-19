@@ -1,6 +1,6 @@
 #!/bin/bash
-# Batch-size sweep for SkillOpt on the Reasoning Gym control (Qwen3-14B, decimal_arithmetic: SkillOpt 37-40 vs
-# GEPA 51-54, so there is room). Train 100 questions (seed 11), val 40 x 4 (seed 12). Batch in 100 50 20 10 1,
+# Batch-size sweep for SkillOpt on the Reasoning Gym control (Qwen3-14B, decimal_arithmetic: first SkillOpt run
+# 37-40, so there is room). Train 100 questions (seed 11), val 40 x 4 (seed 12). Batch in 100 50 20 10 1,
 # 4 epochs each (= 400 training examples seen, 4 to 40 steps), except batch 1: 1 epoch (100 steps) to keep it
 # under a day. Test as run_rg.sh: fresh seed 100000, n 200, greedy + T 1.0 seeds 1-3.
 # Results: ~/rg_gepa/skillopt_ctrl/bsweep/decimal_arithmetic_b<B>_<mode>.jsonl, skills in .../bsweep/skills/
@@ -33,6 +33,6 @@ for f in $D/skills/b*.md; do
     log "bsweep test $b $mode: $(grep -o 'acc= *[0-9.]*' ${o%.jsonl}.txt)"
   done
 done
-PG=$(pgrep -u "$USER" -P $SP -f "serve.sh" | head -1)
+PG=$(pgrep -u "$USER" -P $SP | head -1)
 [ -n "$PG" ] && kill -- -$PG 2>/dev/null; kill $SP 2>/dev/null; wait $SP 2>/dev/null
 log "BSWEEP_DONE"

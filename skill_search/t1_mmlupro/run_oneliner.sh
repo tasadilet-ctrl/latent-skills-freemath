@@ -1,6 +1,6 @@
 #!/bin/bash
 # Test-only column: the one-line prompt "Solve the task step by step and check your work before answering."
-# (the GEPA seed) as the system prompt, scored in runs 1-5 on all 4 models with the same runner, seed (= run),
+# as the system prompt, scored in runs 1-5 on all 4 models with the same runner, seed (= run),
 # temperature and token limits as run_t1.sh. No training; the baseline is not re-run. Restartable.
 #   run_oneliner.sh            (from ~/t1_mq)
 set -uo pipefail
