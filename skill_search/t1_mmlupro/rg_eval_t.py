@@ -2,7 +2,7 @@
 
 usage: rg_eval_t.py --tasks a,b --n 60 --seed 1 [--skill file.md] --out out.jsonl [--temperature 1.0 --req-seed 1]
 rg_eval.py with sampling: --temperature (default 0 = greedy, as rg_eval.py) and a per-request vLLM seed
-(req-seed * 1000003 + item index) so a run is reproducible on the same server.
+(req-seed * 1000003 + item index) so a run is reproducible on the same server. --thinking turns Qwen3 thinking on.
 Items are regenerated from (task, seed, index), so gold answers never leave Reasoning Gym.
 """
 import argparse, asyncio, json, re, sys
@@ -20,10 +20,10 @@ def extract(text):
     m = ANS.findall(text or "")
     return m[-1].strip() if m else None
 
-async def ask(cli, sem, system, q, max_tokens, temp=0.0, rseed=None):
+async def ask(cli, sem, system, q, max_tokens, temp=0.0, rseed=None, think=False):
     msgs = ([{"role": "system", "content": system}] if system else []) + [{"role": "user", "content": q + SUFFIX}]
     async with sem:
-        eb = {"chat_template_kwargs": {"enable_thinking": False}}
+        eb = {"chat_template_kwargs": {"enable_thinking": think}}
         if rseed is not None:
             eb["seed"] = rseed
         r = await cli.chat.completions.create(model="target", messages=msgs, temperature=temp, max_tokens=max_tokens,
@@ -38,14 +38,14 @@ async def ask(cli, sem, system, q, max_tokens, temp=0.0, rseed=None):
             text, forced = text + "\n\n<answer>" + (r2.choices[0].message.content or "") + "</answer>", True
         return text, fin, forced
 
-async def run(tasks, n, seed, system, max_tokens, port, conc, config=None, temp=0.0, req_seed=None):
+async def run(tasks, n, seed, system, max_tokens, port, conc, config=None, temp=0.0, req_seed=None, think=False):
     cli = AsyncOpenAI(base_url=f"http://localhost:{port}/v1", api_key="x", timeout=3600)
     sem = asyncio.Semaphore(conc)
     jobs, meta = [], []
     for t in tasks:
         d, es = items(t, n, seed, (config or {}).get(t))
         for i, e in enumerate(es):
-            jobs.append(ask(cli, sem, system, e["question"], max_tokens, temp, None if req_seed is None else req_seed * 1000003 + i)); meta.append((t, i, d, e))
+            jobs.append(ask(cli, sem, system, e["question"], max_tokens, temp, None if req_seed is None else req_seed * 1000003 + i, think)); meta.append((t, i, d, e))
     outs = await asyncio.gather(*jobs)
     rows = []
     for (t, i, d, e), (text, fin, forced) in zip(meta, outs):
@@ -63,10 +63,11 @@ if __name__ == "__main__":
     ap.add_argument("--max_tokens", type=int, default=2048); ap.add_argument("--port", type=int, default=8100)
     ap.add_argument("--conc", type=int, default=128); ap.add_argument("--config")
     ap.add_argument("--temperature", type=float, default=0.0); ap.add_argument("--req-seed", type=int, default=None)
+    ap.add_argument("--thinking", action="store_true", help="enable_thinking=True (default off)")
     a = ap.parse_args()
     system = open(a.skill).read() if a.skill else None
     cfg = json.load(open(a.config)) if a.config else None
-    rows = asyncio.run(run(a.tasks.split(","), a.n, a.seed, system, a.max_tokens, a.port, a.conc, cfg, a.temperature, a.req_seed))
+    rows = asyncio.run(run(a.tasks.split(","), a.n, a.seed, system, a.max_tokens, a.port, a.conc, cfg, a.temperature, a.req_seed, a.thinking))
     with open(a.out, "w") as f:
         for r in rows: f.write(json.dumps(r) + "\n")
     from collections import defaultdict
