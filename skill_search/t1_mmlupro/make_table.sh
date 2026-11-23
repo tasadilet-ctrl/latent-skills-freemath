@@ -8,9 +8,9 @@
 set -euo pipefail
 S=${1:?work dir}; N=${2:-5}; EXP=${3:-t1}
 if [ "$EXP" = t3 ]; then
-  RES=results_t3; SPLITDIR=mmlupro_math_t2; COLS="4b 8b 14b 27b"; NTEST=255
+  RES=results_t3; SPLITDIR=mmlupro_math_t2; COLS="elim 4b 8b 14b 27b"; NTEST=255
   SETUP="train 100 / val 150 (each val question scored 4 times, averaged), batch 1, 1 epoch (100 steps), starting skill = the elimination prompt"
-  ONE=""; ONE2=""
+  ONE=""; ONE2="Elimination prompt (= every T3 run's starting skill): 'Reason step by step. Before answering, read all the options and eliminate those that contradict your result or the question's conditions; check units and signs. Then give the remaining option.' No training; not in the average column."
 elif [ "$EXP" = t2 ]; then
   RES=results_t2; SPLITDIR=mmlupro_math_t2; COLS="4b 8b 14b 27b"; NTEST=255
   SETUP="train 100 / val 150 (each val question scored 4 times, averaged), batch 100, 4 epochs"
