@@ -3,11 +3,19 @@
 # Usage: bash make_table.sh <work dir> [runs] [t1|t2|t3]   (results are pulled from the box; nothing is committed)
 #   t1 (default): train 40 / val 100 / test 365, results/, with the one-line and elimination prompt columns
 #   t3: as t2 but batch 1, 1 epoch (the Reasoning Gym sweep's best), results_t3/
+#   rgm: Reasoning Gym decimal_arithmetic as 10-option MCQ (make_rg_mcq.py), results_rgm_t1/, test 250
 #   t2: Adil's split train 100 / val 150 / test 255 (make_split_t2.py), 4 samples per val question, results_t2/
 # Runs with any file missing are left out (the title says how many runs went in).
 set -euo pipefail
 S=${1:?work dir}; N=${2:-5}; EXP=${3:-t1}
-if [ "$EXP" = t3 ]; then
+PREFIX=mmlupro_math_tq_sb; BENCH="MMLU-Pro math"; TOKS="2048 tokens (27B 4096)"
+if [ "$EXP" = rgm ]; then
+  RES=results_rgm_t1; SPLITDIR=rg_decimal_mcq; COLS="oneliner elim 4b 8b 14b 27b"; NTEST=250
+  PREFIX=rg_decimal_mcq; BENCH="Reasoning Gym decimal_arithmetic, 10-option MCQ"; TOKS="4096 tokens"
+  SETUP="train 100 / val 150 (each val question scored 4 times, averaged), batch 100, 4 epochs, starting skill = the elimination prompt"
+  ONE="One-line prompt: 'Solve the task step by step and check your work before answering.' as the system prompt, no training; not in the average column."
+  ONE2="Elimination prompt (= every run's starting skill): 'Reason step by step. Before answering, read all the options and eliminate those that contradict your result or the question's conditions; check units and signs. Then give the remaining option.' No training; not in the average column."
+elif [ "$EXP" = t3 ]; then
   RES=results_t3; SPLITDIR=mmlupro_math_t2; COLS="elim 4b 8b 14b 27b"; NTEST=255
   SETUP="train 100 / val 150 (each val question scored 4 times, averaged), batch 1, 1 epoch (100 steps), starting skill = the elimination prompt"
   ONE=""; ONE2="Elimination prompt (= every T3 run's starting skill): 'Reason step by step. Before answering, read all the options and eliminate those that contradict your result or the question's conditions; check units and signs. Then give the remaining option.' No training; not in the average column."
@@ -44,10 +52,10 @@ ssh -o ConnectTimeout=30 $BOX "cat ~/skillopt_work/mq_split/$SPLITDIR/test/items
   | python3 -c 'import json,sys; print(json.dumps([x["id"] for x in json.load(sys.stdin)]))' > "$S/heldout_ids.json"
 cd "$S"
 NOTES=(--note "Each run: the named model answers, Qwen3.6-27B edits (both T 1.0), $SETUP; then baseline + that run's 4 skills on every model."
-       --note "Answers: vLLM (FlashInfer), T 1.0 (top_p 1), seed = run, thinking off, 2048 tokens (27B 4096). Scored on the $NTEST held-out test questions.")
+       --note "Answers: vLLM (FlashInfer), T 1.0 (top_p 1), seed = run, thinking off, $TOKS. Scored on the $NTEST held-out test questions.")
 [ -n "$ONE" ] && NOTES+=(--note "$ONE")
 [ -n "$ONE2" ] && NOTES+=(--note "$ONE2")
-python3 -m src.make_runs_table_png --results-dir res/results --prefix mmlupro_math_tq_sb --score-key em \
+python3 -m src.make_runs_table_png --results-dir res/results --prefix $PREFIX --score-key em \
   --ids heldout_ids.json --runs "$N" --skills $COLS \
-  --title "MMLU-Pro math ($EXP): SkillOpt skills at temperature 1.0" "${NOTES[@]}" \
-  --out-dir "$S/out" --stem results_table_mmlupro_$EXP
+  --title "$BENCH ($EXP): SkillOpt skills at temperature 1.0" "${NOTES[@]}" \
+  --out-dir "$S/out" --stem results_table_${PREFIX%%_*}_$EXP
