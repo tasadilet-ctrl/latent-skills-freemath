@@ -29,6 +29,7 @@ else
   ONE="One-line prompt: 'Solve the task step by step and check your work before answering.' as the system prompt, no training; not in the average column."
   ONE2="Elimination prompt: 'Reason step by step. Before answering, read all the options and eliminate those that contradict your result or the question's conditions; check units and signs. Then give the remaining option.' No training; not in the average column."
 fi
+COLS=${COLS_OVERRIDE:-$COLS}  # e.g. leave out a control column whose results do not exist yet
 REPO=$(git -C "$(dirname "$0")" rev-parse --show-toplevel)
 BOX=adilet_tasbolat@100.85.184.12
 mkdir -p "$S/src" "$S/res/results" "$S/out"

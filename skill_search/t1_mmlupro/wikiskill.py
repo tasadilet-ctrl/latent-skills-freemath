@@ -153,10 +153,11 @@ If no action is needed, call finish with: {{"action": "no_action"}}
 TOOL_SYNTAX = """
 
 ## How to call a tool
-End every message with exactly one tool call in this form (JSON inside the tags):
+End every message with one or more tool calls in this form (JSON inside the tags); several read_file calls in
+one message are all answered, in order:
 <tool_call>{"name": "read_file", "arguments": {"path": "wiki/index.md"}}</tool_call>
 <tool_call>{"name": "finish", "arguments": {"proposal": {"action": "no_action"}}}</tool_call>
-You will receive the tool result in the next message."""
+You will receive the tool results in the next message."""
 
 TASK_DESC = "multiple-choice mathematics questions (MMLU-Pro math, 10 options, answer given as a single letter)"
 
@@ -260,7 +261,13 @@ class Optimizer:
         r = await self.cli.chat.completions.create(
             model=self.model, messages=msgs, temperature=1.0, top_p=1.0, max_tokens=max_tokens,
             extra_body={"chat_template_kwargs": {"enable_thinking": True}})
-        return r.choices[0].message.content or ""
+        c = r.choices[0]
+        extra = getattr(c.message, "model_extra", None) or {}
+        rs = getattr(c.message, "reasoning_content", None) or extra.get("reasoning_content") or extra.get("reasoning") or ""
+        self.last = {"finish_reason": c.finish_reason, "reasoning_chars": len(rs),
+                     "completion_tokens": getattr(r.usage, "completion_tokens", None),
+                     "prompt_tokens": getattr(r.usage, "prompt_tokens", None), "reasoning_tail": rs[-1500:]}
+        return c.message.content or ""
 
 
 async def maintain_wiki(opt, ws, k, sample, log):
@@ -306,7 +313,48 @@ async def maintain_wiki(opt, ws, k, sample, log):
     return {"created": nc, "updated": nu, "failed_edits": nbad, "ok": True}
 
 
-TOOL_RE = re.compile(r"<tool_call>\s*(\{.*\})\s*</tool_call>", re.S)
+TOOL_RE = re.compile(r"<tool_call>\s*(\{.*?\})\s*</tool_call>", re.S)
+FENCE_RE = re.compile(r"```(?:json)?\s*(\{.*?\})\s*```", re.S)
+
+
+def find_calls(text):
+    """Tool calls in a proposer message: <tool_call>{json}</tool_call> blocks, an unterminated last <tool_call>, or,
+    failing that, fenced JSON objects that have a "name". JSON is parsed leniently (raw newlines allowed in strings).
+    Returns (calls, n_unparsed)."""
+    raws = TOOL_RE.findall(text)
+    tail = text.rsplit("</tool_call>", 1)[-1]
+    if "<tool_call>" in tail:
+        raws.append(tail.split("<tool_call>", 1)[1])
+    if not raws:
+        raws = [r for r in FENCE_RE.findall(text) if '"name"' in r]
+    calls, bad = [], 0
+    for raw in raws:
+        c = _lenient_json(raw)
+        if isinstance(c, dict):
+            calls.append((c.get("name"), c.get("arguments") or {}))
+        else:
+            bad += 1
+    return calls, bad
+
+
+def _lenient_json(raw):
+    """json with two repairs for near-valid calls: LaTeX-style backslashes that are not JSON escapes (\\frac) are
+    doubled, and up to 3 missing closing braces are added (Qwen3.6 often closes {"arguments": {"proposal": {...}}} with
+    one brace short)."""
+    if "{" not in raw:
+        return None
+    body = raw[raw.index("{"):].strip()
+    # an unescaped \f \b \r \t before a letter is LaTeX (\frac \beta \right \theta), not a control character
+    body = re.sub(r'(?<!\\)((?:\\\\)*)\\(?=[fbrt][A-Za-z])', r"\1\\\\", body)
+    fixed = re.sub(r'(?<!\\)((?:\\\\)*)\\(?!["\\/bfnrtu])', r"\1\\\\", body)
+    for text in (body, fixed):
+        for extra in range(4):
+            try:
+                c, _ = json.JSONDecoder(strict=False).raw_decode(text + "}" * extra)
+                return c
+            except Exception:  # noqa: BLE001
+                continue
+    return None
 
 
 async def propose(opt, ws, k, train_recs, log):
@@ -322,56 +370,70 @@ async def propose(opt, ws, k, train_recs, log):
             {"role": "user", "content": user}]
     traces_read, chars, turns = set(), 0, 0
     tdir = os.path.join(ws, "raw", "traces", f"iter{k}")
-    while turns < PROPOSER_TURNS + 2:
+    tfile, transcript = os.path.join(ws, "raw", "proposer", f"iter{k}.json"), []
+
+    def read_tool(args):
+        nonlocal chars
+        path = str(args.get("path", "")).lstrip("/")
+        if path.startswith("traces/"):
+            f = os.path.join(tdir, safe_id(path[len("traces/"):].removesuffix(".md")) + ".md")
+        else:
+            f = os.path.normpath(os.path.join(ws, path))
+        if not f.startswith(os.path.abspath(ws)) or not os.path.isfile(f):
+            res = f"Error: {path} does not exist."
+        else:
+            res = read(f)[:TRACE_CAP]
+            if path.startswith("traces/"):
+                traces_read.add(f)
+        chars += len(res)
+        return f"<tool_response>\n[read_file {path}]\n{res}\n</tool_response>"
+
+    # A message may hold several tool calls (Qwen issues parallel calls): every read_file is answered, in order;
+    # a finish is handled after the reads. After PROPOSER_TURNS turns only finish is accepted (3 more tries).
+    while turns < PROPOSER_TURNS + 3:
         turns += 1
         out = await opt.chat(msgs, max_tokens=16384)
         msgs.append({"role": "assistant", "content": out})
-        m = TOOL_RE.findall(out)
-        if not m:
-            msgs.append({"role": "user", "content": "No tool call found. End your message with one <tool_call>{...}</tool_call>."})
-            continue
-        try:
-            call = json.loads(m[-1])
-            name, args = call.get("name"), call.get("arguments") or {}
-        except Exception as e:  # noqa: BLE001
-            msgs.append({"role": "user", "content": f"Could not parse the tool call JSON ({e}). Try again."})
-            continue
-        if name == "read_file":
-            path = str(args.get("path", "")).lstrip("/")
-            if path.startswith("traces/"):
-                f = os.path.join(tdir, safe_id(path[len("traces/"):].removesuffix(".md")) + ".md")
-            else:
-                f = os.path.normpath(os.path.join(ws, path))
-            if not f.startswith(os.path.abspath(ws)) or not os.path.isfile(f):
-                res = f"Error: {path} does not exist."
-            else:
-                res = read(f)[:TRACE_CAP]
-                if path.startswith("traces/"):
-                    traces_read.add(f)
-            chars += len(res)
-            note = "" if chars < PROPOSER_CHAR_BUDGET else "\n\n[Context budget reached: call finish now.]"
-            if turns >= PROPOSER_TURNS:
-                note += "\n\n[Turn limit reached: call finish now.]"
-            msgs.append({"role": "user", "content": f"<tool_response>\n{res}\n</tool_response>{note}"})
-        elif name == "finish":
-            prop = args.get("proposal", args)
+        calls, bad = find_calls(out)
+        meta = dict(getattr(opt, "last", {}) or {})
+        transcript.append({"turn": turns, **meta, "content": out})
+        write(tfile, json.dumps({"messages": msgs, "turns": transcript}, ensure_ascii=False, indent=1))
+        reads = [a for n, a in calls if n == "read_file"]
+        fin = [a for n, a in calls if n == "finish"]
+        over = turns >= PROPOSER_TURNS or chars >= PROPOSER_CHAR_BUDGET
+        log(f"    [proposer turn {turns}] reads={len(reads)} finish={len(fin)} unparsed={bad} traces_read={len(traces_read)}"
+            f" stop={meta.get('finish_reason')} think={meta.get('reasoning_chars')}c content={len(out)}c")
+        if fin:
+            prop = fin[-1].get("proposal", fin[-1])
             if isinstance(prop, str):
                 try:
                     prop = json.loads(prop)
                 except Exception:  # noqa: BLE001
                     prop = {}
-            act = prop.get("action")
-            if act in ("create", "patch") and len(traces_read) < 4 and turns < PROPOSER_TURNS:
-                msgs.append({"role": "user", "content": f"Rejected: you have read {len(traces_read)} execution traces; "
-                             "you MUST read at least 4 before proposing a skill change."})
-                continue
+            act = prop.get("action") if isinstance(prop, dict) else None
             if act not in ("create", "patch", "no_action"):
                 msgs.append({"role": "user", "content": "Invalid proposal: action must be create, patch or no_action."})
                 continue
+            if act in ("create", "patch") and len(traces_read) < 4 and not over:
+                resp = "\n\n".join(read_tool(a) for a in reads)
+                msgs.append({"role": "user", "content": (resp + "\n\n" if resp else "") +
+                             f"Rejected: you have read {len(traces_read)} execution traces; you MUST read at least 4 "
+                             "before proposing a skill change."})
+                continue
             log(f"  [proposer] {act} {prop.get('name', '')} after {turns} turns, {len(traces_read)} traces read")
             return prop, turns, len(traces_read)
-        else:
-            msgs.append({"role": "user", "content": f"Unknown tool {name}. Use read_file or finish."})
+        if over:
+            msgs.append({"role": "user", "content": "The exploration budget is used up. Call finish now with your "
+                         "proposal (create, patch or no_action); no more read_file calls will be answered."})
+            continue
+        if not reads:
+            why = ("Your message was cut off by the length limit before a complete tool call. Think more briefly and "
+                   "end with the tool call." if meta.get("finish_reason") == "length" else
+                   f"{bad} tool call(s) could not be parsed as JSON. " if bad else "No tool call found. ")
+            msgs.append({"role": "user", "content": why + " End your message with <tool_call>{...}</tool_call> "
+                         "(valid JSON: escape newlines inside strings as \\n)."})
+            continue
+        msgs.append({"role": "user", "content": "\n\n".join(read_tool(a) for a in reads)})
     log("  [proposer] no proposal within the turn limit -> no_action")
     return {"action": "no_action"}, turns, len(traces_read)
 
