@@ -1,0 +1,30 @@
+diff --git a/skillopt/gradient/reflect.py b/skillopt/gradient/reflect.py
+index df68c9b..1260e51 100644
+--- a/skillopt/gradient/reflect.py
++++ b/skillopt/gradient/reflect.py
+@@ -90,7 +90,9 @@ def fmt_trajectory(
+             reasoning = _clip_text(item.get("reasoning"))
+             action = _clip_text(item.get("action"))
+             feedback = _clip_text(item.get("env_feedback"))
+-            if reasoning:
++            # Local patch (2026-11-27): SKILLOPT_HIDE_THINK=1 hides the target's thinking text from the optimizer.
++            # With Qwen3 thinking on, 8 failed 50-step ALFWorld games exceed the optimizer's 131k context.
++            if reasoning and os.environ.get("SKILLOPT_HIDE_THINK", "0") != "1":
+                 lines.append(f"[step {step} think] {reasoning}")
+             lines.append(f"[step {step} action] {action}")
+             lines.append(f"[step {step} obs]    {feedback}")
+diff --git a/skillopt/optimizer/slow_update.py b/skillopt/optimizer/slow_update.py
+index 9f8dd52..26e633b 100644
+--- a/skillopt/optimizer/slow_update.py
++++ b/skillopt/optimizer/slow_update.py
+@@ -138,7 +138,9 @@ def _read_trajectory(rollout_dir: str, task_id: str) -> str:
+             reasoning = _clip_text(entry.get("reasoning"))
+             action = _clip_text(entry.get("action"))
+             feedback = _clip_text(entry.get("env_feedback"))
+-            if reasoning:
++            # Local patch (2026-11-27): SKILLOPT_HIDE_THINK=1 hides the target's thinking text from the optimizer.
++            # With Qwen3 thinking on, 8 failed 50-step ALFWorld games exceed the optimizer's 131k context.
++            if reasoning and os.environ.get("SKILLOPT_HIDE_THINK", "0") != "1":
+                 lines.append(f"[step {step} think] {reasoning}")
+             lines.append(f"[step {step} action] {action}")
+             lines.append(f"[step {step} obs]    {feedback}")
